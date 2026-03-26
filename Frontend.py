@@ -259,7 +259,7 @@ for i, h in enumerate(st.session_state.holdings):
     with col_del:
         st.markdown("<div style='padding-top:8px'></div>", unsafe_allow_html=True)
         if st.button("×", key=f"d_{row_id}"):
-        to_delete = row_id
+            to_delete = row_id
 
 # ── POST-LOOP ACTIONS ──
 if to_delete is not None:
