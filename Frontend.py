@@ -42,16 +42,29 @@ div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 
 div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stHorizontalBlock"]) { gap: 0.2rem !important; }
 div[data-testid="stNumberInput"] { margin-bottom: 0px !important; }
 div[data-testid="stTextInput"] { margin-bottom: 0px !important; }
-.del-btn button {
+div.del-btn div[data-testid="stButton"] > button {
     display: flex !important; align-items: center !important; justify-content: center !important;
-    background-color: transparent !important; color: #ccc !important; 
-    border: 1px solid #eee !important; border-radius: 4px !important;
-    height: 26px !important; width: 26px !important; margin: 0 !important;
+    background-color: #ffffff !important; color: #cccccc !important; 
+    border: 1px solid #eeeeee !important; border-radius: 6px !important;
+    height: 28px !important; width: 28px !important; line-height: 1 !important;
+    transition: all 0.2s ease-in-out !important;
 }
 
-/* This targets the button state more strictly */
-.del-btn div[data-testid="stButton"] button:hover {
-    border-color: #fca5a5 !important; color: #ef4444 !important; background-color: #fef2f2 !important;
+/* ── The Hover Fix (Using deep selector) ── */
+div.del-btn div[data-testid="stButton"] > button:hover {
+    border-color: #fca5a5 !important; 
+    color: #ef4444 !important; 
+    background-color: #fef2f2 !important;
+    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.1) !important;
+}
+
+/* ── Prevent 'Sticky' Focus Color ── */
+div.del-btn div[data-testid="stButton"] > button:focus,
+div.del-btn div[data-testid="stButton"] > button:active {
+    background-color: #fef2f2 !important;
+    border-color: #fca5a5 !important;
+    color: #ef4444 !important;
+    outline: none !important;
 }
 .add-btn div[data-testid="stButton"] button { width: 100%; background: #fafafa !important; border: 1px dashed #d5d5d5 !important; color: #777 !important; padding: 10px !important; }
 section[data-testid="stSidebar"] { background: #fafafa; border-right: 1px solid #f0f0f0; }
@@ -271,9 +284,9 @@ if to_delete is not None:
 
     # 5. Delete Button (Inside its own column)
     with col_del:
-        st.markdown('<div class="del-btn">', unsafe_allow_html=True)
-        if st.button("×", key=f"d_{row_id}"): 
-            to_delete = i
+        # We use 'pointer-events: auto' to ensure the hover registers correctly
+        st.markdown('<div class="del-btn" style="display: flex; height: 38px; align-items: center; pointer-events: auto;">', unsafe_allow_html=True)
+        if st.button("×", key=f"d_{row_id}"): to_delete = i
         st.markdown('</div>', unsafe_allow_html=True)
     
 # Define variables safely
