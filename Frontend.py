@@ -201,22 +201,40 @@ for i, h in enumerate(st.session_state.holdings):
     data = c['data']
     row_id = h['id']
     
+    # 1. Create columns
     col_tick, col_name, col_units, col_price, col_val, col_yld, col_inc, col_frank, col_del = st.columns([1, 1.8, 0.9, 0.9, 1, 0.75, 1, 0.85, 0.3])
 
+    # 2. Assign Ticker
     with col_tick:
-        # Change key=f"t_{i}" to key=f"t_{row_id}"
         new_ticker = st.text_input("Ticker", value=h['ticker'], key=f"t_{row_id}", placeholder="CBA")
         st.session_state.holdings[i]['ticker'] = new_ticker.upper().strip()
 
+    # 3. Assign Units
     with col_units:
-        # Change key=f"u_{i}" to key=f"u_{row_id}"
         new_units = st.number_input("Units", value=float(h['units']), key=f"u_{row_id}", min_value=0.0, step=1.0, format="%g")
         st.session_state.holdings[i]['units'] = new_units
 
+    # 4. Display Data (Ensure these variables are defined in your 'computed' section)
+    name_str = data['name'] if data else "—"
+    price_str = fmt_aud2(data['price']) if data else "—"
+    val_str = fmt_aud(c['val']) if c['val'] else "—"
+    yld_str = fmt_pct(data['yield']) if data else "—"
+    inc_str = fmt_aud(c['cash']) if c['cash'] else "—"
+    frank_badge = franking_badge(data['franking']) if data else "—"
+
+    with col_name: st.markdown(f'<div style="font-size:13px;color:#666;padding-top:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{name_str}</div>', unsafe_allow_html=True)
+    with col_price: st.markdown(f'<div style="font-size:13px;text-align:right;padding-top:8px;">{price_str}</div>', unsafe_allow_html=True)
+    with col_val: st.markdown(f'<div style="font-size:13px;font-weight:600;text-align:right;padding-top:8px;">{val_str}</div>', unsafe_allow_html=True)
+    with col_yld: st.markdown(f'<div style="font-size:13px;color:#166534;font-weight:500;text-align:right;padding-top:8px;">{yld_str}</div>', unsafe_allow_html=True)
+    with col_inc: st.markdown(f'<div style="font-size:13px;font-weight:600;text-align:right;padding-top:8px;">{inc_str}</div>', unsafe_allow_html=True)
+    with col_frank: st.markdown(f'<div style="text-align:right;padding-top:8px;">{frank_badge}</div>', unsafe_allow_html=True)
+
+    # 5. Delete Button (Inside its own column)
     with col_del:
-        # Change key=f"d_{i}" to key=f"d_{row_id}"
+        st.markdown('<div class="del-btn">', unsafe_allow_html=True)
         if st.button("×", key=f"d_{row_id}"): 
             to_delete = i
+        st.markdown('</div>', unsafe_allow_html=True)
     
 # Define variables safely
     name_str = data['name'] if data else "—"
