@@ -272,61 +272,7 @@ st.markdown('<div class="add-btn">', unsafe_allow_html=True)
 if st.button("+ Add holding", use_container_width=True):
     st.session_state.holdings.append({"ticker": "", "units": 0, "id": str(uuid.uuid4())})
     st.rerun()
-st.markdown('</div>', unsafe_allow_html=True)# 1. The Header
-st.markdown("""<div class="tbl-header" style="display: grid; grid-template-columns: 1fr 1.8fr 0.9fr 0.9fr 1fr 0.75fr 1fr 0.85fr 0.3fr; gap: 0; padding: 0 12px 8px; margin-bottom: 10px; border-bottom: 1px solid #e5e5e5;"><span style="text-align: left;">Ticker</span><span style="text-align: left;">Company</span><span style="text-align: left;">Units</span><span class="r">Price</span><span class="r">Value</span><span class="r">Yield</span><span class="r">Annual income</span><span class="r">Franking</span><span></span></div>""", unsafe_allow_html=True)
 
-to_delete = None
-
-# 2. The Loop (This handles EVERY row)
-for i, h in enumerate(st.session_state.holdings):
-    c = computed[i]
-    data = c['data']
-    row_id = h['id']
-    
-    col_tick, col_name, col_units, col_price, col_val, col_yld, col_inc, col_frank, col_del = st.columns([1, 1.8, 0.9, 0.9, 1, 0.75, 1, 0.85, 0.3])
-
-    with col_tick:
-        new_ticker = st.text_input("Ticker", value=h['ticker'], key=f"t_{row_id}", placeholder="CBA", label_visibility="collapsed")
-        st.session_state.holdings[i]['ticker'] = new_ticker.upper().strip()
-
-    with col_units:
-        new_units = st.number_input("Units", value=float(h['units']), key=f"u_{row_id}", min_value=0.0, step=1.0, format="%g", label_visibility="collapsed")
-        st.session_state.holdings[i]['units'] = new_units
-
-    # Define text variables
-    name_str = data['name'] if data else "—"
-    price_str = fmt_aud2(data['price']) if data else "—"
-    val_str = fmt_aud(c['val']) if c['val'] else "—"
-    yld_str = fmt_pct(data['yield']) if data else "—"
-    inc_str = fmt_aud(c['cash']) if c['cash'] else "—"
-    frank_badge = franking_badge(data['franking']) if data else "—"
-
-    # Display Static Data
-    with col_name: st.markdown(f'<div style="font-size:15px;color:#666;padding-top:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{name_str}</div>', unsafe_allow_html=True)
-    with col_price: st.markdown(f'<div style="font-size:15px;text-align:right;padding-top:9px;">{price_str}</div>', unsafe_allow_html=True)
-    with col_val: st.markdown(f'<div style="font-size:15px;font-weight:600;text-align:right;padding-top:9px;">{val_str}</div>', unsafe_allow_html=True)
-    with col_yld: st.markdown(f'<div style="font-size:15px;color:#166534;font-weight:500;text-align:right;padding-top:9px;">{yld_str}</div>', unsafe_allow_html=True)
-    with col_inc: st.markdown(f'<div style="font-size:15px;font-weight:600;text-align:right;padding-top:9px;">{inc_str}</div>', unsafe_allow_html=True)
-    with col_frank: st.markdown(f'<div style="text-align:right;padding-top:9px;">{frank_badge}</div>', unsafe_allow_html=True)
-
-    # 3. The Delete Button (Only one needed per row)
-    with col_del:
-        st.markdown('<div class="del-btn" style="display: flex; height: 38px; align-items: center; pointer-events: auto;">', unsafe_allow_html=True)
-        if st.button("×", key=f"d_{row_id}"): 
-            to_delete = i
-        st.markdown('</div>', unsafe_allow_html=True)
-
-# 4. State Management (Outside the loop)
-if to_delete is not None:
-    st.session_state.holdings.pop(to_delete)
-    st.rerun()
-
-# 5. Add New Holding Button
-st.markdown('<div class="add-btn">', unsafe_allow_html=True)
-if st.button("+ Add holding", use_container_width=True):
-    st.session_state.holdings.append({"ticker": "", "units": 0, "id": str(uuid.uuid4())})
-    st.rerun()
-st.markdown('</div>', unsafe_allow_html=True)
 
 # ── FOOTER ────────────────────────────────────────────────────────────────────
 
