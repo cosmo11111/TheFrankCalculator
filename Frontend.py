@@ -237,7 +237,7 @@ for i, h in enumerate(st.session_state.holdings):
     # 5. The Delete Button
     with col_del:
         st.markdown('<div class="del-btn">', unsafe_allow_html=True)
-            if st.button("×", key=f"d_{row_id}"): 
+    if st.button("×", key=f"d_{row_id}"): 
         to_delete = i
         st.markdown('</div>', unsafe_allow_html=True)
 
