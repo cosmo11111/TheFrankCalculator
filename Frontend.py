@@ -206,7 +206,7 @@ st.markdown(f"""
 
 # ── TABLE ─────────────────────────────────────────────────────────────────────
 
-st.markdown("""<div class="tbl-header" style="display: grid; grid-template-columns: 1.0fr 1.8fr 0.9fr 0.9fr 1.0fr 0.75fr 1.0fr 0.85fr 0.3fr; gap: 0; padding: 0 12px 8px; border-bottom: 1px solid #e5e5e5;"><span>Ticker</span><span>Company</span><span class="r">Units</span><span class="r">Price</span><span class="r">Value</span><span class="r">Yield</span><span class="r">Annual income</span><span class="r">Franking</span><span></span></div>""", unsafe_allow_html=True)
+st.markdown("""<div class="tbl-header" style="display: grid; grid-template-columns: 1.0fr 1.6fr 0.9fr 0.9fr 1.0fr 0.75fr 1.0fr 0.85fr 0.3fr; gap: 0; padding: 0 12px 8px; border-bottom: 1px solid #e5e5e5;"><span>Ticker</span><span>Company</span><span class="r">Units</span><span class="r">Price</span><span class="r">Value</span><span class="r">Yield</span><span class="r">Annual income</span><span class="r">Franking</span><span></span></div>""", unsafe_allow_html=True)
 
 to_delete = None
 for i, h in enumerate(st.session_state.holdings):
