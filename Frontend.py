@@ -50,7 +50,7 @@ section[data-testid="stSidebar"] { background: #fafafa; border-right: 1px solid 
 # ── DATA SOURCES ─────────────────────────────────────────────────────────────
 
 # Your Published CSV link
-SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQXUiVcziu72OkPGE8Wy5xhelPIXJTMs0Z1oBtqQbZ-_RS5qNOAt9q5sr23I7ejAqXrQRuKZiwy6gFi/pub?gid=942242974&single=true&output=csv"
+SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQHsCseAp_79hGxGEUPnpoaJ0WLueO_Ot9IqBIg7g4mGzMj93e_BQMDuLIe6xDKjQbQzxxFadty0ILK/pub?gid=0&single=true&output=csv"
 
 TAX_ENVIRONMENTS = {
     "Pension phase (0%)": 0.00,
