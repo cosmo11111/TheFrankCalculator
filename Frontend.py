@@ -47,7 +47,7 @@ section[data-testid="stSidebar"] { background: #fafafa; border-right: 1px solid 
 
 # ── DATA SOURCES ──────────────────────────────────────────────────────────────
 
-SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQXUiVcziu72OkPGE8Wy5xhelPIXJTMs0Z1oBtqQbZ-_RS5qNOAt9q5sr23I7ejAqXrQRuKZiwy6gFi/pub?gid=942242974&single=true&output=csv"
+SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQXUiVcziu72OkPGE8Wy5xhelPIXJTMs0Z1oBtqQbZ-_RS5qNOAt9q5sr23I7ejAqXrQRuKZiwy6gFi/pub?gid=0&single=true&output=csv"
 
 TAX_ENVIRONMENTS = {
     "Pension phase (0%)": 0.00,
@@ -74,7 +74,10 @@ def franking_badge(pct):
 @st.cache_data(ttl=3600)
 def load_master_data():
     try:
-        df = pd.read_csv(SHEET_CSV_URL)
+        import requests, io
+        r = requests.get(SHEET_CSV_URL, headers={"User-Agent": "Mozilla/5.0"})
+        r.raise_for_status()
+        df = pd.read_csv(io.StringIO(r.text))
         df.columns = df.columns.str.strip()
         df['Ticker'] = df['Ticker'].astype(str).str.upper().str.replace('.AX', '', regex=False).str.strip()
         if 'Franking Rate (%)' in df.columns:
@@ -111,6 +114,13 @@ if 'holdings' not in st.session_state:
 
 if 'next_id' not in st.session_state:
     st.session_state.next_id = 4
+
+# Migration: add stable id to any old holdings that are missing it
+# This handles the transition from the old format (no id) to the new format
+for i, h in enumerate(st.session_state.holdings):
+    if 'id' not in h:
+        h['id'] = st.session_state.next_id
+        st.session_state.next_id += 1
 
 # ── LOAD DATA ─────────────────────────────────────────────────────────────────
 
