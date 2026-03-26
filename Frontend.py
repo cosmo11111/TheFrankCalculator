@@ -38,29 +38,8 @@ div[data-testid="stNumberInput"] button { display: none !important; }
 div[data-testid="stNumberInput"] > div { border: none !important; box-shadow: none !important; background: transparent !important; }
 div[data-testid="stNumberInput"] input { font-size: 13px !important; border-radius: 6px !important; border: 1px solid #e5e5e5 !important; padding: 6px 10px !important; background: #fff !important; }
 div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 7px !important; border: 1px solid #e5e5e5 !important; background: #fff !important; padding: 6px 14px !important; }
-/* ── Clean Delete Button (No Border) ── */
-.del-btn div[data-testid="stButton"] button {
-    color: #ccc !important;
-    border: none !important;          /* Removes the physical border */
-    background: transparent !important; /* Ensures no white background */
-    font-size: 20px !important;        /* Slightly larger 'x' looks better without a border */
-    padding: 0px 8px !important;
-    box-shadow: none !important;      /* Removes any shadow/glow when clicked */
-    transition: color 0.2s !important;
-}
-
-.del-btn div[data-testid="stButton"] button:hover {
-    color: #ef4444 !important;        /* Turns red on hover */
-    background: #fef2f2 !important;   /* Subtle red tint background */
-    border: none !important;
-}
-
-.del-btn div[data-testid="stButton"] button:active, 
-.del-btn div[data-testid="stButton"] button:focus {
-    border: none !important;
-    box-shadow: none !important;
-    background: #fee2e2 !important;
-}
+.del-btn div[data-testid="stButton"] button { color: #ccc !important; border-color: transparent !important; font-size: 18px !important; padding: 2px 8px !important; }
+.del-btn div[data-testid="stButton"] button:hover { color: #ef4444 !important; background: #fef2f2 !important; }
 .add-btn div[data-testid="stButton"] button { width: 100%; background: #fafafa !important; border: 1px dashed #d5d5d5 !important; color: #777 !important; padding: 10px !important; }
 section[data-testid="stSidebar"] { background: #fafafa; border-right: 1px solid #f0f0f0; }
 .status-pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: #999; background: #f5f5f5; border-radius: 20px; padding: 3px 10px; }
