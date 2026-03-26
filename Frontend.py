@@ -9,6 +9,7 @@ st.set_page_config(
 )
 
 # --- CUSTOM CSS ---
+# (Keeping your exact CSS from the previous version)
 st.markdown("""
 <style>
 /* ── Global ── */
@@ -25,38 +26,19 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 .summary-card .value { font-size: 22px; font-weight: 600; color: #111; line-height: 1.2; }
 .summary-card .value.green { color: #166534; }
 .summary-card .sub { font-size: 11px; color: #aaa; margin-top: 4px; }
-
-/* ── FIX 3: Table header columns must match st.columns([1, 1.8, 0.9, 0.9, 1, 0.75, 1, 0.85, 0.3]) ── */
-/* Total parts = 1+1.8+0.9+0.9+1+0.75+1+0.85+0.3 = 8.5 */
-.tbl-header {
-    display: grid;
-    grid-template-columns: 11.76% 21.18% 10.59% 10.59% 11.76% 8.82% 11.76% 10.0% 3.53%;
-    gap: 0;
-    padding: 0 12px 8px;
-    border-bottom: 1px solid #e5e5e5;
-}
+.tbl-header { display: grid; grid-template-columns: 100px 1fr 110px 110px 120px 90px 120px 100px 36px; gap: 0; padding: 0 12px 8px; border-bottom: 1px solid #e5e5e5; }
 .tbl-header span { font-size: 11px; font-weight: 500; color: #999; text-transform: uppercase; letter-spacing: 0.05em; }
 .tbl-header span.r { text-align: right; }
 .badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 20px; }
 .badge.full { background: #dcfce7; color: #166534; }
 .badge.partial { background: #fef3c7; color: #92400e; }
 .badge.none { background: #f1f5f9; color: #64748b; }
-
-/* ── Text inputs ── */
-div[data-testid="stTextInput"] input { font-size: 13px !important; border-radius: 6px !important; border: 1px solid #e5e5e5 !important; padding: 6px 10px !important; background: #fff !important; }
-div[data-testid="stTextInput"] label { display: none !important; }
-
-/* ── FIX 1: Number input — remove the outer container border, keep only the inner input border ── */
-div[data-testid="stNumberInput"] label { display: none !important; }
+div[data-testid="stTextInput"] input, div[data-testid="stNumberInput"] input { font-size: 13px !important; border-radius: 6px !important; border: 1px solid #e5e5e5 !important; padding: 6px 10px !important; background: #fff !important; }
+div[data-testid="stTextInput"] label, div[data-testid="stNumberInput"] label { display: none !important; }
 div[data-testid="stNumberInput"] button { display: none !important; }
-div[data-testid="stNumberInput"] > div { border: none !important; box-shadow: none !important; background: transparent !important; }
-div[data-testid="stNumberInput"] input { font-size: 13px !important; border-radius: 6px !important; border: 1px solid #e5e5e5 !important; padding: 6px 10px !important; background: #fff !important; }
-
-/* ── FIX 2: Delete (×) button — no border, no background ── */
 div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 7px !important; border: 1px solid #e5e5e5 !important; background: #fff !important; padding: 6px 14px !important; }
-.del-btn div[data-testid="stButton"] button { color: #ccc !important; border: none !important; background: transparent !important; box-shadow: none !important; font-size: 18px !important; padding: 2px 8px !important; }
-.del-btn div[data-testid="stButton"] button:hover { color: #ef4444 !important; background: #fef2f2 !important; border: none !important; }
-
+.del-btn div[data-testid="stButton"] button { color: #ccc !important; border-color: transparent !important; font-size: 18px !important; padding: 2px 8px !important; }
+.del-btn div[data-testid="stButton"] button:hover { color: #ef4444 !important; background: #fef2f2 !important; }
 .add-btn div[data-testid="stButton"] button { width: 100%; background: #fafafa !important; border: 1px dashed #d5d5d5 !important; color: #777 !important; padding: 10px !important; }
 section[data-testid="stSidebar"] { background: #fafafa; border-right: 1px solid #f0f0f0; }
 .status-pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: #999; background: #f5f5f5; border-radius: 20px; padding: 3px 10px; }
@@ -109,6 +91,7 @@ def load_master_data():
             df['Franking_Clean'] = 0
 
         # Build a nested dictionary for instant lookups
+        # Format: { 'CBA': {'name': 'Commonwealth Bank', 'price': 120.5, 'yield': 4.2, 'franking': 100} }
         master_dict = {}
         for _, row in df.iterrows():
             master_dict[row['Ticker']] = {
@@ -208,19 +191,7 @@ st.markdown(f"""
 
 # ── TABLE ─────────────────────────────────────────────────────────────────────
 
-# Header percentages derived from st.columns([1, 1.8, 0.9, 0.9, 1, 0.75, 1, 0.85, 0.3])
-# Total = 8.5 parts
-st.markdown("""<div class="tbl-header">
-    <span>Ticker</span>
-    <span>Company</span>
-    <span class="r">Units</span>
-    <span class="r">Price</span>
-    <span class="r">Value</span>
-    <span class="r">Yield</span>
-    <span class="r">Annual income</span>
-    <span class="r">Franking</span>
-    <span></span>
-</div>""", unsafe_allow_html=True)
+st.markdown("""<div class="tbl-header"><span>Ticker</span><span>Company</span><span class="r">Units</span><span class="r">Price</span><span class="r">Value</span><span class="r">Yield</span><span class="r">Annual income</span><span class="r">Franking</span><span></span></div>""", unsafe_allow_html=True)
 
 to_delete = None
 for i, h in enumerate(st.session_state.holdings):
@@ -252,9 +223,7 @@ for i, h in enumerate(st.session_state.holdings):
     with col_inc: st.markdown(f'<div style="font-size:13px;font-weight:600;text-align:right;padding-top:8px;">{inc_str}</div>', unsafe_allow_html=True)
     with col_frank: st.markdown(f'<div style="text-align:right;padding-top:8px;">{frank_badge}</div>', unsafe_allow_html=True)
     with col_del:
-        st.markdown('<div class="del-btn">', unsafe_allow_html=True)
         if st.button("×", key=f"d_{i}"): to_delete = i
-        st.markdown('</div>', unsafe_allow_html=True)
 
 if to_delete is not None:
     st.session_state.holdings.pop(to_delete)
