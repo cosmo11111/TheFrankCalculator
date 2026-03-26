@@ -206,7 +206,7 @@ st.markdown(f"""
 
 # ── TABLE ─────────────────────────────────────────────────────────────────────
 
-st.markdown("""<div class="tbl-header" style="display: grid; grid-template-columns: 1fr 1.8fr 0.9fr 0.9fr 1fr 0.75fr 1fr 0.85fr 0.3fr; gap: 0; padding: 0 12px 8px; border-bottom: 1px solid #e5e5e5;"><span style="text-align: left;">Ticker</span><span style="text-align: left;">Company</span><span style="text-align: left;">Units</span><span style="text-align: left;">Price</span><span style="text-align: left;">Value</span><span style="text-align: left;">Yield</span><span style="text-align: left;">Annual income</span><span style="text-align: left;">Franking</span><span></span></div>""", unsafe_allow_html=True)
+st.markdown("""<div class="tbl-header" style="display: grid; grid-template-columns: 1fr 1.8fr 0.9fr 0.9fr 1fr 0.75fr 1fr 0.85fr 0.3fr; gap: 0; padding: 0 12px 8px; border-bottom: 1px solid #e5e5e5;"><span style="text-align: left;">Ticker</span><span style="text-align: left;">Company</span><span style="text-align: left;">Units</span><span class="r">Price</span><span class="r">Value</span><span class="r">Yield</span><span class="r">Annual income</span><span class="r">Franking</span><span></span></div>""", unsafe_allow_html=True)
 
 to_delete = None
 for i, h in enumerate(st.session_state.holdings):
@@ -237,12 +237,12 @@ for i, h in enumerate(st.session_state.holdings):
     frank_badge = franking_badge(data['franking']) if data else "—"
 
     # 4. Display Static Data
-    with col_name: st.markdown(f'<div style="font-size:13px;color:#666;padding-top:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{name_str}</div>', unsafe_allow_html=True)
-    with col_price: st.markdown(f'<div style="font-size:13px;text-align:left;padding-top:8px;">{price_str}</div>', unsafe_allow_html=True)
-    with col_val: st.markdown(f'<div style="font-size:13px;font-weight:600;text-align:left;padding-top:8px;">{val_str}</div>', unsafe_allow_html=True)
-    with col_yld: st.markdown(f'<div style="font-size:13px;color:#166534;font-weight:500;text-align:left;padding-top:8px;">{yld_str}</div>', unsafe_allow_html=True)
-    with col_inc: st.markdown(f'<div style="font-size:13px;font-weight:600;text-align:left;padding-top:8px;">{inc_str}</div>', unsafe_allow_html=True)
-    with col_frank: st.markdown(f'<div style="text-align:left;padding-top:8px;">{frank_badge}</div>', unsafe_allow_html=True)
+    with col_name: st.markdown(f'<div style="font-size:15px;color:#666;padding-top:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{name_str}</div>', unsafe_allow_html=True)
+    with col_price: st.markdown(f'<div style="font-size:15px;text-align:right;padding-top:8px;">{price_str}</div>', unsafe_allow_html=True)
+    with col_val: st.markdown(f'<div style="font-size:15px;font-weight:600;text-align:right;padding-top:8px;">{val_str}</div>', unsafe_allow_html=True)
+    with col_yld: st.markdown(f'<div style="font-size:15px;color:#166534;font-weight:500;text-align:right;padding-top:8px;">{yld_str}</div>', unsafe_allow_html=True)
+    with col_inc: st.markdown(f'<div style="font-size:15px;font-weight:600;text-align:right;padding-top:8px;">{inc_str}</div>', unsafe_allow_html=True)
+    with col_frank: st.markdown(f'<div style="text-align:right;padding-top:8px;">{frank_badge}</div>', unsafe_allow_html=True)
 
     # 5. The Delete Button
     with col_del:
