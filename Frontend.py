@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import uuid
 
 # --- CONFIG ---
 st.set_page_config(
@@ -132,9 +133,9 @@ with st.sidebar:
 
 if 'holdings' not in st.session_state:
     st.session_state.holdings = [
-        {"ticker": "CBA", "units": 100},
-        {"ticker": "VAS", "units": 200},
-        {"ticker": "TLS", "units": 500},
+        {"ticker": "CBA", "units": 100, "id": str(uuid.uuid4())},
+        {"ticker": "VAS", "units": 200, "id": str(uuid.uuid4())},
+        {"ticker": "TLS", "units": 500, "id": str(uuid.uuid4())},
     ]
 
 # ── HEADER ────────────────────────────────────────────────────────────────────
@@ -198,18 +199,28 @@ to_delete = None
 for i, h in enumerate(st.session_state.holdings):
     c = computed[i]
     data = c['data']
+    row_id = h['id']
     
     col_tick, col_name, col_units, col_price, col_val, col_yld, col_inc, col_frank, col_del = st.columns([1, 1.8, 0.9, 0.9, 1, 0.75, 1, 0.85, 0.3])
 
-    with col_tick:
-        new_ticker = st.text_input("Ticker", value=h['ticker'], key=f"t_{i}", placeholder="CBA")
+with col_tick:
+        # Change key=f"t_{i}" to key=f"t_{row_id}"
+        new_ticker = st.text_input("Ticker", value=h['ticker'], key=f"t_{row_id}", placeholder="CBA")
         st.session_state.holdings[i]['ticker'] = new_ticker.upper().strip()
 
     with col_units:
-        new_units = st.number_input("Units", value=float(h['units']), key=f"u_{i}", min_value=0.0, step=1.0, format="%g")
+        # Change key=f"u_{i}" to key=f"u_{row_id}"
+        new_units = st.number_input("Units", value=float(h['units']), key=f"u_{row_id}", min_value=0.0, step=1.0, format="%g")
         st.session_state.holdings[i]['units'] = new_units
 
-    # Define variables safely
+
+
+    with col_del:
+        # Change key=f"d_{i}" to key=f"d_{row_id}"
+        if st.button("×", key=f"d_{row_id}"): 
+            to_delete = i
+    
+# Define variables safely
     name_str = data['name'] if data else "—"
     price_str = fmt_aud2(data['price']) if data else "—"
     val_str = fmt_aud(c['val']) if c['val'] else "—"
@@ -232,7 +243,12 @@ if to_delete is not None:
 
 st.markdown('<div class="add-btn">', unsafe_allow_html=True)
 if st.button("+ Add holding", use_container_width=True):
-    st.session_state.holdings.append({"ticker": "", "units": 0})
+    # Assign a unique ID immediately upon creation
+    st.session_state.holdings.append({
+        "ticker": "", 
+        "units": 0, 
+        "id": str(uuid.uuid4())
+    })
     st.rerun()
 st.markdown('</div>', unsafe_allow_html=True)
 
