@@ -33,14 +33,12 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 .badge.full { background: #dcfce7; color: #166534; }
 .badge.partial { background: #fef3c7; color: #92400e; }
 .badge.none { background: #f1f5f9; color: #64748b; }
-div[data-testid="stNumberInput"] label { display: none !important; }
+div[data-testid="stTextInput"] input, div[data-testid="stNumberInput"] input { font-size: 13px !important; border-radius: 6px !important; border: 1px solid #e5e5e5 !important; padding: 6px 10px !important; background: #fff !important; }
+div[data-testid="stTextInput"] label, div[data-testid="stNumberInput"] label { display: none !important; }
 div[data-testid="stNumberInput"] button { display: none !important; }
-div[data-testid="stNumberInput"] > div { border: none !important; box-shadow: none !important; background: transparent !important; }
-div[data-testid="stNumberInput"] input { font-size: 13px !important; border-radius: 6px !important; border: 1px solid #e5e5e5 !important; padding: 6px 10px !important; background: #fff !important; }
 div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 7px !important; border: 1px solid #e5e5e5 !important; background: #fff !important; padding: 6px 14px !important; }
-div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 7px !important; border: 1px solid #e5e5e5 !important; background: #fff !important; padding: 6px 14px !important; }
-.del-btn div[data-testid="stButton"] button { color: #ccc !important; border: none !important; background: transparent !important; box-shadow: none !important; font-size: 18px !important; padding: 2px 8px !important; }
-.del-btn div[data-testid="stButton"] button:hover { color: #ef4444 !important; background: #fef2f2 !important; border: none !important; }
+.del-btn div[data-testid="stButton"] button { color: #ccc !important; border-color: transparent !important; font-size: 18px !important; padding: 2px 8px !important; }
+.del-btn div[data-testid="stButton"] button:hover { color: #ef4444 !important; background: #fef2f2 !important; }
 .add-btn div[data-testid="stButton"] button { width: 100%; background: #fafafa !important; border: 1px dashed #d5d5d5 !important; color: #777 !important; padding: 10px !important; }
 section[data-testid="stSidebar"] { background: #fafafa; border-right: 1px solid #f0f0f0; }
 .status-pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: #999; background: #f5f5f5; border-radius: 20px; padding: 3px 10px; }
@@ -52,7 +50,7 @@ section[data-testid="stSidebar"] { background: #fafafa; border-right: 1px solid 
 # ── DATA SOURCES ─────────────────────────────────────────────────────────────
 
 # Your Published CSV link
-SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQHsCseAp_79hGxGEUPnpoaJ0WLueO_Ot9IqBIg7g4mGzMj93e_BQMDuLIe6xDKjQbQzxxFadty0ILK/pub?gid=0&single=true&output=csv"
+SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQXUiVcziu72OkPGE8Wy5xhelPIXJTMs0Z1oBtqQbZ-_RS5qNOAt9q5sr23I7ejAqXrQRuKZiwy6gFi/pub?gid=0&single=true&output=csv"
 
 TAX_ENVIRONMENTS = {
     "Pension phase (0%)": 0.00,
