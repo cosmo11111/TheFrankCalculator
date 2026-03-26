@@ -42,19 +42,15 @@ div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 
 div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stHorizontalBlock"]) { gap: 0.2rem !important; }
 div[data-testid="stNumberInput"] { margin-bottom: 0px !important; }
 div[data-testid="stTextInput"] { margin-bottom: 0px !important; }
-.del-btn div[data-testid="stButton"] { 
-    height: 31px !important; display: flex !important; align-items: center !important; 
-}
-.del-btn div[data-testid="stButton"] button {
+.del-btn button {
     display: flex !important; align-items: center !important; justify-content: center !important;
-    background-color: #fff !important; color: #999 !important; border: 1px solid #e5e5e5 !important;
-    border-radius: 6px !important; height: 28px !important; width: 28px !important; 
-    padding: 0 !important; margin: 0 !important; font-size: 20px !important; line-height: 1 !important;
+    background-color: transparent !important; color: #ccc !important; 
+    border: 1px solid #eee !important; border-radius: 4px !important;
+    height: 26px !important; width: 26px !important; margin: 0 !important;
 }
-/* This specific path ensures the hover overrides Streamlit's defaults */
-.del-btn div[data-testid="stButton"] button:hover, 
-.del-btn div[data-testid="stButton"] button:focus, 
-.del-btn div[data-testid="stButton"] button:active {
+
+/* This targets the button state more strictly */
+.del-btn div[data-testid="stButton"] button:hover {
     border-color: #fca5a5 !important; color: #ef4444 !important; background-color: #fef2f2 !important;
 }
 .add-btn div[data-testid="stButton"] button { width: 100%; background: #fafafa !important; border: 1px dashed #d5d5d5 !important; color: #777 !important; padding: 10px !important; }
@@ -247,11 +243,11 @@ for i, h in enumerate(st.session_state.holdings):
     with col_inc: st.markdown(f'<div style="font-size:15px;font-weight:600;text-align:right;padding-top:9px;">{inc_str}</div>', unsafe_allow_html=True)
     with col_frank: st.markdown(f'<div style="text-align:right;padding-top:9px;">{frank_badge}</div>', unsafe_allow_html=True)
 
-    # 5. The Delete Button
     with col_del:
-        st.markdown('<div class="del-btn" style="transform: translateY(6px);">', unsafe_allow_html=True)
-    if st.button("×", key=f"d_{row_id}"): to_delete = i
-    st.markdown('</div>', unsafe_allow_html=True)
+        # We use flex and margin-top here to manually 'lock' the button height
+        st.markdown('<div class="del-btn" style="display: flex; height: 38px; align-items: center; margin-top: -2px;">', unsafe_allow_html=True)
+        if st.button("×", key=f"d_{row_id}"): to_delete = i
+        st.markdown('</div>', unsafe_allow_html=True)
 
 # ── POST-LOOP ACTIONS ──
 if to_delete is not None:
