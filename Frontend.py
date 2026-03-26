@@ -257,62 +257,17 @@ for i, h in enumerate(st.session_state.holdings):
     with col_frank: st.markdown(f'<div style="text-align:right;padding-top:9px;">{frank_badge}</div>', unsafe_allow_html=True)
 
     with col_del:
-        # We use flex and margin-top here to manually 'lock' the button height
-        st.markdown('<div class="del-btn" style="display: flex; height: 38px; align-items: center; margin-top: -2px;">', unsafe_allow_html=True)
-        if st.button("×", key=f"d_{row_id}"): to_delete = i
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown("<div style='padding-top:8px'></div>", unsafe_allow_html=True)
+        if st.button("×", key=f"d_{row_id}"):
+        to_delete = row_id
 
 # ── POST-LOOP ACTIONS ──
 if to_delete is not None:
     st.session_state.holdings.pop(to_delete)
     st.rerun()
 
-    # 4. Display Data (Ensure these variables are defined in your 'computed' section)
-    name_str = data['name'] if data else "—"
-    price_str = fmt_aud2(data['price']) if data else "—"
-    val_str = fmt_aud(c['val']) if c['val'] else "—"
-    yld_str = fmt_pct(data['yield']) if data else "—"
-    inc_str = fmt_aud(c['cash']) if c['cash'] else "—"
-    frank_badge = franking_badge(data['franking']) if data else "—"
-
-    with col_name: st.markdown(f'<div style="font-size:13px;color:#666;padding-top:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{name_str}</div>', unsafe_allow_html=True)
-    with col_price: st.markdown(f'<div style="font-size:13px;text-align:right;padding-top:8px;">{price_str}</div>', unsafe_allow_html=True)
-    with col_val: st.markdown(f'<div style="font-size:13px;font-weight:600;text-align:right;padding-top:8px;">{val_str}</div>', unsafe_allow_html=True)
-    with col_yld: st.markdown(f'<div style="font-size:13px;color:#166534;font-weight:500;text-align:right;padding-top:8px;">{yld_str}</div>', unsafe_allow_html=True)
-    with col_inc: st.markdown(f'<div style="font-size:13px;font-weight:600;text-align:right;padding-top:8px;">{inc_str}</div>', unsafe_allow_html=True)
-    with col_frank: st.markdown(f'<div style="text-align:right;padding-top:8px;">{frank_badge}</div>', unsafe_allow_html=True)
-
-    # 5. Delete Button (Inside its own column)
-    with col_del:
-        # We use 'pointer-events: auto' to ensure the hover registers correctly
-        st.markdown('<div class="del-btn" style="display: flex; height: 38px; align-items: center; pointer-events: auto;">', unsafe_allow_html=True)
-        if st.button("×", key=f"d_{row_id}"): to_delete = i
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-# Define variables safely
-    name_str = data['name'] if data else "—"
-    price_str = fmt_aud2(data['price']) if data else "—"
-    val_str = fmt_aud(c['val']) if c['val'] else "—"
-    yld_str = fmt_pct(data['yield']) if data else "—"
-    inc_str = fmt_aud(c['cash']) if c['cash'] else "—"
-    frank_badge = franking_badge(data['franking']) if data else "—"
-
-    with col_name: st.markdown(f'<div style="font-size:13px;color:#666;padding-top:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{name_str}</div>', unsafe_allow_html=True)
-    with col_price: st.markdown(f'<div style="font-size:13px;text-align:right;padding-top:8px;">{price_str}</div>', unsafe_allow_html=True)
-    with col_val: st.markdown(f'<div style="font-size:13px;font-weight:600;text-align:right;padding-top:8px;">{val_str}</div>', unsafe_allow_html=True)
-    with col_yld: st.markdown(f'<div style="font-size:13px;color:#166534;font-weight:500;text-align:right;padding-top:8px;">{yld_str}</div>', unsafe_allow_html=True)
-    with col_inc: st.markdown(f'<div style="font-size:13px;font-weight:600;text-align:right;padding-top:8px;">{inc_str}</div>', unsafe_allow_html=True)
-    with col_frank: st.markdown(f'<div style="text-align:right;padding-top:8px;">{frank_badge}</div>', unsafe_allow_html=True)
-    with col_del:
-        if st.button("×", key=f"d_{i}"): to_delete = i
-
-if to_delete is not None:
-    st.session_state.holdings.pop(to_delete)
-    st.rerun()
-
 st.markdown('<div class="add-btn">', unsafe_allow_html=True)
 if st.button("+ Add holding", use_container_width=True):
-    # Assign a unique ID immediately upon creation
     st.session_state.holdings.append({
         "ticker": "", 
         "units": 0, 
