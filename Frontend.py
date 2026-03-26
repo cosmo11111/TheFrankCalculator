@@ -206,7 +206,7 @@ st.markdown(f"""
 
 # ── TABLE ─────────────────────────────────────────────────────────────────────
 
-st.markdown("""<div class="tbl-header" style="display: grid; grid-template-columns: 0.86fr 0.6fr 1.4fr 0.9fr 1.0fr 0.75fr 1.0fr 0.85fr 0.3fr; gap: 0; padding: 0 12px 8px; border-bottom: 1px solid #e5e5e5;"><span>Ticker</span><span>Company</span><span class="r">Units</span><span class="r">Price</span><span class="r">Value</span><span class="r">Yield</span><span class="r">Annual income</span><span class="r">Franking</span><span></span></div>""", unsafe_allow_html=True)
+st.markdown("""<div class="tbl-header" style="display: grid; grid-template-columns: 1.0fr 2.2fr 1.0fr 1.0fr 1.1fr 0.8fr 1.2fr 1.0fr 0.4fr; gap: 0; padding: 0 12px 8px; border-bottom: 1px solid #e5e5e5;"><span>Ticker</span><span>Company</span><span class="r">Units</span><span class="r">Price</span><span class="r">Value</span><span class="r">Yield</span><span class="r">Annual income</span><span class="r">Franking</span><span></span></div>""", unsafe_allow_html=True)
 
 to_delete = None
 for i, h in enumerate(st.session_state.holdings):
@@ -215,7 +215,7 @@ for i, h in enumerate(st.session_state.holdings):
     row_id = h['id']
     
     # 1. Create the columns
-    col_tick, col_name, col_units, col_price, col_val, col_yld, col_inc, col_frank, col_del = st.columns([1, 1.8, 0.9, 0.9, 1, 0.75, 1, 0.85, 0.3])
+    col_tick, col_name, col_units, col_price, col_val, col_yld, col_inc, col_frank, col_del = st.columns([1.0, 2.2, 1.0, 1.0, 1.1, 0.8, 1.2, 1.0, 0.4])
 
     # 2. Input Widgets
     with col_tick:
