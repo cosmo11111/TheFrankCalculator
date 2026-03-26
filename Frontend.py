@@ -33,9 +33,10 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 .badge.full { background: #dcfce7; color: #166534; }
 .badge.partial { background: #fef3c7; color: #92400e; }
 .badge.none { background: #f1f5f9; color: #64748b; }
-div[data-testid="stTextInput"] input, div[data-testid="stNumberInput"] input { font-size: 13px !important; border-radius: 6px !important; border: 1px solid #e5e5e5 !important; padding: 6px 10px !important; background: #fff !important; }
-div[data-testid="stTextInput"] label, div[data-testid="stNumberInput"] label { display: none !important; }
+div[data-testid="stNumberInput"] label { display: none !important; }
 div[data-testid="stNumberInput"] button { display: none !important; }
+div[data-testid="stNumberInput"] > div { border: none !important; box-shadow: none !important; background: transparent !important; }
+div[data-testid="stNumberInput"] input { font-size: 13px !important; border-radius: 6px !important; border: 1px solid #e5e5e5 !important; padding: 6px 10px !important; background: #fff !important; }
 div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 7px !important; border: 1px solid #e5e5e5 !important; background: #fff !important; padding: 6px 14px !important; }
 .del-btn div[data-testid="stButton"] button { color: #ccc !important; border-color: transparent !important; font-size: 18px !important; padding: 2px 8px !important; }
 .del-btn div[data-testid="stButton"] button:hover { color: #ef4444 !important; background: #fef2f2 !important; }
