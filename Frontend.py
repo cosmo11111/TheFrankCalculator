@@ -39,7 +39,7 @@ div[data-testid="stNumberInput"] button { display: none !important; }
 div[data-testid="stNumberInput"] > div { border: none !important; box-shadow: none !important; background: transparent !important; }
 div[data-testid="stNumberInput"] input { font-size: 13px !important; border-radius: 6px !important; border: 1px solid #e5e5e5 !important; padding: 6px 10px !important; background: #fff !important; }
 div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 7px !important; border: 1px solid #e5e5e5 !important; background: #fff !important; padding: 6px 14px !important; }
-div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stHorizontalBlock"]) { gap: 0.1rem !important; }
+div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stHorizontalBlock"]) { gap: 0.2rem !important; }
 div[data-testid="stNumberInput"] { margin-bottom: 0px !important; }
 div[data-testid="stTextInput"] { margin-bottom: 0px !important; }
 .del-btn div[data-testid="stButton"] button { color: #ccc !important; border: none !important; background: transparent !important; box-shadow: none !important; font-size: 20px !important; padding: 0px 8px !important; line-height: 1 !important; }
