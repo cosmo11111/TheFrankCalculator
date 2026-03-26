@@ -49,23 +49,6 @@ div.del-btn div[data-testid="stButton"] > button {
     height: 28px !important; width: 28px !important; line-height: 1 !important;
     transition: all 0.2s ease-in-out !important;
 }
-
-/* ── The Hover Fix (Using deep selector) ── */
-div.del-btn div[data-testid="stButton"] > button:hover {
-    border-color: #fca5a5 !important; 
-    color: #ef4444 !important; 
-    background-color: #fef2f2 !important;
-    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.1) !important;
-}
-
-/* ── Prevent 'Sticky' Focus Color ── */
-div.del-btn div[data-testid="stButton"] > button:focus,
-div.del-btn div[data-testid="stButton"] > button:active {
-    background-color: #fef2f2 !important;
-    border-color: #fca5a5 !important;
-    color: #ef4444 !important;
-    outline: none !important;
-}
 .add-btn div[data-testid="stButton"] button { width: 100%; background: #fafafa !important; border: 1px dashed #d5d5d5 !important; color: #777 !important; padding: 10px !important; }
 section[data-testid="stSidebar"] { background: #fafafa; border-right: 1px solid #f0f0f0; }
 .status-pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: #999; background: #f5f5f5; border-radius: 20px; padding: 3px 10px; }
