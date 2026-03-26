@@ -159,7 +159,7 @@ with st.sidebar:
 if 'holdings' not in st.session_state:
     st.session_state.holdings = [
         {"ticker": "CBA", "units": 100, "id": str(uuid.uuid4())},
-        {"ticker": "VAS", "units": 200, "id": str(uuid.uuid4())},
+        {"ticker": "MQG", "units": 200, "id": str(uuid.uuid4())},
         {"ticker": "TLS", "units": 500, "id": str(uuid.uuid4())},
     ]
 
@@ -257,10 +257,8 @@ for i, h in enumerate(st.session_state.holdings):
 
     # 3. The Delete Button (Only one needed per row)
     with col_del:
-        st.markdown('<div class="del-btn" style="display: flex; height: 38px; align-items: center; pointer-events: auto;">', unsafe_allow_html=True)
-        if st.button("×", key=f"d_{row_id}"): 
-            to_delete = i
-        st.markdown('</div>', unsafe_allow_html=True)
+        if st.button("×", key=f"d_{row_id}"):
+        to_delete = i
 
 # 4. State Management (Outside the loop)
 if to_delete is not None:
