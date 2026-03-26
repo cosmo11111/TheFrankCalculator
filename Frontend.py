@@ -227,9 +227,9 @@ for i, h in enumerate(st.session_state.holdings):
     frank_badge = franking_badge(data['franking']) if data else "—"
 
     # 4. Display Static Data
-    with col_name: st.markdown(f'<div style="font-size:15px;color:#666;padding-top:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{name_str}</div>', unsafe_allow_html=True)
-    with col_price: st.markdown(f'<div style="font-size:15px;text-align:right;padding-top:8px;">{price_str}</div>', unsafe_allow_html=True)
-    with col_val: st.markdown(f'<div style="font-size:15px;font-weight:600;text-align:right;padding-top:8px;">{val_str}</div>', unsafe_allow_html=True)
+    with col_name: st.markdown(f'<div style="font-size:15px;color:#666;padding-top:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{name_str}</div>', unsafe_allow_html=True)
+    with col_price: st.markdown(f'<div style="font-size:15px;text-align:right;padding-top:9px;">{price_str}</div>', unsafe_allow_html=True)
+    with col_val: st.markdown(f'<div style="font-size:15px;font-weight:600;text-align:right;padding-top:9px;">{val_str}</div>', unsafe_allow_html=True)
     with col_yld: st.markdown(f'<div style="font-size:15px;color:#166534;font-weight:500;text-align:right;padding-top:8px;">{yld_str}</div>', unsafe_allow_html=True)
     with col_inc: st.markdown(f'<div style="font-size:15px;font-weight:600;text-align:right;padding-top:8px;">{inc_str}</div>', unsafe_allow_html=True)
     with col_frank: st.markdown(f'<div style="text-align:right;padding-top:8px;">{frank_badge}</div>', unsafe_allow_html=True)
