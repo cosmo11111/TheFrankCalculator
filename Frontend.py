@@ -42,14 +42,17 @@ div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 
 div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stHorizontalBlock"]) { gap: 0.2rem !important; }
 div[data-testid="stNumberInput"] { margin-bottom: 0px !important; }
 div[data-testid="stTextInput"] { margin-bottom: 0px !important; }
-div.del-btn div[data-testid="stButton"] button {
+div.del-btn div[data-testid="stButton"] > button {
     height: 28px;
     width: 28px;
     padding: 0;
+
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+
+    font-size: 18px !important;
+    line-height: 1 !important;
 }
 .add-btn div[data-testid="stButton"] button { width: 100%; background: #fafafa !important; border: 1px dashed #d5d5d5 !important; color: #777 !important; padding: 10px !important; }
 section[data-testid="stSidebar"] { background: #fafafa; border-right: 1px solid #f0f0f0; }
