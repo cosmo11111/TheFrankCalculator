@@ -9,10 +9,8 @@ st.set_page_config(
 )
 
 # --- CUSTOM CSS ---
-# (Keeping your exact CSS from the previous version)
 st.markdown("""
 <style>
-/* ── Global ── */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 #MainMenu, footer, header { visibility: hidden; }
@@ -47,9 +45,8 @@ section[data-testid="stSidebar"] { background: #fafafa; border-right: 1px solid 
 </style>
 """, unsafe_allow_html=True)
 
-# ── DATA SOURCES ─────────────────────────────────────────────────────────────
+# ── DATA SOURCES ──────────────────────────────────────────────────────────────
 
-# Your Published CSV link
 SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQXUiVcziu72OkPGE8Wy5xhelPIXJTMs0Z1oBtqQbZ-_RS5qNOAt9q5sr23I7ejAqXrQRuKZiwy6gFi/pub?gid=0&single=true&output=csv"
 
 TAX_ENVIRONMENTS = {
@@ -69,35 +66,30 @@ def fmt_pct(n): return f"{n:.2f}%" if n is not None else "—"
 
 def franking_badge(pct):
     if pct >= 100: return '<span class="badge full">100%</span>'
-    if pct <= 0: return '<span class="badge none">0%</span>'
+    if pct <= 0:   return '<span class="badge none">0%</span>'
     return f'<span class="badge partial">{pct:.0f}%</span>'
 
-# ── CACHED DATA FETCHERS ──────────────────────────────────────────────────────
+# ── CACHED DATA ───────────────────────────────────────────────────────────────
 
 @st.cache_data(ttl=3600)
 def load_master_data():
     try:
         df = pd.read_csv(SHEET_CSV_URL)
         df.columns = df.columns.str.strip()
-        
-        # Clean Tickers (remove .AX if present to standardize)
         df['Ticker'] = df['Ticker'].astype(str).str.upper().str.replace('.AX', '', regex=False).str.strip()
-        
-        # Clean Franking Rate (convert "100%" to 100.0)
         if 'Franking Rate (%)' in df.columns:
-            df['Franking_Clean'] = df['Franking Rate (%)'].astype(str).str.replace('%', '', regex=False)
-            df['Franking_Clean'] = pd.to_numeric(df['Franking_Clean'], errors='coerce').fillna(0)
+            df['Franking_Clean'] = pd.to_numeric(
+                df['Franking Rate (%)'].astype(str).str.replace('%', '', regex=False),
+                errors='coerce'
+            ).fillna(0)
         else:
             df['Franking_Clean'] = 0
-
-        # Build a nested dictionary for instant lookups
-        # Format: { 'CBA': {'name': 'Commonwealth Bank', 'price': 120.5, 'yield': 4.2, 'franking': 100} }
         master_dict = {}
         for _, row in df.iterrows():
             master_dict[row['Ticker']] = {
-                "name": row.get('Company Name', row['Ticker']),
-                "price": float(row.get('Price', 0)),
-                "yield": float(row.get('Dividend Yield (%)', 0)),
+                "name":     row.get('Company Name', row['Ticker']),
+                "price":    float(row.get('Price', 0)),
+                "yield":    float(row.get('Dividend Yield (%)', 0)),
                 "franking": float(row['Franking_Clean'])
             }
         return master_dict
@@ -105,7 +97,22 @@ def load_master_data():
         st.error(f"Error loading sheet: {e}")
         return {}
 
-# ── INITIALIZE ───────────────────────────────────────────────────────────────
+# ── SESSION STATE ─────────────────────────────────────────────────────────────
+# Each holding gets a stable numeric ID that never changes, even after deletes.
+# Widget keys are built from this ID (e.g. "t_3"), not from list index.
+# This prevents Streamlit from mapping the wrong widget value to the wrong row.
+
+if 'holdings' not in st.session_state:
+    st.session_state.holdings = [
+        {"id": 1, "ticker": "CBA", "units": 100},
+        {"id": 2, "ticker": "VAS", "units": 200},
+        {"id": 3, "ticker": "TLS", "units": 500},
+    ]
+
+if 'next_id' not in st.session_state:
+    st.session_state.next_id = 4
+
+# ── LOAD DATA ─────────────────────────────────────────────────────────────────
 
 MASTER_DATA = load_master_data()
 
@@ -127,15 +134,6 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-# ── SESSION STATE ─────────────────────────────────────────────────────────────
-
-if 'holdings' not in st.session_state:
-    st.session_state.holdings = [
-        {"ticker": "CBA", "units": 100},
-        {"ticker": "VAS", "units": 200},
-        {"ticker": "TLS", "units": 500},
-    ]
-
 # ── HEADER ────────────────────────────────────────────────────────────────────
 
 st.markdown(f"""
@@ -145,32 +143,35 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# ── COMPUTE ──────────────────────────────────────────────────────────────────
+# ── SYNC WIDGET STATE → HOLDINGS ──────────────────────────────────────────────
+# Read the latest widget values back into holdings BEFORE computing.
+# This must happen before any calculation so that edits made in the current
+# render cycle are reflected immediately rather than one cycle behind.
+
+for h in st.session_state.holdings:
+    rid = h['id']
+    if f"t_{rid}" in st.session_state:
+        h['ticker'] = st.session_state[f"t_{rid}"].upper().strip()
+    if f"u_{rid}" in st.session_state:
+        h['units'] = float(st.session_state[f"u_{rid}"])
+
+# ── COMPUTE TOTALS ────────────────────────────────────────────────────────────
 
 computed = []
 total_val = total_cash = total_franking = 0
 
 for h in st.session_state.holdings:
-    ticker_clean = h['ticker'].upper().strip().replace('.AX', '')
+    ticker_clean = h['ticker'].replace('.AX', '').upper().strip()
     data = MASTER_DATA.get(ticker_clean)
-
     row_val = row_cash = row_frank = 0
     if data and h['units'] > 0:
         row_val   = data['price'] * h['units']
         row_cash  = row_val * (data['yield'] / 100)
         row_frank = row_cash * (data['franking'] / 100) * (30 / 70)
-        
         total_val      += row_val
         total_cash     += row_cash
         total_franking += row_frank
-
-    computed.append({
-        "ticker": h['ticker'],
-        "data": data,
-        "val": row_val,
-        "cash": row_cash,
-        "frank": row_frank,
-    })
+    computed.append({"data": data, "val": row_val, "cash": row_cash, "frank": row_frank})
 
 gross_income  = total_cash + total_franking
 tax_liability = gross_income * tax_rate
@@ -189,57 +190,78 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# ── TABLE ─────────────────────────────────────────────────────────────────────
+# ── TABLE HEADER ──────────────────────────────────────────────────────────────
 
-st.markdown("""<div class="tbl-header"><span>Ticker</span><span>Company</span><span class="r">Units</span><span class="r">Price</span><span class="r">Value</span><span class="r">Yield</span><span class="r">Annual income</span><span class="r">Franking</span><span></span></div>""", unsafe_allow_html=True)
+st.markdown("""
+<div class="tbl-header">
+  <span>Ticker</span><span>Company</span><span class="r">Units</span>
+  <span class="r">Price</span><span class="r">Value</span><span class="r">Yield</span>
+  <span class="r">Annual income</span><span class="r">Franking</span><span></span>
+</div>
+""", unsafe_allow_html=True)
+
+# ── HOLDINGS ROWS ─────────────────────────────────────────────────────────────
 
 to_delete = None
+
 for i, h in enumerate(st.session_state.holdings):
-    c = computed[i]
+    rid  = h['id']
+    c    = computed[i]
     data = c['data']
-    
-    col_tick, col_name, col_units, col_price, col_val, col_yld, col_inc, col_frank, col_del = st.columns([1, 1.8, 0.9, 0.9, 1, 0.75, 1, 0.85, 0.3])
+
+    col_tick, col_name, col_units, col_price, col_val, col_yld, col_inc, col_frank, col_del = st.columns(
+        [1, 1.8, 0.9, 0.9, 1, 0.75, 1, 0.85, 0.3]
+    )
 
     with col_tick:
-        new_ticker = st.text_input("Ticker", value=h['ticker'], key=f"t_{i}", placeholder="CBA")
-        st.session_state.holdings[i]['ticker'] = new_ticker.upper().strip()
+        # Key is stable ID-based — survives any reorder or delete
+        st.text_input("Ticker", value=h['ticker'], key=f"t_{rid}", placeholder="CBA")
 
     with col_units:
-        new_units = st.number_input("Units", value=float(h['units']), key=f"u_{i}", min_value=0.0, step=1.0, format="%g")
-        st.session_state.holdings[i]['units'] = new_units
+        st.number_input("Units", value=float(h['units']), key=f"u_{rid}", min_value=0.0, step=1.0, format="%g")
 
-    # Define variables safely
-    name_str = data['name'] if data else "—"
-    price_str = fmt_aud2(data['price']) if data else "—"
-    val_str = fmt_aud(c['val']) if c['val'] else "—"
-    yld_str = fmt_pct(data['yield']) if data else "—"
-    inc_str = fmt_aud(c['cash']) if c['cash'] else "—"
-    frank_badge = franking_badge(data['franking']) if data else "—"
-
-    with col_name: st.markdown(f'<div style="font-size:13px;color:#666;padding-top:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{name_str}</div>', unsafe_allow_html=True)
-    with col_price: st.markdown(f'<div style="font-size:13px;text-align:right;padding-top:8px;">{price_str}</div>', unsafe_allow_html=True)
-    with col_val: st.markdown(f'<div style="font-size:13px;font-weight:600;text-align:right;padding-top:8px;">{val_str}</div>', unsafe_allow_html=True)
-    with col_yld: st.markdown(f'<div style="font-size:13px;color:#166534;font-weight:500;text-align:right;padding-top:8px;">{yld_str}</div>', unsafe_allow_html=True)
-    with col_inc: st.markdown(f'<div style="font-size:13px;font-weight:600;text-align:right;padding-top:8px;">{inc_str}</div>', unsafe_allow_html=True)
-    with col_frank: st.markdown(f'<div style="text-align:right;padding-top:8px;">{frank_badge}</div>', unsafe_allow_html=True)
+    with col_name:
+        name_str = data['name'] if data else "—"
+        st.markdown(f'<div style="font-size:13px;color:#666;padding-top:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{name_str}</div>', unsafe_allow_html=True)
+    with col_price:
+        st.markdown(f'<div style="font-size:13px;text-align:right;padding-top:8px;">{fmt_aud2(data["price"]) if data else "—"}</div>', unsafe_allow_html=True)
+    with col_val:
+        st.markdown(f'<div style="font-size:13px;font-weight:600;text-align:right;padding-top:8px;">{fmt_aud(c["val"]) if c["val"] else "—"}</div>', unsafe_allow_html=True)
+    with col_yld:
+        st.markdown(f'<div style="font-size:13px;color:#166534;font-weight:500;text-align:right;padding-top:8px;">{fmt_pct(data["yield"]) if data else "—"}</div>', unsafe_allow_html=True)
+    with col_inc:
+        st.markdown(f'<div style="font-size:13px;font-weight:600;text-align:right;padding-top:8px;">{fmt_aud(c["cash"]) if c["cash"] else "—"}</div>', unsafe_allow_html=True)
+    with col_frank:
+        st.markdown(f'<div style="text-align:right;padding-top:8px;">{franking_badge(data["franking"]) if data else "—"}</div>', unsafe_allow_html=True)
     with col_del:
-        if st.button("×", key=f"d_{i}"): to_delete = i
+        st.markdown('<div class="del-btn">', unsafe_allow_html=True)
+        if st.button("×", key=f"d_{rid}"):
+            to_delete = rid
+        st.markdown('</div>', unsafe_allow_html=True)
 
+# Delete by stable ID — never touches list index
 if to_delete is not None:
-    st.session_state.holdings.pop(to_delete)
+    st.session_state.holdings = [h for h in st.session_state.holdings if h['id'] != to_delete]
     st.rerun()
+
+# ── ADD ROW ───────────────────────────────────────────────────────────────────
 
 st.markdown('<div class="add-btn">', unsafe_allow_html=True)
 if st.button("+ Add holding", use_container_width=True):
-    st.session_state.holdings.append({"ticker": "", "units": 0})
+    st.session_state.holdings.append({
+        "id":     st.session_state.next_id,
+        "ticker": "",
+        "units":  0
+    })
+    st.session_state.next_id += 1
     st.rerun()
 st.markdown('</div>', unsafe_allow_html=True)
 
 # ── FOOTER ────────────────────────────────────────────────────────────────────
 
-st.markdown(f"""
+st.markdown("""
 <div class="footer">
-    Franking credits calculated at 30% corp tax rate. 
+    Franking credits calculated at 30% corp tax rate.
     Data synced from Google Sheet backend. Not financial advice.
 </div>
 """, unsafe_allow_html=True)
