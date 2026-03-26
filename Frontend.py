@@ -42,7 +42,7 @@ div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 
 div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stHorizontalBlock"]) { gap: 0.2rem !important; }
 div[data-testid="stNumberInput"] { margin-bottom: 0px !important; }
 div[data-testid="stTextInput"] { margin-bottom: 0px !important; }
-.del-btn div[data-testid="stButton"] button { display: flex; align-items: center; justify-content: center; background-color: #fff !important; color: #999 !important; border: 1px solid #e5e5e5 !important; border-radius: 6px !important; height: 31px !important; width: 31px !important; padding: 0 !important; margin-top: -2px !important; font-size: 22px !important; transition: all 0.2s ease; }
+.del-btn div[data-testid="stButton"] button { display: flex; align-items: center; justify-content: center; background-color: #fff !important; color: #999 !important; border: 1px solid #e5e5e5 !important; border-radius: 6px !important; height: 28px !important; width: 28px !important; padding: 0 !important; margin-top: -4px !important; font-size: 22px !important; transition: all 0.2s ease; }
 .del-btn div[data-testid="stButton"] button:hover { border-color: #fca5a5 !important; color: #ef4444 !important; background-color: #fef2f2 !important; }
 .add-btn div[data-testid="stButton"] button { width: 100%; background: #fafafa !important; border: 1px dashed #d5d5d5 !important; color: #777 !important; padding: 10px !important; }
 section[data-testid="stSidebar"] { background: #fafafa; border-right: 1px solid #f0f0f0; }
