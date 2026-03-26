@@ -42,8 +42,21 @@ div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 
 div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stHorizontalBlock"]) { gap: 0.2rem !important; }
 div[data-testid="stNumberInput"] { margin-bottom: 0px !important; }
 div[data-testid="stTextInput"] { margin-bottom: 0px !important; }
-.del-btn div[data-testid="stButton"] button { display: flex; align-items: center; justify-content: center; background-color: #fff !important; color: #999 !important; border: 1px solid #e5e5e5 !important; border-radius: 6px !important; height: 28px !important; width: 28px !important; padding: 0 !important; margin-top: -4px !important; font-size: 22px !important; transition: all 0.2s ease; }
-.del-btn div[data-testid="stButton"] button:hover { border-color: #fca5a5 !important; color: #ef4444 !important; background-color: #fef2f2 !important; }
+.del-btn div[data-testid="stButton"] { 
+    height: 31px !important; display: flex !important; align-items: center !important; 
+}
+.del-btn div[data-testid="stButton"] button {
+    display: flex !important; align-items: center !important; justify-content: center !important;
+    background-color: #fff !important; color: #999 !important; border: 1px solid #e5e5e5 !important;
+    border-radius: 6px !important; height: 28px !important; width: 28px !important; 
+    padding: 0 !important; margin: 0 !important; font-size: 20px !important; line-height: 1 !important;
+}
+/* This specific path ensures the hover overrides Streamlit's defaults */
+.del-btn div[data-testid="stButton"] button:hover, 
+.del-btn div[data-testid="stButton"] button:focus, 
+.del-btn div[data-testid="stButton"] button:active {
+    border-color: #fca5a5 !important; color: #ef4444 !important; background-color: #fef2f2 !important;
+}
 .add-btn div[data-testid="stButton"] button { width: 100%; background: #fafafa !important; border: 1px dashed #d5d5d5 !important; color: #777 !important; padding: 10px !important; }
 section[data-testid="stSidebar"] { background: #fafafa; border-right: 1px solid #f0f0f0; }
 .status-pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: #999; background: #f5f5f5; border-radius: 20px; padding: 3px 10px; }
