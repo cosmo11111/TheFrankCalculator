@@ -220,13 +220,13 @@ for i, h in enumerate(st.session_state.holdings):
     # 2. Input Widgets
     with col_tick:
     # Add label_visibility="collapsed"
-    new_ticker = st.text_input("Ticker", value=h['ticker'], key=f"t_{row_id}", placeholder="CBA", label_visibility="collapsed")
-    st.session_state.holdings[i]['ticker'] = new_ticker.upper().strip()
+        new_ticker = st.text_input("Ticker", value=h['ticker'], key=f"t_{row_id}", placeholder="CBA", label_visibility="collapsed")
+        st.session_state.holdings[i]['ticker'] = new_ticker.upper().strip()
 
     with col_units:
     # Add label_visibility="collapsed"
-    new_units = st.number_input("Units", value=float(h['units']), key=f"u_{row_id}", min_value=0.0, step=1.0, format="%g", label_visibility="collapsed")
-    st.session_state.holdings[i]['units'] = new_units
+        new_units = st.number_input("Units", value=float(h['units']), key=f"u_{row_id}", min_value=0.0, step=1.0, format="%g", label_visibility="collapsed")
+        st.session_state.holdings[i]['units'] = new_units
 
     # 3. Data Variables
     name_str = data['name'] if data else "—"
