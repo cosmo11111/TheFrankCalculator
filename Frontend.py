@@ -42,7 +42,15 @@ div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 
 div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stHorizontalBlock"]) { gap: 0.2rem !important; }
 div[data-testid="stNumberInput"] { margin-bottom: 0px !important; }
 div[data-testid="stTextInput"] { margin-bottom: 0px !important; }
-div[data-testid="stButton"] button { height: 28px; width: 28px; padding: 0; }
+div.del-btn div[data-testid="stButton"] button {
+    height: 28px;
+    width: 28px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
 .add-btn div[data-testid="stButton"] button { width: 100%; background: #fafafa !important; border: 1px dashed #d5d5d5 !important; color: #777 !important; padding: 10px !important; }
 section[data-testid="stSidebar"] { background: #fafafa; border-right: 1px solid #f0f0f0; }
 .status-pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: #999; background: #f5f5f5; border-radius: 20px; padding: 3px 10px; }
