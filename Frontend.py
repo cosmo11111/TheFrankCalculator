@@ -251,7 +251,7 @@ if to_delete is not None:
     st.rerun()
 
 # 5. Add New Holding Button
-
+st.markdown('<div class="add-btn">', unsafe_allow_html=True)
 if st.button("+ Add holding", use_container_width=True):
     st.session_state.holdings.append({"ticker": "", "units": 0, "id": str(uuid.uuid4())})
     st.rerun()
