@@ -233,7 +233,7 @@ for i, h in enumerate(st.session_state.holdings):
 
     # 3. The Delete Button (Only one needed per row)
     with col_del:
-        if st.button(" ", key=f"d_{row_id}", type="tertiary"):
+        if st.button(" ", key=f"d_{row_id}", type="tertiary", icon="🚨", icon_position="center"):
             to_delete = i
 
 # 4. State Management (Outside the loop)
