@@ -42,6 +42,8 @@ div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 
 div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stHorizontalBlock"]) { gap: 0.2rem !important; }
 div[data-testid="stNumberInput"] { margin-bottom: 0px !important; }
 div[data-testid="stTextInput"] { margin-bottom: 0px !important; }
+.delete-btn button { color: grey !important; border: none !important; }
+.delete-btn button:hover { color: red !important; transform: scale(1.2); }
 .add-btn div[data-testid="stButton"] button { width: 100%; background: #fafafa !important; border: 1px dashed #d5d5d5 !important; color: #777 !important; padding: 10px !important; }
 section[data-testid="stSidebar"] { background: #fafafa; border-right: 1px solid #f0f0f0; }
 .status-pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: #999; background: #f5f5f5; border-radius: 20px; padding: 3px 10px; }
@@ -233,6 +235,7 @@ for i, h in enumerate(st.session_state.holdings):
 
     # 3. The Delete Button (Only one needed per row)
     with col_del:
+        st.markdown('<div class="delete-btn">', unsafe_allow_html=True)
         if st.button("✕", key=f"d_{row_id}", type="tertiary"):
             to_delete = i
 
