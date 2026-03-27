@@ -244,7 +244,6 @@ for i, h in enumerate(st.session_state.holdings):
         st.markdown('<div class="del-btn">', unsafe_allow_html=True)
     if st.button("✕", key=f"d_{row_id}", type="tertiary"):
         to_delete = i
-        st.markdown('</div>', unsafe_allow_html=True)
 
 # 4. State Management (Outside the loop)
 if to_delete is not None:
