@@ -10,13 +10,14 @@ st.set_page_config(
 )
 
 # --- CUSTOM CSS ---
+# (Keeping your exact CSS from the previous version)
 st.markdown("""
 <style>
 /* ── Global ── */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 #MainMenu, footer, header { visibility: hidden; }
-.block-container { padding: 2rem 2.5rem 2rem; max-width: 1400px; } /* Slightly wider to fit extra column */
+.block-container { padding: 2rem 2.5rem 2rem; max-width: 1200px; }
 .page-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 2rem; padding-bottom: 1.25rem; border-bottom: 1px solid #f0f0f0; }
 .page-header h1 { font-size: 20px; font-weight: 600; color: #111; margin: 0; }
 .page-header span { font-size: 13px; color: #999; }
@@ -26,7 +27,7 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 .summary-card .value { font-size: 22px; font-weight: 600; color: #111; line-height: 1.2; }
 .summary-card .value.green { color: #166534; }
 .summary-card .sub { font-size: 11px; color: #aaa; margin-top: 4px; }
-.tbl-header { display: grid; grid-template-columns: 100px 1fr 110px 110px 120px 90px 120px 100px 110px 36px; gap: 0; padding: 0 12px 8px; border-bottom: 1px solid #e5e5e5; }
+.tbl-header { display: grid; grid-template-columns: 100px 1fr 110px 110px 120px 90px 120px 100px 36px; gap: 0; padding: 0 12px 8px; border-bottom: 1px solid #e5e5e5; }
 .tbl-header span { font-size: 11px; font-weight: 500; color: #999; text-transform: uppercase; letter-spacing: 0.05em; }
 .tbl-header span.r { text-align: right; }
 .badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 20px; }
@@ -51,6 +52,7 @@ section[data-testid="stSidebar"] { background: #fafafa; border-right: 1px solid 
 
 # ── DATA SOURCES ─────────────────────────────────────────────────────────────
 
+# Your Published CSV link
 SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQXUiVcziu72OkPGE8Wy5xhelPIXJTMs0Z1oBtqQbZ-_RS5qNOAt9q5sr23I7ejAqXrQRuKZiwy6gFi/pub?gid=942242974&single=true&output=csv"
 
 TAX_ENVIRONMENTS = {
@@ -80,14 +82,19 @@ def load_master_data():
     try:
         df = pd.read_csv(SHEET_CSV_URL)
         df.columns = df.columns.str.strip()
+        
+        # Clean Tickers (remove .AX if present to standardize)
         df['Ticker'] = df['Ticker'].astype(str).str.upper().str.replace('.AX', '', regex=False).str.strip()
         
+        # Clean Franking Rate (convert "100%" to 100.0)
         if 'Franking Rate (%)' in df.columns:
             df['Franking_Clean'] = df['Franking Rate (%)'].astype(str).str.replace('%', '', regex=False)
             df['Franking_Clean'] = pd.to_numeric(df['Franking_Clean'], errors='coerce').fillna(0)
         else:
             df['Franking_Clean'] = 0
 
+        # Build a nested dictionary for instant lookups
+        # Format: { 'CBA': {'name': 'Commonwealth Bank', 'price': 120.5, 'yield': 4.2, 'franking': 100} }
         master_dict = {}
         for _, row in df.iterrows():
             master_dict[row['Ticker']] = {
@@ -187,20 +194,18 @@ st.markdown(f"""
 
 # ── TABLE ─────────────────────────────────────────────────────────────────────
 
-# 1. The Header (Added 'Grossed up' column)
-st.markdown("""<div class="tbl-header" style="display: grid; grid-template-columns: 1fr 1.8fr 0.9fr 0.9fr 1fr 0.75fr 1fr 0.85fr 1fr 0.3fr; gap: 0; padding: 0 12px 8px; margin-bottom: 10px; border-bottom: 1px solid #e5e5e5;"><span style="text-align: left;">Ticker</span><span style="text-align: left;">Company</span><span style="text-align: left;">Units</span><span class="r">Price</span><span class="r">Value</span><span class="r">Yield</span><span class="r">Cash inc.</span><span class="r">Franking</span><span class="r">Grossed up</span><span></span></div>""", unsafe_allow_html=True)
+# 1. The Header
+st.markdown("""<div class="tbl-header" style="display: grid; grid-template-columns: 1fr 1.8fr 0.9fr 0.9fr 1fr 0.75fr 1fr 0.85fr 0.3fr; gap: 0; padding: 0 12px 8px; margin-bottom: 10px; border-bottom: 1px solid #e5e5e5;"><span style="text-align: left;">Ticker</span><span style="text-align: left;">Company</span><span style="text-align: left;">Units</span><span class="r">Price</span><span class="r">Value</span><span class="r">Yield</span><span class="r">Annual income</span><span class="r">Franking</span><span></span></div>""", unsafe_allow_html=True)
 
 to_delete = None
 
-# 2. The Loop
+# 2. The Loop (This handles EVERY row)
 for i, h in enumerate(st.session_state.holdings):
     c = computed[i]
     data = c['data']
     row_id = h['id']
     
-    # Updated column proportions to fit the extra column
-    cols = st.columns([1, 1.8, 0.9, 0.9, 1, 0.75, 1, 0.85, 1, 0.3])
-    col_tick, col_name, col_units, col_price, col_val, col_yld, col_inc, col_frank, col_gross, col_del = cols
+    col_tick, col_name, col_units, col_price, col_val, col_yld, col_inc, col_frank, col_del = st.columns([1, 1.8, 0.9, 0.9, 1, 0.75, 1, 0.85, 0.3])
 
     with col_tick:
         new_ticker = st.text_input("Ticker", value=h['ticker'], key=f"t_{row_id}", placeholder="CBA", label_visibility="collapsed")
@@ -217,7 +222,6 @@ for i, h in enumerate(st.session_state.holdings):
     yld_str = fmt_pct(data['yield']) if data else "—"
     inc_str = fmt_aud(c['cash']) if c['cash'] else "—"
     frank_badge = franking_badge(data['franking']) if data else "—"
-    gross_str = fmt_aud(c['cash'] + c['frank']) if (c['cash'] or c['frank']) else "—"
 
     # Display Static Data
     with col_name: st.markdown(f'<div style="font-size:15px;color:#666;padding-top:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{name_str}</div>', unsafe_allow_html=True)
@@ -226,13 +230,13 @@ for i, h in enumerate(st.session_state.holdings):
     with col_yld: st.markdown(f'<div style="font-size:15px;color:#166534;font-weight:500;text-align:right;padding-top:9px;">{yld_str}</div>', unsafe_allow_html=True)
     with col_inc: st.markdown(f'<div style="font-size:15px;font-weight:600;text-align:right;padding-top:9px;">{inc_str}</div>', unsafe_allow_html=True)
     with col_frank: st.markdown(f'<div style="text-align:right;padding-top:9px;">{frank_badge}</div>', unsafe_allow_html=True)
-    with col_gross: st.markdown(f'<div style="font-size:15px;font-weight:600;text-align:right;padding-top:9px;color:#111;">{gross_str}</div>', unsafe_allow_html=True)
 
+    # 3. The Delete Button (Only one needed per row)
     with col_del:
         if st.button("✕", key=f"d_{row_id}", type="tertiary"):
             to_delete = i
 
-# 4. State Management
+# 4. State Management (Outside the loop)
 if to_delete is not None:
     st.session_state.holdings.pop(to_delete)
     st.rerun()
@@ -242,6 +246,7 @@ st.markdown('<div class="add-btn">', unsafe_allow_html=True)
 if st.button("+ Add holding", use_container_width=True):
     st.session_state.holdings.append({"ticker": "", "units": 0, "id": str(uuid.uuid4())})
     st.rerun()
+
 
 # ── FOOTER ────────────────────────────────────────────────────────────────────
 
