@@ -45,10 +45,10 @@ div[data-testid="stTextInput"] { margin-bottom: 0px !important; }
 .del-btn div[data-testid="stButton"] button {
     font-size: 10px !important;
     padding: 0px 5px !important;
-    height: 20px !important;
-    width: 20px !important;
-    min-width: 20px !important;
-    border: 1px solid #eee !important; /* Optional: adds a subtle border */
+    height: 12px !important;
+    width: 12px !important;
+    min-width: 12px !important;
+    border: None !important;
 }
 .add-btn div[data-testid="stButton"] button { width: 100%; background: #fafafa !important; border: 1px dashed #d5d5d5 !important; color: #777 !important; padding: 10px !important; }
 section[data-testid="stSidebar"] { background: #fafafa; border-right: 1px solid #f0f0f0; }
