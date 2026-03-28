@@ -188,37 +188,63 @@ for i, h in enumerate(st.session_state.holdings):
     
     col_tick, col_name, col_units, col_price, col_val, col_yld, col_inc, col_frank, col_del = st.columns([1, 1.8, 0.9, 0.9, 1, 0.75, 1, 0.85, 0.6])
 
-    with col_tick:
-        # --- PREPARE AUTOCOMPLETE LIST ---
-        ticker_options = [""] + sorted(MASTER_DATA.keys())
-        
-        try:
-            current_idx = ticker_options.index(h['ticker'])
-        except ValueError:
-            current_idx = 0
+with col_tick:
+    ticker_options = [""] + sorted(MASTER_DATA.keys())
 
-        user_input = st.text_input(
-            "Ticker",
-            value=h['ticker'] or "CBA",
-            key=f"t_{row_id}",
+    user_input = st.text_input(
+        "Ticker",
+        value=h['ticker'] or "",
+        placeholder="CBA",
+        key=f"t_{row_id}",
+        label_visibility="collapsed"
+    )
+
+    input_upper = user_input.upper() if user_input else ""
+
+    matches = [t for t in ticker_options if input_upper in t][:5]
+
+    if matches and input_upper:
+        selected = st.selectbox(
+            "Suggestions",
+            options=matches,
+            key=f"s_{row_id}",
             label_visibility="collapsed"
         )
-        
-        matches = [t for t in ticker_list if user_input.upper() in t][:5]
 
-        if matches and user_input:
-            selected = st.selectbox(
-                "Suggestions",
-                options=matches,
-                key=f"s_{row_id}",
-                label_visibility="collapsed"
-        )
-    
         if selected != h['ticker']:
             st.session_state.holdings[i]['ticker'] = selected
             st.rerun()
-        else:
-            st.session_state.holdings[i]['ticker'] = user_input.upper()
+    else:
+        if input_upper != h['ticker']:
+            st.session_state.holdings[i]['ticker'] = input_upperwith col_tick:
+    ticker_options = [""] + sorted(MASTER_DATA.keys())
+
+    user_input = st.text_input(
+        "Ticker",
+        value=h['ticker'] or "",
+        placeholder="CBA",
+        key=f"t_{row_id}",
+        label_visibility="collapsed"
+    )
+
+    input_upper = user_input.upper() if user_input else ""
+
+    matches = [t for t in ticker_options if input_upper in t][:5]
+
+    if matches and input_upper:
+        selected = st.selectbox(
+            "Suggestions",
+            options=matches,
+            key=f"s_{row_id}",
+            label_visibility="collapsed"
+        )
+
+        if selected != h['ticker']:
+            st.session_state.holdings[i]['ticker'] = selected
+            st.rerun()
+    else:
+        if input_upper != h['ticker']:
+            st.session_state.holdings[i]['ticker'] = input_upper
 
     with col_units:
         new_units = st.number_input("Units", value=float(h['units']), key=f"u_{row_id}", min_value=0.0, step=1.0, format="%g", label_visibility="collapsed")
