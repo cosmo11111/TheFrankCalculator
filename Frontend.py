@@ -126,7 +126,7 @@ with st.sidebar:
 # ── CALCULATION LOGIC ─────────────────────────────────────────────────────────
 
 computed = []
-total_val = total_cash = total_franking = 0
+total_val = total_cash = total_franking = total_gross = 0
 
 # We calculate based on what is CURRENTLY in session state
 for h in st.session_state.holdings:
