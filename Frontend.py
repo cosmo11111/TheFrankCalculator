@@ -41,15 +41,6 @@ div[data-testid="stTextInput"] label { display: none !important; }
 div[data-testid="stTextInput"] input { font-size: 13px !important; border-radius: 6px !important; border: 1px solid #e5e5e5 !important; padding: 6px 10px !important; background: #fff !important; }
 div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 7px !important; border: 1px solid #e5e5e5 !important; background: #fff !important; padding: 6px 14px !important; }
 div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stHorizontalBlock"]) { gap: 0.2rem !important; }
-/* Hides the dropdown arrow in selectboxes */
-div[data-testid="stSelectbox"] svg[handle="arrow"] {
-    display: none !important;
-}
-
-/* Adjusts padding so the text doesn't look off-center without the arrow */
-div[data-testid="stSelectbox"] div[data-baseweb="select"] > div {
-    padding-right: 10px !important;
-}
 .add-btn div[data-testid="stButton"] button { width: 100%; background: #fafafa !important; border: 1px dashed #d5d5d5 !important; color: #777 !important; padding: 10px !important; }
 section[data-testid="stSidebar"] { background: #fafafa; border-right: 1px solid #f0f0f0; }
 .status-pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: #999; background: #f5f5f5; border-radius: 20px; padding: 3px 10px; }
@@ -206,17 +197,28 @@ for i, h in enumerate(st.session_state.holdings):
         except ValueError:
             current_idx = 0
 
-        new_ticker = st.selectbox(
+        new_ticker = st.text_input(
             "Ticker",
-            options=ticker_options,
-            index=current_idx,
+            value=h['ticker'] or "CBA",
             key=f"t_{row_id}",
             label_visibility="collapsed"
         )
         
-        if new_ticker != h['ticker']:
-            st.session_state.holdings[i]['ticker'] = new_ticker
+        matches = [t for t in ticker_list if new_ticker.upper() in t][:5]
+
+        if matches and new_ticker:
+            selected = st.selectbox(
+                "Suggestions",
+                options=matches,
+                key=f"s_{row_id}",
+                label_visibility="collapsed"
+        )
+    
+        if selected != h['ticker']:
+            st.session_state.holdings[i]['ticker'] = selected
             st.rerun()
+    else:
+        st.session_state.holdings[i]['ticker'] = new_ticker.upper()
 
     with col_units:
         new_units = st.number_input("Units", value=float(h['units']), key=f"u_{row_id}", min_value=0.0, step=1.0, format="%g", label_visibility="collapsed")
