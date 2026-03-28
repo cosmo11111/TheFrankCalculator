@@ -363,7 +363,6 @@ st.markdown(f"""
 # ── TABLE VIEW OPTIONS ──
 col_title, col_toggle = st.columns([3, 1])
 with col_toggle:
-    # This creates a clean switch in the top right of the table area
     is_gross_view = st.toggle("Show Grossed-up (Pre-tax)", value=False, help="Include franking credits in Yield and Income calculations.")
 
 # Update the Header labels dynamically
@@ -386,26 +385,28 @@ st.markdown(f"""<div class="tbl-header" style="display: grid; grid-template-colu
 
 to_delete = None
 
+# START OF LOOP
 for i, h in enumerate(st.session_state.holdings):
     c = computed[i]
     data = c['data']
     row_id = h['id']
     
-    # 2. Vertical Unpacking (The "Clean" way)
-(col_tick, col_name, col_units, col_price, col_val, col_yld, col_inc, col_frank, col_del) = st.columns([1.2, 1.8, 0.8, 0.8, 1, 0.8, 1, 0.8, 0.4])
+    # 1. Unpack columns (9 total)
+    (col_tick, col_name, col_units, col_price, col_val, 
+     col_yld, col_inc, col_frank, col_del) = st.columns([1.2, 1.8, 0.8, 0.8, 1, 0.8, 1, 0.8, 0.4])
 
-if is_gross_view:
-    display_yield = (c['gross'] / c['val'] * 100) if c['val'] else 0
-    display_income = c['gross']
-    yield_color = "#166534" # Green for Gross
-else:
-    display_yield = data['yield'] if data else 0
-    display_income = c['cash']
-    yield_color = "#666" # Neutral for Cash
-    
+    # 2. Logic to pick which data to show based on Toggle
+    if is_gross_view:
+        display_yield = (c['gross'] / c['val'] * 100) if c['val'] else 0
+        display_income = c['gross']
+        yield_color = "#166534" # Green for Gross
+    else:
+        display_yield = data['yield'] if data else 0
+        display_income = c['cash']
+        yield_color = "#666" # Neutral for Cash
+        
     # 3. Handle Inputs
     with col_tick:
-        # Using selectbox for the "Autocomplete" we discussed
         ticker_options = [""] + sorted(MASTER_DATA.keys())
         try:
             curr_idx = ticker_options.index(h['ticker'])
@@ -423,36 +424,37 @@ else:
             st.session_state.holdings[i]['units'] = new_units
             st.rerun()
 
-    # 4. Display Static Data (Using the named columns)
+    # 4. Display Static Data
     name_str = data['name'] if data else "—"
     price_str = fmt_aud2(data['price']) if data else "—"
     val_str = fmt_aud(c['val']) if c['val'] else "—"
-    yld_str = fmt_pct(data['yield']) if data else "—"
     
-    # Calculate Gross Yield for this specific row
-    gross_yield_val = (c['gross'] / c['val'] * 100) if c['val'] else 0
-    gross_yld_str = fmt_pct(gross_yield_val) if gross_yield_val else "—"
-    
-    inc_str = fmt_aud(c['cash']) if c['cash'] else "—"
-    frank_badge_html = franking_badge(data['franking']) if data else "—"
-
     with col_name: st.markdown(f'<div style="font-size:14px;color:#666;padding-top:9px;">{name_str}</div>', unsafe_allow_html=True)
     with col_price: st.markdown(f'<div style="font-size:14px;text-align:right;padding-top:9px;">{price_str}</div>', unsafe_allow_html=True)
     with col_val: st.markdown(f'<div style="font-size:14px;font-weight:600;text-align:right;padding-top:9px;">{val_str}</div>', unsafe_allow_html=True)
-    with col_yld: st.markdown(f'<div style="font-size:14px;color:{yield_color};font-weight:600;text-align:right;padding-top:9px;">{fmt_pct(display_yield)}</div>', unsafe_allow_html=True)
-    with col_gross_yld: st.markdown(f'<div style="font-size:14px;color:#166534;font-weight:600;text-align:right;padding-top:9px;">{gross_yld_str}</div>', unsafe_allow_html=True)
-    with col_inc: st.markdown(f'<div style="font-size:14px;font-weight:600;text-align:right;padding-top:9px;">{fmt_aud(display_income)}</div>', unsafe_allow_html=True)
-    with col_frank: st.markdown(f'<div style="text-align:right;padding-top:9px;">{frank_badge_html}</div>', unsafe_allow_html=True)
+    
+    # Toggle-responsive columns
+    with col_yld: 
+        st.markdown(f'<div style="font-size:14px;color:{yield_color};font-weight:600;text-align:right;padding-top:9px;">{fmt_pct(display_yield)}</div>', unsafe_allow_html=True)
+    
+    with col_inc: 
+        st.markdown(f'<div style="font-size:14px;font-weight:600;text-align:right;padding-top:9px;">{fmt_aud(display_income)}</div>', unsafe_allow_html=True)
+    
+    with col_frank: 
+        frank_badge_html = franking_badge(data['franking']) if data else "—"
+        st.markdown(f'<div style="text-align:right;padding-top:9px;">{frank_badge_html}</div>', unsafe_allow_html=True)
 
     with col_del:
         if st.button("✕", key=f"d_{row_id}"):
             to_delete = i
 
+# --- END OF LOOP ---
+
 if to_delete is not None:
     st.session_state.holdings.pop(to_delete)
     st.rerun()
 
-st.markdown('<div class="add-btn">', unsafe_allow_html=True)
+# Add Button
 if st.button("+ Add holding", use_container_width=True):
     st.session_state.holdings.append({"ticker": "", "units": 0.0, "id": str(uuid.uuid4())})
     st.rerun()
