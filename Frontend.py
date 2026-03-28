@@ -41,6 +41,15 @@ div[data-testid="stTextInput"] label { display: none !important; }
 div[data-testid="stTextInput"] input { font-size: 13px !important; border-radius: 6px !important; border: 1px solid #e5e5e5 !important; padding: 6px 10px !important; background: #fff !important; }
 div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 7px !important; border: 1px solid #e5e5e5 !important; background: #fff !important; padding: 6px 14px !important; }
 div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stHorizontalBlock"]) { gap: 0.2rem !important; }
+/* Hides the dropdown arrow in selectboxes */
+div[data-testid="stSelectbox"] svg[handle="arrow"] {
+    display: none !important;
+}
+
+/* Adjusts padding so the text doesn't look off-center without the arrow */
+div[data-testid="stSelectbox"] div[data-baseweb="select"] > div {
+    padding-right: 10px !important;
+}
 .add-btn div[data-testid="stButton"] button { width: 100%; background: #fafafa !important; border: 1px dashed #d5d5d5 !important; color: #777 !important; padding: 10px !important; }
 section[data-testid="stSidebar"] { background: #fafafa; border-right: 1px solid #f0f0f0; }
 .status-pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: #999; background: #f5f5f5; border-radius: 20px; padding: 3px 10px; }
@@ -179,6 +188,9 @@ st.markdown(f"""
 
 st.markdown("""<div class="tbl-header" style="display: grid; grid-template-columns: 1fr 1.8fr 0.9fr 0.9fr 1fr 0.75fr 1fr 0.85fr 0.6fr; gap: 0; padding: 0 12px 8px; margin-bottom: 10px; border-bottom: 1px solid #e5e5e5;"><span style="text-align: left;">Ticker</span><span style="text-align: left;">Company</span><span style="text-align: left;">Units</span><span class="r">Price</span><span class="r">Value</span><span class="r">Yield</span><span class="r">Annual income</span><span class="r">Franking</span><span></span></div>""", unsafe_allow_html=True)
 
+# --- PREPARE AUTOCOMPLETE LIST ---
+ticker_options = [""] + sorted(MASTER_DATA.keys())
+
 to_delete = None
 
 for i, h in enumerate(st.session_state.holdings):
@@ -189,8 +201,19 @@ for i, h in enumerate(st.session_state.holdings):
     col_tick, col_name, col_units, col_price, col_val, col_yld, col_inc, col_frank, col_del = st.columns([1, 1.8, 0.9, 0.9, 1, 0.75, 1, 0.85, 0.6])
 
     with col_tick:
-        # Key change: Use on_change to trigger a rerun immediately when the text changes
-        new_ticker = st.text_input("Ticker", value=h['ticker'], key=f"t_{row_id}", placeholder="CBA", label_visibility="collapsed").upper().strip()
+        try:
+            current_idx = ticker_options.index(h['ticker'])
+        except ValueError:
+            current_idx = 0
+
+        new_ticker = st.selectbox(
+            "Ticker",
+            options=ticker_options,
+            index=current_idx,
+            key=f"t_{row_id}",
+            label_visibility="collapsed"
+        )
+        
         if new_ticker != h['ticker']:
             st.session_state.holdings[i]['ticker'] = new_ticker
             st.rerun()
