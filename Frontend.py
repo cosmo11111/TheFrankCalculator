@@ -28,15 +28,7 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 .badge.none { background: #f1f5f9; color: #64748b; }
 .badge.partial { background: #fef3c7; color: #92400e; }
 
-/* Input Styling */
-div[data-testid="stNumberInput"] label, div[data-testid="stSelectbox"] label { display: none !important; }
-div[data-testid="stNumberInput"] button { display: none !important; }
-div[data-testid="stNumberInput"] input, div[data-testid="stSelectbox"] div[data-baseweb="select"] { 
-    font-size: 13px !important; border-radius: 6px !important; border: 1px solid #e5e5e5 !important; background: #fff !important; 
-}
-div[data-testid="stSelectbox"] svg[handle="arrow"] { display: none !important; }
-div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 7px !important; border: 1px solid #e5e5e5 !important; }
-.footer { font-size: 11px; color: #bbb; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #f0f0f0; }
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -162,7 +154,7 @@ for i, h in enumerate(st.session_state.holdings):
             st.markdown(f'<div style="text-align:right;padding-top:9px;color:{"#166534" if is_gross_view else "#666"};">{fmt_pct(y_val)}</div>', unsafe_allow_html=True)
 
     # Static Columns
-    with cols[1]: st.markdown(f'<div style="padding-top:9px;">{data["name"] if data else "—"}</div>', unsafe_allow_html=True)
+    with cols[1]: st.markdown(f'<div style="color:#666;padding-top:9px;">{data["name"] if data else "—"}</div>', unsafe_allow_html=True)
     with cols[4]: st.markdown(f'<div style="font-weight:600;text-align:right;padding-top:9px;">{fmt_aud(c["val"])}</div>', unsafe_allow_html=True)
     with cols[6]: st.markdown(f'<div style="font-weight:600;text-align:right;padding-top:9px;">{fmt_aud(c["gross"] if is_gross_view else c["cash"])}</div>', unsafe_allow_html=True)
     with cols[7]: st.markdown(f'<div style="text-align:right;padding-top:9px;">{franking_badge(c["f"])}</div>', unsafe_allow_html=True)
