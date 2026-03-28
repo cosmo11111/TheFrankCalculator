@@ -392,7 +392,7 @@ for i, h in enumerate(st.session_state.holdings):
     row_id = h['id']
     
     # 2. Vertical Unpacking (The "Clean" way)
-   (col_tick, col_name, col_units, col_price, col_val, col_yld, col_inc, col_frank, col_del) = st.columns([1.2, 1.8, 0.8, 0.8, 1, 0.8, 1, 0.8, 0.4])
+(col_tick, col_name, col_units, col_price, col_val, col_yld, col_inc, col_frank, col_del) = st.columns([1.2, 1.8, 0.8, 0.8, 1, 0.8, 1, 0.8, 0.4])
 
     if is_gross_view:
         display_yield = (c['gross'] / c['val'] * 100) if c['val'] else 0
