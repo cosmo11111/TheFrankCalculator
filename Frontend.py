@@ -179,6 +179,9 @@ st.markdown(f"""
 
 st.markdown("""<div class="tbl-header" style="display: grid; grid-template-columns: 1fr 1.8fr 0.9fr 0.9fr 1fr 0.75fr 1fr 0.85fr 0.6fr; gap: 0; padding: 0 12px 8px; margin-bottom: 10px; border-bottom: 1px solid #e5e5e5;"><span style="text-align: left;">Ticker</span><span style="text-align: left;">Company</span><span style="text-align: left;">Units</span><span class="r">Price</span><span class="r">Value</span><span class="r">Yield</span><span class="r">Annual income</span><span class="r">Franking</span><span></span></div>""", unsafe_allow_html=True)
 
+# --- PREPARE AUTOCOMPLETE LIST ---
+ticker_options = [""] + sorted(MASTER_DATA.keys())
+
 to_delete = None
 
 for i, h in enumerate(st.session_state.holdings):
@@ -188,35 +191,23 @@ for i, h in enumerate(st.session_state.holdings):
     
     col_tick, col_name, col_units, col_price, col_val, col_yld, col_inc, col_frank, col_del = st.columns([1, 1.8, 0.9, 0.9, 1, 0.75, 1, 0.85, 0.6])
 
-with col_tick:
-    ticker_options = [""] + sorted(MASTER_DATA.keys())
+    with col_tick:
+        try:
+            current_idx = ticker_options.index(h['ticker'])
+        except ValueError:
+            current_idx = 0
 
-    user_input = st.text_input(
-        "Ticker",
-        value=h['ticker'] or "",
-        placeholder="CBA",
-        key=f"t_{row_id}",
-        label_visibility="collapsed"
-    )
-
-    input_upper = user_input.upper() if user_input else ""
-
-    matches = [t for t in ticker_options if input_upper in t][:5]
-
-    if matches and input_upper:
-        selected = st.selectbox(
-            "Suggestions",
-            options=matches,
-            key=f"s_{row_id}",
+        new_ticker = st.selectbox(
+            "Ticker",
+            options=ticker_options,
+            index=current_idx,
+            key=f"t_{row_id}",
             label_visibility="collapsed"
         )
-
-        if selected != h['ticker']:
-            st.session_state.holdings[i]['ticker'] = selected
+        
+        if new_ticker != h['ticker']:
+            st.session_state.holdings[i]['ticker'] = new_ticker
             st.rerun()
-    else:
-        if input_upper != h['ticker']:
-            st.session_state.holdings[i]['ticker'] = input_upper
 
     with col_units:
         new_units = st.number_input("Units", value=float(h['units']), key=f"u_{row_id}", min_value=0.0, step=1.0, format="%g", label_visibility="collapsed")
