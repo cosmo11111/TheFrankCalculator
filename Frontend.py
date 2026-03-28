@@ -2,8 +2,6 @@ import streamlit as st
 import pandas as pd
 import uuid
 
-st.session_state.clear()
-
 # --- CONFIG ---
 st.set_page_config(layout="wide", page_title="ASX Dividend Tool", page_icon="📊")
 
