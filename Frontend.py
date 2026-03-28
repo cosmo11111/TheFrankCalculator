@@ -197,16 +197,16 @@ for i, h in enumerate(st.session_state.holdings):
         except ValueError:
             current_idx = 0
 
-        new_ticker = st.text_input(
+        user_input = st.text_input(
             "Ticker",
             value=h['ticker'] or "CBA",
             key=f"t_{row_id}",
             label_visibility="collapsed"
         )
         
-        matches = [t for t in ticker_list if new_ticker.upper() in t][:5]
+        matches = [t for t in ticker_list if user_input.upper() in t][:5]
 
-        if matches and new_ticker:
+        if matches and user_input:
             selected = st.selectbox(
                 "Suggestions",
                 options=matches,
@@ -218,7 +218,7 @@ for i, h in enumerate(st.session_state.holdings):
             st.session_state.holdings[i]['ticker'] = selected
             st.rerun()
         else:
-            st.session_state.holdings[i]['ticker'] = new_ticker.upper()
+            st.session_state.holdings[i]['ticker'] = user_input.upper()
 
     with col_units:
         new_units = st.number_input("Units", value=float(h['units']), key=f"u_{row_id}", min_value=0.0, step=1.0, format="%g", label_visibility="collapsed")
