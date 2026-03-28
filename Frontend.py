@@ -10,7 +10,6 @@ st.set_page_config(
 )
 
 # --- CUSTOM CSS ---
-# (Keeping your exact CSS from the previous version)
 st.markdown("""
 <style>
 /* ── Global ── */
@@ -27,7 +26,7 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 .summary-card .value { font-size: 22px; font-weight: 600; color: #111; line-height: 1.2; }
 .summary-card .value.green { color: #166534; }
 .summary-card .sub { font-size: 11px; color: #aaa; margin-top: 4px; }
-.tbl-header { display: grid; grid-template-columns: 100px 1fr 110px 110px 120px 90px 120px 100px 36px; gap: 0; padding: 0 12px 8px; border-bottom: 1px solid #e5e5e5; }
+.tbl-header { display: grid; grid-template-columns: 1fr 1.8fr 0.9fr 0.9fr 1fr 0.75fr 1fr 0.85fr 0.6fr; gap: 0; padding: 0 12px 8px; margin-bottom: 10px; border-bottom: 1px solid #e5e5e5; }
 .tbl-header span { font-size: 11px; font-weight: 500; color: #999; text-transform: uppercase; letter-spacing: 0.05em; }
 .tbl-header span.r { text-align: right; }
 .badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 20px; }
@@ -38,10 +37,10 @@ div[data-testid="stNumberInput"] label { display: none !important; }
 div[data-testid="stNumberInput"] button { display: none !important; }
 div[data-testid="stNumberInput"] > div { border: none !important; box-shadow: none !important; background: transparent !important; }
 div[data-testid="stNumberInput"] input { font-size: 13px !important; border-radius: 6px !important; border: 1px solid #e5e5e5 !important; padding: 6px 10px !important; background: #fff !important; }
+div[data-testid="stTextInput"] label { display: none !important; }
+div[data-testid="stTextInput"] input { font-size: 13px !important; border-radius: 6px !important; border: 1px solid #e5e5e5 !important; padding: 6px 10px !important; background: #fff !important; }
 div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 7px !important; border: 1px solid #e5e5e5 !important; background: #fff !important; padding: 6px 14px !important; }
 div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stHorizontalBlock"]) { gap: 0.2rem !important; }
-div[data-testid="stNumberInput"] { margin-bottom: 0px !important; }
-div[data-testid="stTextInput"] { margin-bottom: 0px !important; }
 .add-btn div[data-testid="stButton"] button { width: 100%; background: #fafafa !important; border: 1px dashed #d5d5d5 !important; color: #777 !important; padding: 10px !important; }
 section[data-testid="stSidebar"] { background: #fafafa; border-right: 1px solid #f0f0f0; }
 .status-pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: #999; background: #f5f5f5; border-radius: 20px; padding: 3px 10px; }
@@ -52,7 +51,6 @@ section[data-testid="stSidebar"] { background: #fafafa; border-right: 1px solid 
 
 # ── DATA SOURCES ─────────────────────────────────────────────────────────────
 
-# Your Published CSV link
 SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQXUiVcziu72OkPGE8Wy5xhelPIXJTMs0Z1oBtqQbZ-_RS5qNOAt9q5sr23I7ejAqXrQRuKZiwy6gFi/pub?gid=1786895027&single=true&output=csv"
 
 TAX_ENVIRONMENTS = {
@@ -82,19 +80,14 @@ def load_master_data():
     try:
         df = pd.read_csv(SHEET_CSV_URL)
         df.columns = df.columns.str.strip()
-        
-        # Clean Tickers (remove .AX if present to standardize)
         df['Ticker'] = df['Ticker'].astype(str).str.upper().str.replace('.AX', '', regex=False).str.strip()
         
-        # Clean Franking Rate (convert "100%" to 100.0)
         if 'Franking Rate (%)' in df.columns:
             df['Franking_Clean'] = df['Franking Rate (%)'].astype(str).str.replace('%', '', regex=False)
             df['Franking_Clean'] = pd.to_numeric(df['Franking_Clean'], errors='coerce').fillna(0)
         else:
             df['Franking_Clean'] = 0
 
-        # Build a nested dictionary for instant lookups
-        # Format: { 'CBA': {'name': 'Commonwealth Bank', 'price': 120.5, 'yield': 4.2, 'franking': 100} }
         master_dict = {}
         for _, row in df.iterrows():
             master_dict[row['Ticker']] = {
@@ -108,9 +101,16 @@ def load_master_data():
         st.error(f"Error loading sheet: {e}")
         return {}
 
-# ── INITIALIZE ───────────────────────────────────────────────────────────────
-
 MASTER_DATA = load_master_data()
+
+# ── SESSION STATE ─────────────────────────────────────────────────────────────
+
+if 'holdings' not in st.session_state:
+    st.session_state.holdings = [
+        {"ticker": "CBA", "units": 100.0, "id": str(uuid.uuid4())},
+        {"ticker": "MQG", "units": 200.0, "id": str(uuid.uuid4())},
+        {"ticker": "TLS", "units": 500.0, "id": str(uuid.uuid4())},
+    ]
 
 # ── SIDEBAR ───────────────────────────────────────────────────────────────────
 
@@ -123,36 +123,12 @@ with st.sidebar:
         st.cache_data.clear()
         st.rerun()
 
-    st.markdown(f"""
-    <div style="margin-top:2rem;padding-top:1rem;border-top:1px solid #eee;">
-        <div style="font-size:11px;color:#bbb;">Database Status</div>
-        <div style="font-size:12px;color:#777;margin-top:3px;">{len(MASTER_DATA)} stocks available</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-# ── SESSION STATE ─────────────────────────────────────────────────────────────
-
-if 'holdings' not in st.session_state:
-    st.session_state.holdings = [
-        {"ticker": "CBA", "units": 100, "id": str(uuid.uuid4())},
-        {"ticker": "MQG", "units": 200, "id": str(uuid.uuid4())},
-        {"ticker": "TLS", "units": 500, "id": str(uuid.uuid4())},
-    ]
-
-# ── HEADER ────────────────────────────────────────────────────────────────────
-
-st.markdown(f"""
-<div class="page-header">
-    <h1>ASX Dividend Calculator</h1>
-    <span class="status-pill"><span class="status-dot"></span> Database Connected</span>
-</div>
-""", unsafe_allow_html=True)
-
-# ── COMPUTE ──────────────────────────────────────────────────────────────────
+# ── CALCULATION LOGIC ─────────────────────────────────────────────────────────
 
 computed = []
 total_val = total_cash = total_franking = 0
 
+# We calculate based on what is CURRENTLY in session state
 for h in st.session_state.holdings:
     ticker_clean = h['ticker'].upper().strip().replace('.AX', '')
     data = MASTER_DATA.get(ticker_clean)
@@ -180,7 +156,14 @@ tax_liability = gross_income * tax_rate
 post_tax      = gross_income - tax_liability
 portfolio_yld = (total_cash / total_val * 100) if total_val else 0
 
-# ── SUMMARY CARDS ─────────────────────────────────────────────────────────────
+# ── HEADER & SUMMARY ─────────────────────────────────────────────────────────
+
+st.markdown(f"""
+<div class="page-header">
+    <h1>ASX Dividend Calculator</h1>
+    <span class="status-pill"><span class="status-dot"></span> Database Connected</span>
+</div>
+""", unsafe_allow_html=True)
 
 st.markdown(f"""
 <div class="summary-row">
@@ -194,12 +177,10 @@ st.markdown(f"""
 
 # ── TABLE ─────────────────────────────────────────────────────────────────────
 
-# 1. The Header
 st.markdown("""<div class="tbl-header" style="display: grid; grid-template-columns: 1fr 1.8fr 0.9fr 0.9fr 1fr 0.75fr 1fr 0.85fr 0.6fr; gap: 0; padding: 0 12px 8px; margin-bottom: 10px; border-bottom: 1px solid #e5e5e5;"><span style="text-align: left;">Ticker</span><span style="text-align: left;">Company</span><span style="text-align: left;">Units</span><span class="r">Price</span><span class="r">Value</span><span class="r">Yield</span><span class="r">Annual income</span><span class="r">Franking</span><span></span></div>""", unsafe_allow_html=True)
 
 to_delete = None
 
-# 2. The Loop (This handles EVERY row)
 for i, h in enumerate(st.session_state.holdings):
     c = computed[i]
     data = c['data']
@@ -208,51 +189,44 @@ for i, h in enumerate(st.session_state.holdings):
     col_tick, col_name, col_units, col_price, col_val, col_yld, col_inc, col_frank, col_del = st.columns([1, 1.8, 0.9, 0.9, 1, 0.75, 1, 0.85, 0.6])
 
     with col_tick:
-        new_ticker = st.text_input("Ticker", value=h['ticker'], key=f"t_{row_id}", placeholder="CBA", label_visibility="collapsed")
-        st.session_state.holdings[i]['ticker'] = new_ticker.upper().strip()
+        # Key change: Use on_change to trigger a rerun immediately when the text changes
+        new_ticker = st.text_input("Ticker", value=h['ticker'], key=f"t_{row_id}", placeholder="CBA", label_visibility="collapsed").upper().strip()
+        if new_ticker != h['ticker']:
+            st.session_state.holdings[i]['ticker'] = new_ticker
+            st.rerun()
 
     with col_units:
         new_units = st.number_input("Units", value=float(h['units']), key=f"u_{row_id}", min_value=0.0, step=1.0, format="%g", label_visibility="collapsed")
-        st.session_state.holdings[i]['units'] = new_units
+        if new_units != h['units']:
+            st.session_state.holdings[i]['units'] = new_units
+            st.rerun()
 
-    # Define text variables
+    # Static Data Display
     name_str = data['name'] if data else "—"
     price_str = fmt_aud2(data['price']) if data else "—"
     val_str = fmt_aud(c['val']) if c['val'] else "—"
     yld_str = fmt_pct(data['yield']) if data else "—"
     inc_str = fmt_aud(c['cash']) if c['cash'] else "—"
-    frank_badge = franking_badge(data['franking']) if data else "—"
+    frank_badge_html = franking_badge(data['franking']) if data else "—"
 
-    # Display Static Data
-    with col_name: st.markdown(f'<div style="font-size:15px;color:#666;padding-top:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{name_str}</div>', unsafe_allow_html=True)
+    with col_name: st.markdown(f'<div style="font-size:15px;color:#666;padding-top:9px;">{name_str}</div>', unsafe_allow_html=True)
     with col_price: st.markdown(f'<div style="font-size:15px;text-align:right;padding-top:9px;">{price_str}</div>', unsafe_allow_html=True)
     with col_val: st.markdown(f'<div style="font-size:15px;font-weight:600;text-align:right;padding-top:9px;">{val_str}</div>', unsafe_allow_html=True)
     with col_yld: st.markdown(f'<div style="font-size:15px;color:#166534;font-weight:500;text-align:right;padding-top:9px;">{yld_str}</div>', unsafe_allow_html=True)
     with col_inc: st.markdown(f'<div style="font-size:15px;font-weight:600;text-align:right;padding-top:9px;">{inc_str}</div>', unsafe_allow_html=True)
-    with col_frank: st.markdown(f'<div style="text-align:right;padding-top:9px;">{frank_badge}</div>', unsafe_allow_html=True)
+    with col_frank: st.markdown(f'<div style="text-align:right;padding-top:9px;">{frank_badge_html}</div>', unsafe_allow_html=True)
 
-    # 3. The Delete Button (Only one needed per row)
     with col_del:
-        if st.button("✕", key=f"d_{row_id}", type="tertiary"):
+        if st.button("✕", key=f"d_{row_id}"):
             to_delete = i
 
-# 4. State Management (Outside the loop)
 if to_delete is not None:
     st.session_state.holdings.pop(to_delete)
     st.rerun()
 
-# 5. Add New Holding Button
 st.markdown('<div class="add-btn">', unsafe_allow_html=True)
 if st.button("+ Add holding", use_container_width=True):
-    st.session_state.holdings.append({"ticker": "", "units": 0, "id": str(uuid.uuid4())})
+    st.session_state.holdings.append({"ticker": "", "units": 0.0, "id": str(uuid.uuid4())})
     st.rerun()
 
-
-# ── FOOTER ────────────────────────────────────────────────────────────────────
-
-st.markdown(f"""
-<div class="footer">
-    Franking credits calculated at 30% corp tax rate. 
-    Data synced from Google Sheet backend. Not financial advice.
-</div>
-""", unsafe_allow_html=True)
+st.markdown("""<div class="footer">Franking credits calculated at 30% corp tax rate. Data synced from Google Sheet backend. Not financial advice.</div>""", unsafe_allow_html=True)
