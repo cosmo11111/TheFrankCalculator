@@ -35,7 +35,7 @@ div[data-testid="stNumberInput"] input, div[data-testid="stSelectbox"] div[data-
     font-size: 13px ;
 }
 div[data-testid="stSelectbox"] svg[handle="arrow"] { display: none !important; }
-div[data-testid="stButton"] button { font-size: 13px }
+div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 7px !important; border: 1px solid #e5e5e5 !important; }
 .footer { font-size: 11px; color: #bbb; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #f0f0f0; }
 </style>
 """, unsafe_allow_html=True)
