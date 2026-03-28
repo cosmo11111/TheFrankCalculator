@@ -136,22 +136,22 @@ for i, h in enumerate(st.session_state.holdings):
 
     with cols[0]: # Ticker
         opts = [""] + sorted(MASTER_DATA.keys())
-        new_t = st.selectbox("T", opts, index=opts.index(h['ticker']) if h['ticker'] in opts else 0, key=f"t_{rid}")
+        new_t = st.selectbox("T", opts, index=opts.index(h['ticker']) if h['ticker'] in opts else 0, key=f"t_{rid}", label_visibility="collapsed")
         if new_t != h['ticker']: st.session_state.holdings[i]['ticker'] = new_t; st.rerun()
 
     with cols[2]: # Units
-        new_u = st.number_input("U", value=float(h['units']), key=f"u_{rid}", format="%g")
+        new_u = st.number_input("U", value=float(h['units']), key=f"u_{rid}", format="%g", label_visibility="collapsed")
         if new_u != h['units']: st.session_state.holdings[i]['units'] = new_u; st.rerun()
 
     with cols[3]: # Price
         if is_edit_mode:
-            new_p = st.number_input("P", value=float(c['p']), key=f"p_{rid}", format="%g")
+            new_p = st.number_input("P", value=float(c['p']), key=f"p_{rid}", format="%g", label_visibility="collapsed")
             if new_p != h['custom_p']: st.session_state.holdings[i]['custom_p'] = new_p; st.rerun()
         else: st.markdown(f'<div style="text-align:right;padding-top:9px;">{fmt_aud2(c["p"])}</div>', unsafe_allow_html=True)
 
     with cols[5]: # Yield
         if is_edit_mode:
-            new_y = st.number_input("Y", value=float(c['y']), key=f"y_{rid}", format="%g")
+            new_y = st.number_input("Y", value=float(c['y']), key=f"y_{rid}", format="%g", label_visibility="collapsed")
             if new_y != h['custom_y']: st.session_state.holdings[i]['custom_y'] = new_y; st.rerun()
         else:
             y_val = (c['gross']/c['val']*100) if is_gross_view and c['val'] else c['y']
