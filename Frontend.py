@@ -143,6 +143,7 @@ for h in st.session_state.holdings:
         total_val      += row_val
         total_cash     += row_cash
         total_franking += row_frank
+        total_gross    += row_gross
 
     computed.append({
         "ticker": h['ticker'],
