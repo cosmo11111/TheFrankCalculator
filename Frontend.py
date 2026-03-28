@@ -138,6 +138,7 @@ for h in st.session_state.holdings:
         row_val   = data['price'] * h['units']
         row_cash  = row_val * (data['yield'] / 100)
         row_frank = row_cash * (data['franking'] / 100) * (30 / 70)
+        row_gross = row_cash + row_frank
         
         total_val      += row_val
         total_cash     += row_cash
@@ -149,9 +150,11 @@ for h in st.session_state.holdings:
         "val": row_val,
         "cash": row_cash,
         "frank": row_frank,
+        "gross": row_gross,
     })
 
 gross_income  = total_cash + total_franking
+portfolio_gross_yld = (total_gross / total_val * 100) if total_val else 0
 tax_liability = gross_income * tax_rate
 post_tax      = gross_income - tax_liability
 portfolio_yld = (total_cash / total_val * 100) if total_val else 0
@@ -177,10 +180,19 @@ st.markdown(f"""
 
 # ── TABLE ─────────────────────────────────────────────────────────────────────
 
-st.markdown("""<div class="tbl-header" style="display: grid; grid-template-columns: 1fr 1.8fr 0.9fr 0.9fr 1fr 0.75fr 1fr 0.85fr 0.6fr; gap: 0; padding: 0 12px 8px; margin-bottom: 10px; border-bottom: 1px solid #e5e5e5;"><span style="text-align: left;">Ticker</span><span style="text-align: left;">Company</span><span style="text-align: left;">Units</span><span class="r">Price</span><span class="r">Value</span><span class="r">Yield</span><span class="r">Annual income</span><span class="r">Franking</span><span></span></div>""", unsafe_allow_html=True)
-
-# --- PREPARE AUTOCOMPLETE LIST ---
-ticker_options = [""] + sorted(MASTER_DATA.keys())
+# 1. Define the Header (Matches the 10-column layout)
+st.markdown("""<div class="tbl-header" style="display: grid; grid-template-columns: 1.2fr 1.6fr 0.8fr 0.8fr 1fr 0.7fr 0.7fr 1fr 0.8fr 0.4fr; gap: 0; padding: 0 12px 8px; margin-bottom: 10px; border-bottom: 1px solid #e5e5e5;">
+    <span>Ticker</span>
+    <span>Company</span>
+    <span>Units</span>
+    <span class="r">Price</span>
+    <span class="r">Value</span>
+    <span class="r">Yield</span>
+    <span class="r">Gross</span>
+    <span class="r">Income</span>
+    <span class="r">Franking</span>
+    <span></span>
+</div>""", unsafe_allow_html=True)
 
 to_delete = None
 
@@ -189,45 +201,57 @@ for i, h in enumerate(st.session_state.holdings):
     data = c['data']
     row_id = h['id']
     
-    col_tick, col_name, col_units, col_price, col_val, col_yld, col_inc, col_frank, col_del = st.columns([1, 1.8, 0.9, 0.9, 1, 0.75, 1, 0.85, 0.6])
+    # 2. Vertical Unpacking (The "Clean" way)
+    (col_tick, 
+     col_name, 
+     col_units, 
+     col_price, 
+     col_val, 
+     col_yld, 
+     col_gross_yld, 
+     col_inc, 
+     col_frank, 
+     col_del) = st.columns([1.2, 1.6, 0.8, 0.8, 1, 0.7, 0.7, 1, 0.8, 0.4])
 
+    # 3. Handle Inputs
     with col_tick:
+        # Using selectbox for the "Autocomplete" we discussed
+        ticker_options = [""] + sorted(MASTER_DATA.keys())
         try:
-            current_idx = ticker_options.index(h['ticker'])
-        except ValueError:
-            current_idx = 0
-
-        new_ticker = st.selectbox(
-            "Ticker",
-            options=ticker_options,
-            index=current_idx,
-            key=f"t_{row_id}",
-            label_visibility="collapsed"
-        )
-        
+            curr_idx = ticker_options.index(h['ticker'])
+        except:
+            curr_idx = 0
+            
+        new_ticker = st.selectbox("Ticker", options=ticker_options, index=curr_idx, key=f"t_{row_id}", label_visibility="collapsed")
         if new_ticker != h['ticker']:
             st.session_state.holdings[i]['ticker'] = new_ticker
             st.rerun()
 
     with col_units:
-        new_units = st.number_input("Units", value=float(h['units']), key=f"u_{row_id}", min_value=0.0, step=1.0, format="%g", label_visibility="collapsed")
+        new_units = st.number_input("Units", value=float(h['units']), key=f"u_{row_id}", step=1.0, format="%g", label_visibility="collapsed")
         if new_units != h['units']:
             st.session_state.holdings[i]['units'] = new_units
             st.rerun()
 
-    # Static Data Display
+    # 4. Display Static Data (Using the named columns)
     name_str = data['name'] if data else "—"
     price_str = fmt_aud2(data['price']) if data else "—"
     val_str = fmt_aud(c['val']) if c['val'] else "—"
     yld_str = fmt_pct(data['yield']) if data else "—"
+    
+    # Calculate Gross Yield for this specific row
+    gross_yield_val = (c['gross'] / c['val'] * 100) if c['val'] else 0
+    gross_yld_str = fmt_pct(gross_yield_val) if gross_yield_val else "—"
+    
     inc_str = fmt_aud(c['cash']) if c['cash'] else "—"
     frank_badge_html = franking_badge(data['franking']) if data else "—"
 
-    with col_name: st.markdown(f'<div style="font-size:15px;color:#666;padding-top:9px;">{name_str}</div>', unsafe_allow_html=True)
-    with col_price: st.markdown(f'<div style="font-size:15px;text-align:right;padding-top:9px;">{price_str}</div>', unsafe_allow_html=True)
-    with col_val: st.markdown(f'<div style="font-size:15px;font-weight:600;text-align:right;padding-top:9px;">{val_str}</div>', unsafe_allow_html=True)
-    with col_yld: st.markdown(f'<div style="font-size:15px;color:#166534;font-weight:500;text-align:right;padding-top:9px;">{yld_str}</div>', unsafe_allow_html=True)
-    with col_inc: st.markdown(f'<div style="font-size:15px;font-weight:600;text-align:right;padding-top:9px;">{inc_str}</div>', unsafe_allow_html=True)
+    with col_name: st.markdown(f'<div style="font-size:14px;color:#666;padding-top:9px;">{name_str}</div>', unsafe_allow_html=True)
+    with col_price: st.markdown(f'<div style="font-size:14px;text-align:right;padding-top:9px;">{price_str}</div>', unsafe_allow_html=True)
+    with col_val: st.markdown(f'<div style="font-size:14px;font-weight:600;text-align:right;padding-top:9px;">{val_str}</div>', unsafe_allow_html=True)
+    with col_yld: st.markdown(f'<div style="font-size:14px;color:#666;text-align:right;padding-top:9px;">{yld_str}</div>', unsafe_allow_html=True)
+    with col_gross_yld: st.markdown(f'<div style="font-size:14px;color:#166534;font-weight:600;text-align:right;padding-top:9px;">{gross_yld_str}</div>', unsafe_allow_html=True)
+    with col_inc: st.markdown(f'<div style="font-size:14px;font-weight:600;text-align:right;padding-top:9px;">{inc_str}</div>', unsafe_allow_html=True)
     with col_frank: st.markdown(f'<div style="text-align:right;padding-top:9px;">{frank_badge_html}</div>', unsafe_allow_html=True)
 
     with col_del:
