@@ -32,7 +32,7 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 div[data-testid="stNumberInput"] label, div[data-testid="stSelectbox"] label { display: none !important; }
 div[data-testid="stNumberInput"] button { display: none !important; }
 div[data-testid="stNumberInput"] input, div[data-testid="stSelectbox"] div[data-baseweb="select"] { 
-    font-size: 13px
+    font-size: 13px ; background: transparent !important;
 }
 div[data-testid="stSelectbox"] svg[handle="arrow"] { display: none !important; }
 div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 7px !important; border: 1px solid #e5e5e5 !important; }
