@@ -217,8 +217,8 @@ for i, h in enumerate(st.session_state.holdings):
         if selected != h['ticker']:
             st.session_state.holdings[i]['ticker'] = selected
             st.rerun()
-    else:
-        st.session_state.holdings[i]['ticker'] = new_ticker.upper()
+        else:
+            st.session_state.holdings[i]['ticker'] = new_ticker.upper()
 
     with col_units:
         new_units = st.number_input("Units", value=float(h['units']), key=f"u_{row_id}", min_value=0.0, step=1.0, format="%g", label_visibility="collapsed")
