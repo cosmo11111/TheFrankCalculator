@@ -216,34 +216,6 @@ with col_tick:
             st.rerun()
     else:
         if input_upper != h['ticker']:
-            st.session_state.holdings[i]['ticker'] = input_upperwith col_tick:
-    ticker_options = [""] + sorted(MASTER_DATA.keys())
-
-    user_input = st.text_input(
-        "Ticker",
-        value=h['ticker'] or "",
-        placeholder="CBA",
-        key=f"t_{row_id}",
-        label_visibility="collapsed"
-    )
-
-    input_upper = user_input.upper() if user_input else ""
-
-    matches = [t for t in ticker_options if input_upper in t][:5]
-
-    if matches and input_upper:
-        selected = st.selectbox(
-            "Suggestions",
-            options=matches,
-            key=f"s_{row_id}",
-            label_visibility="collapsed"
-        )
-
-        if selected != h['ticker']:
-            st.session_state.holdings[i]['ticker'] = selected
-            st.rerun()
-    else:
-        if input_upper != h['ticker']:
             st.session_state.holdings[i]['ticker'] = input_upper
 
     with col_units:
