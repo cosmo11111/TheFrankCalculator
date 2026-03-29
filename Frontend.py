@@ -38,7 +38,7 @@ div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 
 
 # ── DATA SOURCES ──
 SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQXUiVcziu72OkPGE8Wy5xhelPIXJTMs0Z1oBtqQbZ-_RS5qNOAt9q5sr23I7ejAqXrQRuKZiwy6gFi/pub?gid=1786895027&single=true&output=csv"
-TAX_ENVIRONMENTS = {"Pension phase (0%)": 0.0, "Super accumulation (15%)": 0.15, "Marginal rate — 18%": 0.18, "Marginal rate — 32.5%": 0.325, "Marginal rate — 37%": 0.37, "Top marginal (47%)": 0.47}
+TAX_ENVIRONMENTS = {"Pension phase - 0%": 0.0, "Super accumulation - 15%": 0.15, "Marginal rate — 18%": 0.18, "Marginal rate — 32.5%": 0.325, "Marginal rate — 37%": 0.37, "Top marginal - 47%": 0.47}
 
 # ── HELPERS ──
 def fmt_aud(n): return f"${n:,.0f}" if n else "—"
