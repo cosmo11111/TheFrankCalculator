@@ -113,7 +113,7 @@ with col_t2:
 
 with col_btn:
     # Prepare the CSV data
-    csv = get_csv_data(computed, st.session_state.holdings, is_gross_view)
+    csv = get_csv_data(computed_list, st.session_state.holdings, is_gross_view)
     
     st.download_button(
         label="📥",
