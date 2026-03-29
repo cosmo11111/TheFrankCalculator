@@ -102,27 +102,6 @@ with st.sidebar:
         st.cache_data.clear()
         st.rerun()
 
-# ── TOGGLES & DOWNLOAD ──
-col_title, col_t1, col_t2, col_btn = st.columns([2, 0.8, 0.8, 0.4])
-
-with col_t1: 
-    is_gross_view = st.toggle("Grossed-up View", value=False)
-
-with col_t2: 
-    is_edit_mode = st.toggle("Manual Override", value=False)
-
-with col_btn:
-    # Prepare the CSV data
-    csv = get_csv_data(computed_list, st.session_state.holdings, is_gross_view)
-    
-    st.download_button(
-        label="📥",
-        data=csv,
-        file_name="asx_dividend_report.csv",
-        mime="text/csv",
-        help="Download current view as CSV"
-    )
-
 # ── CALCULATION LOGIC ──
 computed = []
 t_val = t_cash = t_frank = t_gross = 0
@@ -143,6 +122,27 @@ for h in st.session_state.holdings:
     computed.append({"val": r_val, "cash": r_cash, "gross": r_gross, "p": base_p, "y": base_y, "f": base_f})
 
 post_tax = (t_cash + t_frank) * (1 - tax_rate)
+
+# ── TOGGLES & DOWNLOAD ──
+col_title, col_t1, col_t2, col_btn = st.columns([2, 0.8, 0.8, 0.4])
+
+with col_t1: 
+    is_gross_view = st.toggle("Grossed-up View", value=False)
+
+with col_t2: 
+    is_edit_mode = st.toggle("Manual Override", value=False)
+
+with col_btn:
+    # Prepare the CSV data
+    csv = get_csv_data(computed, st.session_state.holdings, is_gross_view)
+    
+    st.download_button(
+        label="📥",
+        data=csv,
+        file_name="asx_dividend_report.csv",
+        mime="text/csv",
+        help="Download current view as CSV"
+    )
 
 # ── SUMMARY ──
 st.markdown(f"""<div class="summary-row">
