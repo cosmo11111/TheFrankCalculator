@@ -49,6 +49,23 @@ def franking_badge(pct):
     if pct <= 0: return '<span class="badge none">0%</span>'
     return f'<span class="badge partial">{pct:.0f}%</span>'
 
+def get_csv_data(computed_list, holdings_list, is_gross):
+    export_data = []
+    for i, h in enumerate(holdings_list):
+        c = computed_list[i]
+        data = c.get('data')
+        export_data.append({
+            "Ticker": h['ticker'],
+            "Company": data['name'] if data else "Unknown",
+            "Units": h['units'],
+            "Price": c['p'],
+            "Value": c['val'],
+            "Yield (%)": (c['gross']/c['val']*100) if is_gross and c['val'] else c['y'],
+            "Annual Income": c['gross'] if is_gross else c['cash'],
+            "Franking (%)": c['f']
+        })
+    return pd.DataFrame(export_data).to_csv(index=False).encode('utf-8')
+
 # ── DATA FETCHING ──
 @st.cache_data(ttl=3600)
 def load_master_data():
@@ -85,10 +102,26 @@ with st.sidebar:
         st.cache_data.clear()
         st.rerun()
 
-# ── TOGGLES ──
-col_title, col_t1, col_t2 = st.columns([2, 1, 1])
-with col_t1: is_gross_view = st.toggle("Grossed-up View", value=False)
-with col_t2: is_edit_mode = st.toggle("Manual Override", value=False)
+# ── TOGGLES & DOWNLOAD ──
+col_title, col_t1, col_t2, col_btn = st.columns([2, 0.8, 0.8, 0.4])
+
+with col_t1: 
+    is_gross_view = st.toggle("Grossed-up View", value=False)
+
+with col_t2: 
+    is_edit_mode = st.toggle("Manual Override", value=False)
+
+with col_btn:
+    # Prepare the CSV data
+    csv = get_csv_data(computed, st.session_state.holdings, is_gross_view)
+    
+    st.download_button(
+        label="📥",
+        data=csv,
+        file_name="asx_dividend_report.csv",
+        mime="text/csv",
+        help="Download current view as CSV"
+    )
 
 # ── CALCULATION LOGIC ──
 computed = []
