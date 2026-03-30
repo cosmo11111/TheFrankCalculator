@@ -57,21 +57,6 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
         border-radius: 4px;
     }
 
-/* Force the Expander Header to use a clean Sans-Serif font */
-    .streamlit-expanderHeader p, 
-    .streamlit-expanderHeader strong {
-        font-family: "Source Sans Pro", sans-serif !important;
-        font-size: 14px !important; /* Adjust this to 12px if it still looks too big */
-        font-weight: 600 !important;
-        color: #31333F !important;
-    }
-
-    /* Optional: Add a subtle background to make it look like a row */
-    .streamlit-expanderHeader {
-        background-color: #f9fafb !important;
-        border-radius: 4px !important;
-        margin-bottom: 2px !important;
-    }
 
 }
 
@@ -240,7 +225,7 @@ if is_mobile:
         y_val  = f"{c['y']:.2f}%"
         i_val  = fmt_aud(c['gross'] if is_gross_view else c['cash'])
 
-        card_label = f"{t_name} | ${v_val} | {y_val} | ${i_val}"
+        card_label = f"{t_name} | \${v_val} | {y_val} | \${i_val}"
 
         with st.expander(f"**{card_label}**", expanded=(not h['ticker'])):
             # --- ROW 1: Ticker & Units ---
