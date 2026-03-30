@@ -52,6 +52,15 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
         height: 48px !important;
         width: 100% !important;
     }
+    .streamlit-expanderHeader {
+        background-color: #f8f9fa !important;
+        border-radius: 4px;
+    }
+    .streamlit-expanderHeader strong {
+        font-family: 'Inter', sans-serif;
+        color: #1f2937;
+        letter-spacing: -0.5px;
+    }
 
 }
 
