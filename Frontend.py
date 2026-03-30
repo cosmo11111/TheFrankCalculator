@@ -52,6 +52,12 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
         height: 48px !important;
         width: 100% !important;
     }
+    /* Minature Headers
+    .streamlit-expanderHeader p {
+        font-size: 11px !important;
+        font-family: 'Courier New', Courier, monospace; /* Monospace keeps columns aligned */
+        white-space: nowrap;
+    }
 }
 
 /* Input Styling */
@@ -211,8 +217,16 @@ if is_mobile:
 
     # 2. THE CARDS LOOP
     for i, h in enumerate(st.session_state.holdings):
-        # We use the ticker name as the label, or "New Holding" if empty
-        card_label = f"🏷️ {h['ticker']}" if h['ticker'] else "🏷️ New Holding"
+        c = computed[i]
+           
+        t_name = h['ticker'] if h['ticker'] else "NEW"
+        u_val  = f"{h['units']:,.0f}"
+        p_val  = fmt_aud2(c['p'])
+        y_val  = fmt_pct(c['y'])
+        i_val  = fmt_aud(c['gross'] if is_gross_view else c['cash'])
+        f_val  = f"{c['f']:.0f}%"
+
+        card_label = f"{t_name} | {u_val} | {p_val} | {y_val} | {i_val} | {f_val}"
         
         with st.expander(card_label, expanded=(not h['ticker'])):
             # TICKER SELECTOR
