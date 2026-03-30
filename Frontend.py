@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import uuid
-from st_javascript import st_javascript
+from streamlit_javascript import st_javascript
 
 # --- CONFIG ---
 st.set_page_config(layout="wide", page_title="ASX Dividend Tool", page_icon="📊")
