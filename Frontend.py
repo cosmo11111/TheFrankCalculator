@@ -190,6 +190,7 @@ with col_btn:
         help="Download current view as CSV"
     )
 
+# ----- MOBILE LAYOUT ------
 if is_mobile:
     st.markdown("### Portfolio Overview")
     
@@ -215,52 +216,58 @@ if is_mobile:
         c = computed[i]
            
         t_name = h['ticker'] if h['ticker'] else "NEW"
-        u_val  = f"{h['units']:,.0f}"
-        p_val  = fmt_aud2(c['p'])
-        y_val  = fmt_pct(c['y'])
+        v_val  = fmt_aud(c['val'])
+        y_val  = f"{c['y']:.2f}%"
         i_val  = fmt_aud(c['gross'] if is_gross_view else c['cash'])
-        f_val  = f"{c['f']:.0f}%"
 
-        card_label = f"{t_name} | {u_val} | {p_val} | {y_val} | {i_val} | {f_val}"
+        card_label = f"{t_name} | ${v_val} | {y_val} | ${i_val}"
         
-        with st.expander(card_label, expanded=(not h['ticker'])):
-            # TICKER SELECTOR
-            # We update the session_state DIRECTLY using the 'index'
-            ticker_opts = [""] + list(MASTER_DATA.keys())
-            try:
-                curr_idx = ticker_opts.index(h['ticker'])
-            except ValueError:
-                curr_idx = 0
+if is_mobile:
+    st.markdown("### Your Holdings")
+    
+    for i, h in enumerate(st.session_state.holdings):
+        c = computed[i]
+        
+        # Build the condensed 4-part header
+        t_name = h['ticker'] if h['ticker'] else "NEW"
+        v_val  = fmt_aud(c['val'])
+        y_val  = f"{c['y']:.2f}%"
+        i_val  = fmt_aud(c['gross'] if is_gross_view else c['cash'])
+        
+        # The Final String: Ticker | Value | Yield | Income
+        card_label = f"{t_name} | {v_val} | {y_val} | {i_val}"
 
-            new_ticker = st.selectbox(
-                "Ticker", 
-                ticker_opts, 
-                index=curr_idx, 
-                key=f"m_tick_{h['id']}"
-            )
-            st.session_state.holdings[i]['ticker'] = new_ticker
+        with st.expander(f"**{card_label}**", expanded=(not h['ticker'])):
+            # --- ROW 1: Ticker & Units ---
+            c1, c2 = st.columns(2)
+            with c1:
+                # Ticker Selector
+                ticker_opts = [""] + list(MASTER_DATA.keys())
+                curr_idx = ticker_opts.index(h['ticker']) if h['ticker'] in ticker_opts else 0
+                h['ticker'] = st.selectbox("Ticker", ticker_opts, index=curr_idx, key=f"m_t_{h['id']}")
+            with c2:
+                # Units Input
+                h['units'] = st.number_input("Units", value=int(h['units']), step=1, key=f"m_u_{h['id']}")
 
-            # UNITS INPUT
-            new_units = st.number_input(
-                "Units", 
-                value=int(h['units']), 
-                step=1, 
-                key=f"m_units_{h['id']}"
-            )
-            st.session_state.holdings[i]['units'] = new_units
+            # --- ROW 2: Price & Franking ---
+            c3, c4 = st.columns(2)
+            with c3:
+                # Price (Show custom if override is on, else show master data price)
+                display_p = float(c['p'])
+                st.write(f"**Price:** {fmt_aud2(display_p)}")
+            with c4:
+                # Franking Rate
+                st.write(f"**Franking:** {c['f']:.0f}%")
 
-            # MANUAL OVERRIDES (Only show if Edit Mode is ON)
+            # --- MANUAL OVERRIDES (Optional) ---
             if is_edit_mode:
-                col1, col2 = st.columns(2)
-                with col1:
-                    h['custom_p'] = st.number_input("Price ($)", value=float(h['custom_p']), key=f"m_p_{h['id']}")
-                with col2:
-                    h['custom_y'] = st.number_input("Yield (%)", value=float(h['custom_y']), key=f"m_y_{h['id']}")
+                st.divider()
+                oc1, oc2 = st.columns(2)
+                h['custom_p'] = oc1.number_input("Man. Price", value=float(h['custom_p']), key=f"m_cp_{h['id']}")
+                h['custom_y'] = oc2.number_input("Man. Yield", value=float(h['custom_y']), key=f"m_cy_{h['id']}")
 
-            # DELETE BUTTON
-            if st.button("🗑️ Remove", key=f"m_del_{h['id']}", use_container_width=True):
-                st.session_state.holdings.pop(i)
-                st.rerun()
+            # --- DELETE BUTTON ---
+            st.button("🗑️ Remove", key=f"m_del_{h['id']}", on_click=lambda idx=i: st.session_state.holdings.pop(idx), use_container_width=True)
 
 
 else:
