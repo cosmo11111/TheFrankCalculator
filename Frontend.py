@@ -190,6 +190,16 @@ with col_btn:
     )
 
 if is_mobile:
+    st.markdown("### Portfolio Overview")
+    
+    # 2x2 Grid for high-level numbers
+    m_col1, m_col2 = st.columns(2)
+    m_col1.metric("Total Value", fmt_aud(t_val))
+    m_col1.metric("Annual Income", fmt_aud(t_cash if not is_gross_view else t_gross))
+    
+    m_col2.metric("Portfolio Yield", fmt_pct(portfolio_yld))
+    m_col2.metric("Post-Tax Est.", fmt_aud(post_tax))
+    
     st.markdown("### Your Holdings")
     
     # 1. THE "ADD" BUTTON (At the top for easy thumb access)
