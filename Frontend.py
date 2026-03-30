@@ -52,12 +52,7 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
         height: 48px !important;
         width: 100% !important;
     }
-    /* Minature Headers
-    .streamlit-expanderHeader p {
-        font-size: 11px !important;
-        font-family: 'Courier New', Courier, monospace; /* Monospace keeps columns aligned */
-        white-space: nowrap;
-    }
+
 }
 
 /* Input Styling */
