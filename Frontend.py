@@ -34,18 +34,35 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
     /* Stop the iPhone from zooming in when you tap an input box */
     input, select, textarea {
         font-size: 16px !important;
+
+@media (max-width: 800px) {
+
+    .mobile-summary {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 16px;
     }
 
-    /* Make the Summary Cards stack in 2 columns on phones */
-    .summary-row {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 8px;
+    .mobile-summary .item {
+        background: #fafafa;
+        border: 1px solid #f0f0f0;
+        border-radius: 8px;
+        padding: 10px;
     }
 
-    /* Adjust padding for smaller screens */
-    .block-container {
-        padding: 1rem 1rem !important;
+    .mobile-summary .label {
+        font-size: 11px;
+        color: #999;
+        margin-bottom: 4px;
     }
+
+    .mobile-summary .value {
+        font-size: 16px;
+        font-weight: 600;
+        color: #111;
+    }
+}
 
     /* Make the Add Holding button large and easy to tap */
     div[data-testid="stButton"] button {
@@ -212,15 +229,26 @@ with col_btn:
 
 # ----- MOBILE LAYOUT ------
 if is_mobile:
-    st.markdown("### Portfolio Overview")
-    
-    # 2x2 Grid for high-level numbers
-    m_col1, m_col2 = st.columns(2)
-    m_col1.metric("Total Value", fmt_aud(t_val))
-    m_col1.metric("Annual Income", fmt_aud(t_cash if not is_gross_view else t_gross))
-    
-    m_col2.metric("Portfolio Yield", fmt_pct(portfolio_yld))
-    m_col2.metric("Post-Tax Est.", fmt_aud(post_tax))
+    st.markdown(f"""
+    <div class="mobile-summary">
+        <div class="item">
+            <div class="label">Total Value</div>
+            <div class="value">{fmt_aud(t_val)}</div>
+        </div>
+        <div class="item">
+            <div class="label">Annual Income</div>
+            <div class="value">{fmt_aud(t_cash if not is_gross_view else t_gross)}</div>
+        </div>
+        <div class="item">
+            <div class="label">Portfolio Yield</div>
+            <div class="value">{fmt_pct(portfolio_yld)}</div>
+        </div>
+        <div class="item">
+            <div class="label">Post-Tax Est.</div>
+            <div class="value">{fmt_aud(post_tax)}</div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
     
     st.markdown("### Your Holdings")
     
