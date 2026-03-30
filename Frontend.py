@@ -221,21 +221,6 @@ if is_mobile:
         i_val  = fmt_aud(c['gross'] if is_gross_view else c['cash'])
 
         card_label = f"{t_name} | ${v_val} | {y_val} | ${i_val}"
-        
-if is_mobile:
-    st.markdown("### Your Holdings")
-    
-    for i, h in enumerate(st.session_state.holdings):
-        c = computed[i]
-        
-        # Build the condensed 4-part header
-        t_name = h['ticker'] if h['ticker'] else "NEW"
-        v_val  = fmt_aud(c['val'])
-        y_val  = f"{c['y']:.2f}%"
-        i_val  = fmt_aud(c['gross'] if is_gross_view else c['cash'])
-        
-        # The Final String: Ticker | Value | Yield | Income
-        card_label = f"{t_name} | {v_val} | {y_val} | {i_val}"
 
         with st.expander(f"**{card_label}**", expanded=(not h['ticker'])):
             # --- ROW 1: Ticker & Units ---
