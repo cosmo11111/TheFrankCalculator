@@ -190,45 +190,58 @@ with col_btn:
     )
 
 if is_mobile:
-    st.markdown("### Portfolio Overview")
-    
-    # 2x2 Grid for high-level numbers
-    m_col1, m_col2 = st.columns(2)
-    m_col1.metric("Total Value", fmt_aud(t_val))
-    m_col1.metric("Annual Income", fmt_aud(t_cash if not is_gross_view else t_gross))
-    
-    m_col2.metric("Portfolio Yield", fmt_pct(portfolio_yld))
-    m_col2.metric("Post-Tax Est.", fmt_aud(post_tax))
-
-    st.divider()
-    
-    # Settings in a small row
-    st.write("**Quick Settings**")
-    is_gross_view = st.toggle("Grossed-up", value=is_gross_view, key="m_gross")
-    is_edit_mode = st.toggle("Edit Mode", value=is_edit_mode, key="m_edit")
-
-    # Mobile Cards for Holdings
     st.markdown("### Your Holdings")
-    for i, h in enumerate(st.session_state.holdings):
-        c = computed[i]
-        with st.expander(f"🏷️ **{h['ticker']}** — {fmt_aud(c['val'])}", expanded=False):
-            # Detailed breakdown inside the card
-            row1_col1, row1_col2 = st.columns(2)
-            row1_col1.write(f"**Units:** {h['units']}")
-            row1_col2.write(f"**Price:** {fmt_aud2(c['p'])}")
-            
-            row2_col1, row2_col2 = st.columns(2)
-            row2_col1.write(f"**Yield:** {fmt_pct(c['y'])}")
-            row2_col1.write(f"**Income:** {fmt_aud(c['cash'])}")
-            row2_col2.write(f"**Franking:** {c['f']:.0f}%")
+    
+    # 1. THE "ADD" BUTTON (At the top for easy thumb access)
+    if st.button("➕ Add New Holding", use_container_width=True):
+        st.session_state.holdings.append({
+            "ticker": "", "units": 0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())
+        })
+        st.rerun()
 
+    # 2. THE CARDS LOOP
+    for i, h in enumerate(st.session_state.holdings):
+        # We use the ticker name as the label, or "New Holding" if empty
+        card_label = f"🏷️ {h['ticker']}" if h['ticker'] else "🏷️ New Holding"
+        
+        with st.expander(card_label, expanded=(not h['ticker'])):
+            # TICKER SELECTOR
+            # We update the session_state DIRECTLY using the 'index'
+            ticker_opts = [""] + list(MASTER_DATA.keys())
+            try:
+                curr_idx = ticker_opts.index(h['ticker'])
+            except ValueError:
+                curr_idx = 0
+
+            new_ticker = st.selectbox(
+                "Ticker", 
+                ticker_opts, 
+                index=curr_idx, 
+                key=f"m_tick_{h['id']}"
+            )
+            st.session_state.holdings[i]['ticker'] = new_ticker
+
+            # UNITS INPUT
+            new_units = st.number_input(
+                "Units", 
+                value=int(h['units']), 
+                step=1, 
+                key=f"m_units_{h['id']}"
+            )
+            st.session_state.holdings[i]['units'] = new_units
+
+            # MANUAL OVERRIDES (Only show if Edit Mode is ON)
+            if is_edit_mode:
+                col1, col2 = st.columns(2)
+                with col1:
+                    h['custom_p'] = st.number_input("Price ($)", value=float(h['custom_p']), key=f"m_p_{h['id']}")
+                with col2:
+                    h['custom_y'] = st.number_input("Yield (%)", value=float(h['custom_y']), key=f"m_y_{h['id']}")
+
+            # DELETE BUTTON
             if st.button("🗑️ Remove", key=f"m_del_{h['id']}", use_container_width=True):
                 st.session_state.holdings.pop(i)
                 st.rerun()
-
-    if st.button("➕ Add New Holding", use_container_width=True):
-        st.session_state.holdings.append({"ticker": "", "units": 0.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())})
-        st.rerun()
 
 
 else:
