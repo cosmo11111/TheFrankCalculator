@@ -225,7 +225,7 @@ if is_mobile:
         y_val  = f"{c['y']:.2f}%"
         i_val  = fmt_aud(c['gross'] if is_gross_view else c['cash'])
 
-        card_label = f"{t_name} | {v_val} | {y_val} | {i_val}"
+        card_label = f"{t_name} | /{v_val} | {y_val} | /{i_val}"
 
         with st.expander(f"**{card_label}**", expanded=(not h['ticker'])):
             # --- ROW 1: Ticker & Units ---
