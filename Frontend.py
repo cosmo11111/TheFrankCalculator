@@ -51,12 +51,27 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
     div[data-testid="stButton"] button {
         height: 48px !important;
         width: 100% !important;
-    }
+
+@media (max-width: 800px) {
+
     .streamlit-expanderHeader {
-        background-color: #f8f9fa !important;
-        border-radius: 4px;
+        background-color: #111827 !important;  /* optional: darker = cleaner */
+        border-radius: 6px !important;
+        padding: 6px 10px !important;
     }
 
+    /* Force ALL header text to behave */
+    .streamlit-expanderHeader * {
+        color: #ffffff !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+    }
+
+    /* Kill Streamlit green metric colour */
+    .streamlit-expanderHeader span {
+        color: #ffffff !important;
+    }
+}
 
 }
 
