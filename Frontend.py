@@ -165,8 +165,16 @@ for h in st.session_state.holdings:
 
     t_val += r_val; t_cash += r_cash; t_frank += r_frank; t_gross += r_gross
     computed.append({"val": r_val, "cash": r_cash, "gross": r_gross, "p": base_p, "y": base_y, "f": base_f})
-
+    
+    if is_gross_view and t_val > 0:
+        portfolio_yld = (t_gross / t_val) * 100
+    elif t_val > 0:
+        portfolio_yld = (t_cash / t_val) * 100
+    else:
+        portfolio_yld = 0
+    
 post_tax = (t_cash + t_frank) * (1 - tax_rate)
+
 
 # ── DOWNLOAD ──
 with col_btn:
