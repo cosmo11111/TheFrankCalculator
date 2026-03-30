@@ -221,7 +221,7 @@ if is_mobile:
         c = computed[i]
            
         t_name = h['ticker'] if h['ticker'] else "NEW"
-        v_val  = "" + fmt_aud(c['val'])
+        v_val  = " " + fmt_aud(c['val'])
         y_val  = f"{c['y']:.2f}%"
         i_val  = fmt_aud(c['gross'] if is_gross_view else c['cash'])
 
