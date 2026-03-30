@@ -56,10 +56,21 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
         background-color: #f8f9fa !important;
         border-radius: 4px;
     }
+
+/* Force the Expander Header to use a clean Sans-Serif font */
+    .streamlit-expanderHeader p, 
     .streamlit-expanderHeader strong {
-        font-family: 'Inter', sans-serif;
-        color: #1f2937;
-        letter-spacing: -0.5px;
+        font-family: "Source Sans Pro", sans-serif !important;
+        font-size: 14px !important; /* Adjust this to 12px if it still looks too big */
+        font-weight: 600 !important;
+        color: #31333F !important;
+    }
+
+    /* Optional: Add a subtle background to make it look like a row */
+    .streamlit-expanderHeader {
+        background-color: #f9fafb !important;
+        border-radius: 4px !important;
+        margin-bottom: 2px !important;
     }
 
 }
