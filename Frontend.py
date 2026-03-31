@@ -258,6 +258,17 @@ if is_mobile:
 
     # 2. THE CARDS LOOP
     for i, h in enumerate(st.session_state.holdings):
+        data = MASTER_DATA.get(h['ticker'].upper().strip())
+        base_p = h['custom_p'] if (is_edit_mode and h['custom_p'] > 0) else (data['price'] if data else 0)
+        base_y = h['custom_y'] if (is_edit_mode and h['custom_y'] > 0) else (data['yield'] if data else 0)
+        
+        calc_val = base_p * h['units']
+        calc_inc = calc_val * (base_y / 100)
+        
+        # Update the display strings immediately
+        v_val = fmt_aud(calc_val)
+        y_val = f"{base_y:.2f}%"
+        
         c = computed[i]
            
         t_name = h['ticker'] if h['ticker'] else "NEW"
