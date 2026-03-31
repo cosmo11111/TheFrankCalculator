@@ -11,15 +11,7 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
-/* Hide only the top-right 'Made with Streamlit' menu, keep the header for the sidebar toggle */
-div[data-testid="stToolbar"] { visibility: hidden; }
-footer { visibility: hidden; }
-
-/* Optional: Make the sidebar toggle button more visible on mobile */
-button[kind="header"] {
-    background-color: #f0f0f0 !important;
-    border-radius: 50% !important;
-}
+#MainMenu, footer, header { visibility: hidden; }
 .block-container { padding: 2rem 2.5rem 2rem; max-width: 1200px; }
 .page-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 2rem; padding-bottom: 1.25rem; border-bottom: 1px solid #f0f0f0; }
 .page-header h1 { font-size: 20px; font-weight: 600; color: #111; margin: 0; }
@@ -266,34 +258,34 @@ if is_mobile:
 
     # 2. THE CARDS LOOP
     for i, h in enumerate(st.session_state.holdings):
-        data = MASTER_DATA.get(h['ticker'].upper().strip())
+        live_units = st.session_state.get(f"m_u_{h['id']}", h['units'])
+        live_ticker = st.session_state.get(f"m_t_{h['id']}", h['ticker'])
+
+        data = MASTER_DATA.get(live_ticker.upper().strip())
+
         base_p = h['custom_p'] if (is_edit_mode and h['custom_p'] > 0) else (data['price'] if data else 0)
         base_y = h['custom_y'] if (is_edit_mode and h['custom_y'] > 0) else (data['yield'] if data else 0)
-        
-        calc_val = base_p * h['units']
+
+        calc_val = base_p * live_units
         calc_inc = calc_val * (base_y / 100)
-        
-        # Update the display strings immediately
-        v_val = fmt_aud(calc_val)
-        y_val = f"{base_y:.2f}%"
-        
+
         c = computed[i]
            
         t_name = h['ticker'] if h['ticker'] else "NEW"
-        v_val  = fmt_aud(c['val'])
-        y_val  = f"{c['y']:.2f}%"
-        i_val  = fmt_aud(c['gross'] if is_gross_view else c['cash'])
-
+        v_val = fmt_aud(calc_val)
+        y_val = f"{base_y:.2f}%"
+        i_val = fmt_aud(calc_inc)
+        
         def escape_math(text):
             return (
                 text.replace("%", r"\%")
                     .replace("$", r"\$")
         )
 
-        raw_label = f"{t_name} | {v_val} | {y_val} | {i_val}"
+        raw_label = f"{live_ticker or 'NEW'} | {v_val} | {y_val} | {i_val}"
         card_label = escape_math(raw_label)
 
-        with st.expander(f"**{card_label}**", expanded=(not h['ticker'])):
+        with st.expander(f"**{card_label}**", expanded=(not live_ticker)):
             st.markdown(card_label, unsafe_allow_html=True)
             c1, c2 = st.columns(2)
             with c1:
