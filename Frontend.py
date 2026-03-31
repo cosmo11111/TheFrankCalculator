@@ -183,7 +183,7 @@ if is_mobile:
 
     st.divider()
     
-    st.markdown("### Your Holdings")
+
     
     # 1. THE "ADD" BUTTON (At the top for easy thumb access)
     if st.button("➕ Add New Holding", use_container_width=True):
@@ -197,7 +197,7 @@ if is_mobile:
         c = computed[i]
            
         t_name = h['ticker'] if h['ticker'] else "NEW"
-        v_val  = str(fmt_aud(c['val']))
+        v_val  = fmt_aud(c['val'])
         y_val  = f"{c['y']:.2f}%"
         i_val  = fmt_aud(c['gross'] if is_gross_view else c['cash'])
 
