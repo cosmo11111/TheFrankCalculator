@@ -194,6 +194,24 @@ with col_btn:
 
 # ----- MOBILE LAYOUT ------
 if is_mobile:
+    .menu-btn {
+        position: fixed;
+        top: 12px;
+        left: 12px;
+        z-index: 9999;
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-radius: 8px;
+        padding: 6px 10px;
+        font-size: 18px;
+        cursor: pointer;
+    }
+    
+    /* Hide default sidebar toggle (Streamlit’s one is unreliable on mobile) */
+    button[kind="header"] {
+        display: none !important;
+    }
+
     st.markdown("""
     <style>
     .mobile-summary {
