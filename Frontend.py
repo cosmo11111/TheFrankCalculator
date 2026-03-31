@@ -148,7 +148,7 @@ if 'holdings' not in st.session_state:
 # ── TOOLBAR ──
 st.markdown('<div class="toolbar">', unsafe_allow_html=True)
 
-col_gross, col_manual, col_tax = st.columns([0.9, 1, 1.4])
+col_gross, col_manual, col_tax, col_dl = st.columns([0.9, 1, 1.4, 0.5])
 
 with col_gross:
     is_gross_view = st.toggle("Grossed-up", value=False)
@@ -162,6 +162,16 @@ with col_tax:
         list(TAX_ENVIRONMENTS.keys())
     )
     tax_rate = TAX_ENVIRONMENTS[selected_env]
+
+with col_dl:
+    st.download_button(
+        label="📥",
+        data=csv,
+        file_name="asx_dividend_report.csv",
+        mime="text/csv",
+        help="Download current view as CSV",
+        use_container_width=True
+    )
 
 st.markdown('</div>', unsafe_allow_html=True)
 
@@ -192,20 +202,6 @@ for h in st.session_state.holdings:
         portfolio_yld = 0
     
 post_tax = (t_cash + t_frank) * (1 - tax_rate)
-
-
-# ── DOWNLOAD ──
-with col_btn:
-    # Prepare the CSV data
-    csv = get_csv_data(computed, st.session_state.holdings, is_gross_view)
-    
-    st.download_button(
-        label="📥",
-        data=csv,
-        file_name="asx_dividend_report.csv",
-        mime="text/csv",
-        help="Download current view as CSV"
-    )
 
 # ----- MOBILE LAYOUT ------
 if is_mobile:
