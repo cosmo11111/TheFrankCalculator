@@ -19,7 +19,7 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 .summary-card { background: #fafafa; border: 1px solid #f0f0f0; border-radius: 10px; padding: 16px 18px; }
 .summary-card .label { font-size: 11px; font-weight: 500; color: #999; text-transform: uppercase; margin-bottom: 6px; }
 .summary-card .value { font-size: 22px; font-weight: 600; color: #111; }
-
+.summary-card .value.green { color: #166534; }
 .summary-card .sub { font-size: 11px; color: #aaa; margin-top: 4px; }
 .tbl-header { display: grid; grid-template-columns: 1.2fr 1.8fr 0.7fr 0.9fr 1fr 0.9fr 1.1fr 0.9fr 0.6fr; gap: 0; padding: 0 12px 8px; margin-bottom: 10px; border-bottom: 1px solid #e5e5e5; }
 .tbl-header span { font-size: 11px; font-weight: 500; color: #999; text-transform: uppercase; }
