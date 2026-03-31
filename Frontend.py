@@ -10,7 +10,11 @@ st.set_page_config(layout="wide", page_title="ASX Dividend Tool", page_icon="ðŸ“
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
+/* Global font (safe selector) */
+html, body, .block-container {
+    font-family: 'Inter', sans-serif !important;
+}
+
 /* Force white background everywhere */
 html, body, .block-container, [data-testid="stAppViewContainer"] {
     background-color: #ffffff !important;
@@ -20,7 +24,6 @@ html, body, .block-container, [data-testid="stAppViewContainer"] {
 .block-container {
     padding-top: 0.5rem !important;
 }
-
 #MainMenu, footer, header { visibility: hidden; }
 .block-container { padding: 2rem 2.5rem 2rem; max-width: 1200px; }
 .page-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 2rem; padding-bottom: 1.25rem; border-bottom: 1px solid #f0f0f0; }
