@@ -140,7 +140,7 @@ if 'holdings' not in st.session_state:
     ]
 
 # ── TOOLBAR ──
-st.markdown('<div class="toolbar">', unsafe_allow_html=True)
+st.markdown('<div class="toolbar-wrapper"><div class="toolbar-inner">', unsafe_allow_html=True)
 
 col_gross, col_manual, col_tax, col_btn = st.columns([0.9, 1, 1.4, 0.5])
 
@@ -158,8 +158,7 @@ with col_tax:
     )
     tax_rate = TAX_ENVIRONMENTS[selected_env]
 
-st.markdown('</div>', unsafe_allow_html=True)
-
+st.markdown('</div></div>', unsafe_allow_html=True)
 
 # ── CALCULATION LOGIC ──
 computed = []
