@@ -144,9 +144,12 @@ col_title, col_tax, col_t1, col_t2, col_btn = st.columns([2, 0.8, 0.8, 1.2, 0.4]
 
 with col_tax:
     selected_env = st.selectbox(
+        "",
         list(TAX_ENVIRONMENTS.keys())
     )
-    
+
+tax_rate = TAX_ENVIRONMENTS[selected_env]
+ 
 with col_t1: 
     is_gross_view = st.toggle("Grossed-up View", value=False)
 
