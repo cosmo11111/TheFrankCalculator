@@ -125,6 +125,9 @@ col_title, col_t1, col_t2, col_btn = st.columns([2, 0.8, 0.8, 0.4])
 with col_t1: 
     is_gross_view = st.toggle("Grossed-up View", value=False)
 
+with col_t2: 
+    is_edit_mode = st.toggle("Manual Override", value=False)
+
 
 # ── CALCULATION LOGIC ──
 computed = []
@@ -144,7 +147,13 @@ for h in st.session_state.holdings:
 
     t_val += r_val; t_cash += r_cash; t_frank += r_frank; t_gross += r_gross
     computed.append({"val": r_val, "cash": r_cash, "gross": r_gross, "p": base_p, "y": base_y, "f": base_f})
-
+    
+    if is_gross_view and t_val > 0:
+        portfolio_yld = (t_gross / t_val) * 100
+    elif t_val > 0:
+        portfolio_yld = (t_cash / t_val) * 100
+    else:
+        portfolio_yld = 0
     
 post_tax = (t_cash + t_frank) * (1 - tax_rate)
 
@@ -215,6 +224,13 @@ if is_mobile:
             with c4:
                 # Franking Rate
                 st.write(f"**Franking:** {c['f']:.0f}%")
+
+            # --- MANUAL OVERRIDES (Optional) ---
+            if is_edit_mode:
+                st.divider()
+                oc1, oc2 = st.columns(2)
+                h['custom_p'] = oc1.number_input("Man. Price", value=float(h['custom_p']), key=f"m_cp_{h['id']}")
+                h['custom_y'] = oc2.number_input("Man. Yield", value=float(h['custom_y']), key=f"m_cy_{h['id']}")
 
             # --- DELETE BUTTON ---
             st.button("🗑️ Remove", key=f"m_del_{h['id']}", on_click=lambda idx=i: st.session_state.holdings.pop(idx), use_container_width=True)
