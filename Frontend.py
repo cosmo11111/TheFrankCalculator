@@ -142,7 +142,7 @@ if 'holdings' not in st.session_state:
 # ── TOOLBAR ──
 st.markdown('<div class="toolbar-wrapper"><div class="toolbar-inner">', unsafe_allow_html=True)
 
-col_gross, col_manual, col_tax, col_btn = st.columns([0.9, 1, 1.4, 0.5])
+col_spacer, col_gross, col_manual, col_tax, col_btn = st.columns([3, 0.9, 1, 1.4, 0.5])
 
 with col_gross:
     is_gross_view = st.toggle("Grossed-up", value=False)
