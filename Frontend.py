@@ -265,7 +265,7 @@ if is_mobile:
         y_val  = f"{c['y']:.2f}%"
         i_val  = fmt_aud(c['gross'] if is_gross_view else c['cash'])
 
-        card_label = f"<span style='all:unset'>{t_name} {v_val} {y_val} {i_val}</span>"
+        card_label = <span style='all:unset'>{t_name} {v_val} {y_val} {i_val}</span>
 
         with st.expander(f"**{card_label}**", expanded=(not h['ticker'])):
             st.markdown(card_label, unsafe_allow_html=True)
