@@ -87,22 +87,23 @@ def get_csv_data(computed_list, holdings_list, is_gross):
     for i, h in enumerate(holdings_list):
         c = computed_list[i]
         ticker = h['ticker'].upper().strip()
-        # Look up company name from MASTER_DATA
+        
+        # Pull company name from MASTER_DATA 
         data = MASTER_DATA.get(ticker)
         company_name = data['name'] if data else "Unknown"
         
-        # Calculate specific yield and income based on the 'Grossed-up' toggle
+        # Determine which yield/income to show based on the toggle [cite: 24, 25]
         display_yield = (c['gross']/c['val']*100) if is_gross and c['val'] else c['y']
         display_income = c['gross'] if is_gross else c['cash']
 
         export_data.append({
             "Ticker": ticker,
             "Company": company_name,
-            "Units": f"{h['units']:,}", # Adds thousands separator
+            "Units": f"{h['units']:,}", 
             "Price": fmt_aud2(c['p']),
             "Value": fmt_aud(c['val']),
             "Yield (%)": fmt_pct(display_yield),
-            "Annual Income": fmt_aud(display_income),
+            "Annual Income": fmt_aud(display_income), # Now returns $0 instead of —
             "Franking (%)": f"{c['f']:.0f}%"
         })
     return pd.DataFrame(export_data).to_csv(index=False).encode('utf-8')
