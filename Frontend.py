@@ -11,7 +11,15 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
-#MainMenu, footer, header { visibility: hidden; }
+/* Hide only the top-right 'Made with Streamlit' menu, keep the header for the sidebar toggle */
+div[data-testid="stToolbar"] { visibility: hidden; }
+footer { visibility: hidden; }
+
+/* Optional: Make the sidebar toggle button more visible on mobile */
+button[kind="header"] {
+    background-color: #f0f0f0 !important;
+    border-radius: 50% !important;
+}
 .block-container { padding: 2rem 2.5rem 2rem; max-width: 1200px; }
 .page-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 2rem; padding-bottom: 1.25rem; border-bottom: 1px solid #f0f0f0; }
 .page-header h1 { font-size: 20px; font-weight: 600; color: #111; margin: 0; }
