@@ -40,6 +40,14 @@ div[data-testid="stExpanderHeader"] > div:first-child * {
     color: #111 !important;
     -webkit-text-fill-color: #111 !important;
 }
+/* Override MathJax inline math color inside expander headers */
+div[data-testid="stExpanderHeader"] .math-inline,
+div[data-testid="stExpanderHeader"] .language-math,
+div[data-testid="stExpanderHeader"] .st-emotion-cache-119tkyc,
+div[data-testid="stExpanderHeader"] .e19xqh4f0 {
+    color: #111 !important;
+    -webkit-text-fill-color: #111 !important;
+}
 
 
 /* ── MOBILE-SPECIFIC TWEAKS ── */
