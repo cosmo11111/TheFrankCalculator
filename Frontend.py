@@ -251,9 +251,11 @@ if is_mobile:
     
     # 1. THE "ADD" BUTTON (At the top for easy thumb access)
     if st.button("+ Add New Holding", use_container_width=True):
+        new_id = str(uuid.uuid4())
         st.session_state.holdings.append({
-            "ticker": "", "units": 0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())
+        "ticker": "", "units": 0, "custom_p": 0.0, "custom_y": 0.0, "id": new_id
         })
+        st.session_state[f"exp_{new_id}"] = True 
         st.rerun()
 
     # 2. THE CARDS LOOP
@@ -284,8 +286,10 @@ if is_mobile:
 
         raw_label = f"{live_ticker or 'NEW'} | {v_val} | {y_val} | {i_val}"
         card_label = escape_math(raw_label)
-
-        with st.expander(f"**{card_label}**", expanded=(not live_ticker)):
+    
+        is_expanded = st.session_state.get(f"exp_{h['id']}", False)
+        
+        with st.expander(f"**{card_label}**", expanded=is_expanded):
             st.markdown(card_label, unsafe_allow_html=True)
             c1, c2 = st.columns(2)
             with c1:
