@@ -12,7 +12,7 @@ st.markdown("""
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
 /* Global & Layout */
-html, body, .block-container { font-family: 'Inter', sans-serif !important; background-color: #ffffff !important; }
+html, body, .block-container { font-family: 'Inter', sans-serif !important; }
 .block-container { padding: 0.5rem 2.5rem 2rem !important; max-width: 1200px; }
 #MainMenu, footer, header { visibility: hidden; }
 
