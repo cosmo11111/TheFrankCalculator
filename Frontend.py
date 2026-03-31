@@ -153,7 +153,8 @@ with col_manual:
 with col_tax:
     selected_env = st.selectbox(
         "Tax Environment",
-        list(TAX_ENVIRONMENTS.keys())
+        list(TAX_ENVIRONMENTS.keys()),
+        label_visibility="collapsed"
     )
     tax_rate = TAX_ENVIRONMENTS[selected_env]
 
