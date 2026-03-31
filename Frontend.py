@@ -11,6 +11,16 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
+/* Force white background everywhere */
+html, body, .block-container, [data-testid="stAppViewContainer"] {
+    background-color: #ffffff !important;
+}
+
+/* Remove top padding so toolbar sits near the top */
+.block-container {
+    padding-top: 0.5rem !important;
+}
+
 #MainMenu, footer, header { visibility: hidden; }
 .block-container { padding: 2rem 2.5rem 2rem; max-width: 1200px; }
 .page-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 2rem; padding-bottom: 1.25rem; border-bottom: 1px solid #f0f0f0; }
