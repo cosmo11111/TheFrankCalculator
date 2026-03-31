@@ -57,6 +57,20 @@ div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 
 
 /* Mobile Adjustments */
 @media (max-width: 800px) { input, select, textarea { font-size: 16px !important; } }
+
+/* Fix "Whited Over" Widgets: Ensures widget containers stay transparent */
+div[data-testid="stWidgetLabel"] p { color: #111 !important; }
+div[data-role="toggle-container"] { background-color: transparent !important; }
+
+/* Normalize Button/Input Colors: Prevents forced black boxes */
+div[data-testid="stButton"] button { background-color: #ffffff !important; color: #111 !important; border: 1px solid #e5e5e5 !important; }
+div[data-testid="stButton"] button:hover { border-color: #111 !important; color: #111 !important; }
+
+/* Ensure Toggles (Checkboxes/Toggles) are visible and styled */
+.stCheckbox, .stToggleButton, [data-testid="stTickBar"] { background-color: transparent !important; }
+
+/* Specific fix for inputs appearing too dark or inverted */
+input[type="text"], input[type="number"], .stSelectbox div { background-color: #ffffff !important; color: #111 !important; }
 </style>
 """, unsafe_allow_html=True)
 
