@@ -146,6 +146,8 @@ if 'holdings' not in st.session_state:
     ]
 
 # ── TOOLBAR ──
+csv = get_csv_data(computed, st.session_state.holdings, is_gross_view)
+
 st.markdown('<div class="toolbar">', unsafe_allow_html=True)
 
 col_gross, col_manual, col_tax, col_dl = st.columns([0.9, 1, 1.4, 0.5])
