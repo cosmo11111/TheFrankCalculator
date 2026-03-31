@@ -198,7 +198,7 @@ if is_mobile:
            
         t_name = h['ticker'] if h['ticker'] else "NEW"
         v_val  = fmt_aud(c['val'])
-        y_val  = f":gray[{c['y']:.2f}%]"
+        y_val  = {c['y']:.2f}%
         i_val  = fmt_aud(c['gross'] if is_gross_view else c['cash'])
 
         card_label = f"{t_name} | {v_val} | {y_val} | {i_val}"
