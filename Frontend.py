@@ -183,7 +183,7 @@ if is_mobile:
 
     st.divider()
     
-
+    st.markdown("### Your Holdings")
     
     # 1. THE "ADD" BUTTON (At the top for easy thumb access)
     if st.button("➕ Add New Holding", use_container_width=True):
