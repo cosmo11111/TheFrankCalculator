@@ -139,22 +139,22 @@ if 'holdings' not in st.session_state:
         {"ticker": "TLS", "units": 1000.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())},
     ]
 
-# ── SIDEBAR ──
-with st.sidebar:
-    selected_env = st.selectbox("Tax environment (incl. of Medicare levy)", list(TAX_ENVIRONMENTS.keys()))
-    tax_rate = TAX_ENVIRONMENTS[selected_env]
-    if st.button("Refresh Data"): 
-        st.cache_data.clear()
-        st.rerun()
-
 # ── TOGGLES ──
-col_title, col_t1, col_t2, col_btn = st.columns([2, 0.8, 0.8, 0.4])
+col_title, col_t1, col_t2, col_tax, col_btn = st.columns([2, 0.8, 0.8, 1.2, 0.4])
 
 with col_t1: 
     is_gross_view = st.toggle("Grossed-up View", value=False)
 
 with col_t2: 
     is_edit_mode = st.toggle("Manual Override", value=False)
+
+with col_tax:
+    selected_env = st.selectbox(
+        "Tax Environment",
+        list(TAX_ENVIRONMENTS.keys()),
+        index=list(TAX_ENVIRONMENTS.keys()).index(selected_env)
+    )
+    tax_rate = TAX_ENVIRONMENTS[selected_env]
 
 
 # ── CALCULATION LOGIC ──
