@@ -194,6 +194,10 @@ with col_btn:
 
 # ----- MOBILE LAYOUT ------
 if is_mobile:
+    st.markdown("""
+    <style>
+    
+    /* --- MOBILE SIDEBAR TOGGLE --- */
     .menu-btn {
         position: fixed;
         top: 12px;
@@ -207,10 +211,22 @@ if is_mobile:
         cursor: pointer;
     }
     
-    /* Hide default sidebar toggle (Streamlit’s one is unreliable on mobile) */
+    /* Hide default Streamlit toggle */
     button[kind="header"] {
         display: none !important;
     }
+    
+    @media (max-width: 800px) {
+        [data-testid="stSidebar"] {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            position: fixed !important;
+            z-index: 9998;
+        }
+    }
+    
+    </style>
+    """, unsafe_allow_html=True)
 
     st.markdown("""
     <style>
