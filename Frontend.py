@@ -11,68 +11,32 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
-/* Global font */
-html, body, .block-container {
-    font-family: 'Inter', sans-serif !important;
-}
+/* Global & Layout */
+html, body, .block-container { font-family: 'Inter', sans-serif !important; background-color: #ffffff !important; }
+.block-container { padding: 0.5rem 2.5rem 2rem !important; max-width: 1200px; }
+#MainMenu, footer, header { visibility: hidden; }
 
-/* Safe background override (does NOT break widgets) */
-html, body {
-    background-color: #ffffff !important;
-}
-
-.block-container {
-    background-color: #ffffff !important;
-    padding-top: 0.5rem !important;
-}
-
-/* Hide Streamlit chrome */
-#MainMenu, footer, header { 
-    visibility: hidden; 
-}
-.block-container { padding: 2rem 2.5rem 2rem; max-width: 1200px; }
+/* Header & Toolbar */
 .page-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 2rem; padding-bottom: 1.25rem; border-bottom: 1px solid #f0f0f0; }
 .page-header h1 { font-size: 20px; font-weight: 600; color: #111; margin: 0; }
-.toolbar {
-    margin-bottom: 1rem;
-}
-.toolbar .element-container {
-    padding-bottom: 0 !important;
-}
+.toolbar { margin-bottom: 1rem; }
+.toolbar .element-container { padding-bottom: 0 !important; }
 
+/* Summary Cards */
 .summary-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 1.75rem; }
 .summary-card { background: #fafafa; border: 1px solid #f0f0f0; border-radius: 10px; padding: 16px 18px; }
 .summary-card .label { font-size: 11px; font-weight: 500; color: #999; text-transform: uppercase; margin-bottom: 6px; }
 .summary-card .value { font-size: 22px; font-weight: 600; color: #111; }
 .summary-card .value.green { color: #166534; }
 .summary-card .sub { font-size: 11px; color: #aaa; margin-top: 4px; }
-.mobile-summary {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    margin-bottom: 1rem;
-}
 
-.mobile-summary .card {
-    background: #fafafa;
-    border: 1px solid #f0f0f0;
-    border-radius: 10px;
-    padding: 14px 16px;
-}
+/* Mobile Summary */
+.mobile-summary { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 1rem; }
+.mobile-summary .card { background: #fafafa; border: 1px solid #f0f0f0; border-radius: 10px; padding: 14px 16px; }
+.mobile-summary .label { font-size: 11px; font-weight: 500; color: #999; text-transform: uppercase; margin-bottom: 4px; }
+.mobile-summary .value { font-size: 20px; font-weight: 600; color: #111; }
 
-.mobile-summary .label {
-    font-size: 11px;
-    font-weight: 500;
-    color: #999;
-    text-transform: uppercase;
-    margin-bottom: 4px;
-}
-
-.mobile-summary .value {
-    font-size: 20px;
-    font-weight: 600;
-    color: #111;
-}
+/* Table Elements */
 .tbl-header { display: grid; grid-template-columns: 1.2fr 1.8fr 0.7fr 0.9fr 1fr 0.9fr 1.1fr 0.9fr 0.6fr; gap: 0; padding: 0 12px 8px; margin-bottom: 10px; border-bottom: 1px solid #e5e5e5; }
 .tbl-header span { font-size: 11px; font-weight: 500; color: #999; text-transform: uppercase; }
 .tbl-header span.r { text-align: right; }
@@ -80,40 +44,19 @@ html, body {
 .badge.full { background: #dcfce7; color: #166534; }
 .badge.none { background: #f1f5f9; color: #64748b; }
 .badge.partial { background: #fef3c7; color: #92400e; }
-/* Force expander header text to black */
-div[data-testid="stExpanderHeader"] p,
-div[data-testid="stExpanderHeader"] span,
-div[data-testid="stExpanderHeader"] {
-    color: #111 !important;
-}
-/* FINAL FIX — overrides Streamlit’s inline theme color */
-div[data-testid="stExpanderHeader"] > div:first-child,
-div[data-testid="stExpanderHeader"] > div:first-child * {
-    color: #111 !important;
-    -webkit-text-fill-color: #111 !important;
-}
-/* Override MathJax inline math color inside expander headers */
-div[data-testid="stExpanderHeader"] .math-inline,
-div[data-testid="stExpanderHeader"] .language-math,
-div[data-testid="stExpanderHeader"] .st-emotion-cache-119tkyc,
-div[data-testid="stExpanderHeader"] .e19xqh4f0 {
-    color: #111 !important;
-    -webkit-text-fill-color: #111 !important;
-}
 
+/* Expander Headers */
+div[data-testid="stExpanderHeader"] p, div[data-testid="stExpanderHeader"] span, div[data-testid="stExpanderHeader"] { color: #111 !important; }
+div[data-testid="stExpanderHeader"] > div:first-child, div[data-testid="stExpanderHeader"] > div:first-child * { color: #111 !important; -webkit-text-fill-color: #111 !important; }
+div[data-testid="stExpanderHeader"] .math-inline, div[data-testid="stExpanderHeader"] .language-math, div[data-testid="stExpanderHeader"] .st-emotion-cache-119tkyc, div[data-testid="stExpanderHeader"] .e19xqh4f0 { color: #111 !important; -webkit-text-fill-color: #111 !important; }
 
-/* ── MOBILE-SPECIFIC TWEAKS ── */
-@media (max-width: 800px) {
-    /* Stop the iPhone from zooming in when you tap an input box */
-    input, select, textarea {
-        font-size: 16px !important;
-
-
-/* Input Styling */
-
+/* Widgets & Inputs */
 div[data-testid="stSelectbox"] svg[handle="arrow"] { display: none !important; }
 div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 7px !important; border: 1px solid #e5e5e5 !important; }
 .footer { font-size: 11px; color: #bbb; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #f0f0f0; }
+
+/* Mobile Adjustments */
+@media (max-width: 800px) { input, select, textarea { font-size: 16px !important; } }
 </style>
 """, unsafe_allow_html=True)
 
