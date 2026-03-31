@@ -265,8 +265,14 @@ if is_mobile:
         y_val  = f"{c['y']:.2f}%"
         i_val  = fmt_aud(c['gross'] if is_gross_view else c['cash'])
 
+        def escape_math(text):
+            return (
+                text.replace("%", r"\%")
+                    .replace("$", r"\$")
+        )
+
         raw_label = f"{t_name} {v_val} {y_val} {i_val}"
-        card_label = f"```{raw_label}```" 
+        card_label = escape_math(raw_label)
 
         with st.expander(f"**{card_label}**", expanded=(not h['ticker'])):
             st.markdown(card_label, unsafe_allow_html=True)
