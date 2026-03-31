@@ -271,7 +271,7 @@ if is_mobile:
                     .replace("$", r"\$")
         )
 
-        raw_label = f"{t_name} {v_val} {y_val} {i_val}"
+        raw_label = f"{t_name} | {v_val} | {y_val} | {i_val}"
         card_label = escape_math(raw_label)
 
         with st.expander(f"**{card_label}**", expanded=(not h['ticker'])):
