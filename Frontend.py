@@ -266,10 +266,9 @@ if is_mobile:
         i_val  = fmt_aud(c['gross'] if is_gross_view else c['cash'])
 
         card_label = f"<span>{t_name} {v_val} {y_val} {i_val}</span>"
-        st.markdown(card_label, unsafe_allow_html=True)
 
         with st.expander(f"**{card_label}**", expanded=(not h['ticker'])):
-            # --- ROW 1: Ticker & Units ---
+            st.markdown(card_label, unsafe_allow_html=True)
             c1, c2 = st.columns(2)
             with c1:
                 # Ticker Selector
