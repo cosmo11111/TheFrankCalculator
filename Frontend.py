@@ -22,6 +22,12 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 .block-container { padding: 2rem 2.5rem 2rem; max-width: 1200px; }
 .page-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 2rem; padding-bottom: 1.25rem; border-bottom: 1px solid #f0f0f0; }
 .page-header h1 { font-size: 20px; font-weight: 600; color: #111; margin: 0; }
+.toolbar {
+    margin-bottom: 1rem;
+}
+.toolbar .element-container {
+    padding-bottom: 0 !important;
+}
 .summary-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 1.75rem; }
 .summary-card { background: #fafafa; border: 1px solid #f0f0f0; border-radius: 10px; padding: 16px 18px; }
 .summary-card .label { font-size: 11px; font-weight: 500; color: #999; text-transform: uppercase; margin-bottom: 6px; }
@@ -139,24 +145,25 @@ if 'holdings' not in st.session_state:
         {"ticker": "TLS", "units": 1000.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())},
     ]
 
-# ── TOGGLES ──
-col_title, col_tax, col_t1, col_t2, col_btn = st.columns([2, 0.8, 0.8, 1.2, 0.4])
+# ── TOOLBAR ──
+st.markdown('<div class="toolbar">', unsafe_allow_html=True)
+
+col_gross, col_manual, col_tax = st.columns([0.9, 1, 1.4])
+
+with col_gross:
+    is_gross_view = st.toggle("Grossed-up", value=False)
+
+with col_manual:
+    is_edit_mode = st.toggle("Manual Override", value=False)
 
 with col_tax:
     selected_env = st.selectbox(
-        "",
+        "Tax Environment",
         list(TAX_ENVIRONMENTS.keys())
     )
+    tax_rate = TAX_ENVIRONMENTS[selected_env]
 
-tax_rate = TAX_ENVIRONMENTS[selected_env]
- 
-with col_t1: 
-    is_gross_view = st.toggle("Grossed-up View", value=False)
-
-with col_t2: 
-    is_edit_mode = st.toggle("Manual Override", value=False)
-
-tax_rate = TAX_ENVIRONMENTS[selected_env]
+st.markdown('</div>', unsafe_allow_html=True)
 
 # ── CALCULATION LOGIC ──
 computed = []
