@@ -145,6 +145,34 @@ if 'holdings' not in st.session_state:
         {"ticker": "TLS", "units": 1000.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())},
     ]
 
+# ── CALCULATION LOGIC ──
+computed = []
+t_val = t_cash = t_frank = t_gross = 0
+
+for h in st.session_state.holdings:
+    data = MASTER_DATA.get(h['ticker'].upper().strip())
+    # Source Logic
+    base_p = h['custom_p'] if (is_edit_mode and h['custom_p'] > 0) else (data['price'] if data else 0)
+    base_y = h['custom_y'] if (is_edit_mode and h['custom_y'] > 0) else (data['yield'] if data else 0)
+    base_f = data['franking'] if data else 0
+
+    r_val = base_p * h['units']
+    r_cash = r_val * (base_y / 100)
+    r_frank = r_cash * (base_f / 100) * (30/70)
+    r_gross = r_cash + r_frank
+
+    t_val += r_val; t_cash += r_cash; t_frank += r_frank; t_gross += r_gross
+    computed.append({"val": r_val, "cash": r_cash, "gross": r_gross, "p": base_p, "y": base_y, "f": base_f})
+    
+    if is_gross_view and t_val > 0:
+        portfolio_yld = (t_gross / t_val) * 100
+    elif t_val > 0:
+        portfolio_yld = (t_cash / t_val) * 100
+    else:
+        portfolio_yld = 0
+    
+post_tax = (t_cash + t_frank) * (1 - tax_rate)
+
 # ── TOOLBAR ──
 csv = get_csv_data(computed, st.session_state.holdings, is_gross_view)
 
@@ -176,34 +204,6 @@ with col_dl:
     )
 
 st.markdown('</div>', unsafe_allow_html=True)
-
-# ── CALCULATION LOGIC ──
-computed = []
-t_val = t_cash = t_frank = t_gross = 0
-
-for h in st.session_state.holdings:
-    data = MASTER_DATA.get(h['ticker'].upper().strip())
-    # Source Logic
-    base_p = h['custom_p'] if (is_edit_mode and h['custom_p'] > 0) else (data['price'] if data else 0)
-    base_y = h['custom_y'] if (is_edit_mode and h['custom_y'] > 0) else (data['yield'] if data else 0)
-    base_f = data['franking'] if data else 0
-
-    r_val = base_p * h['units']
-    r_cash = r_val * (base_y / 100)
-    r_frank = r_cash * (base_f / 100) * (30/70)
-    r_gross = r_cash + r_frank
-
-    t_val += r_val; t_cash += r_cash; t_frank += r_frank; t_gross += r_gross
-    computed.append({"val": r_val, "cash": r_cash, "gross": r_gross, "p": base_p, "y": base_y, "f": base_f})
-    
-    if is_gross_view and t_val > 0:
-        portfolio_yld = (t_gross / t_val) * 100
-    elif t_val > 0:
-        portfolio_yld = (t_cash / t_val) * 100
-    else:
-        portfolio_yld = 0
-    
-post_tax = (t_cash + t_frank) * (1 - tax_rate)
 
 # ----- MOBILE LAYOUT ------
 if is_mobile:
