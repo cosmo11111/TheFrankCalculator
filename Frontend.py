@@ -151,11 +151,10 @@ with col_t2:
 with col_tax:
     selected_env = st.selectbox(
         "Tax Environment",
-        list(TAX_ENVIRONMENTS.keys()),
-        index=list(TAX_ENVIRONMENTS.keys()).index(selected_env)
+        list(TAX_ENVIRONMENTS.keys())
     )
-    tax_rate = TAX_ENVIRONMENTS[selected_env]
 
+tax_rate = TAX_ENVIRONMENTS[selected_env]
 
 # ── CALCULATION LOGIC ──
 computed = []
