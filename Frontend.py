@@ -34,11 +34,13 @@ div[data-testid="stExpanderHeader"] span,
 div[data-testid="stExpanderHeader"] {
     color: #111 !important;
 }
-/* Override Streamlit math/expander header green text */
-div[data-testid="stExpanderHeader"] * {
+/* FINAL FIX — overrides Streamlit’s inline theme color */
+div[data-testid="stExpanderHeader"] > div:first-child,
+div[data-testid="stExpanderHeader"] > div:first-child * {
     color: #111 !important;
-    -webkit-text-fill-color: #111 !important; /* Safari fix */
+    -webkit-text-fill-color: #111 !important;
 }
+
 
 /* ── MOBILE-SPECIFIC TWEAKS ── */
 @media (max-width: 800px) {
