@@ -25,9 +25,7 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 .tbl-header span { font-size: 11px; font-weight: 500; color: #999; text-transform: uppercase; }
 .tbl-header span.r { text-align: right; }
 .badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 20px; }
-.badge.full { background: #dcfce7; color: #166534; }
-.badge.none { background: #f1f5f9; color: #64748b; }
-.badge.partial { background: #fef3c7; color: #92400e; }
+
 
 /* ── MOBILE-SPECIFIC TWEAKS ── */
 @media (max-width: 800px) {
