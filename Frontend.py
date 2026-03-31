@@ -34,7 +34,11 @@ div[data-testid="stExpanderHeader"] span,
 div[data-testid="stExpanderHeader"] {
     color: #111 !important;
 }
-
+/* Override Streamlit math/expander header green text */
+div[data-testid="stExpanderHeader"] * {
+    color: #111 !important;
+    -webkit-text-fill-color: #111 !important; /* Safari fix */
+}
 
 /* ── MOBILE-SPECIFIC TWEAKS ── */
 @media (max-width: 800px) {
