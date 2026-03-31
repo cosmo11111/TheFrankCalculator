@@ -28,6 +28,13 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 .badge.full { background: #dcfce7; color: #166534; }
 .badge.none { background: #f1f5f9; color: #64748b; }
 .badge.partial { background: #fef3c7; color: #92400e; }
+/* Force expander header text to black */
+div[data-testid="stExpanderHeader"] p,
+div[data-testid="stExpanderHeader"] span,
+div[data-testid="stExpanderHeader"] {
+    color: #111 !important;
+}
+
 
 /* ── MOBILE-SPECIFIC TWEAKS ── */
 @media (max-width: 800px) {
