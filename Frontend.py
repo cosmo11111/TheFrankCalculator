@@ -132,8 +132,9 @@ MASTER_DATA = load_master_data()
 # ── SESSION STATE ──
 if 'holdings' not in st.session_state:
     st.session_state.holdings = [
-        {"ticker": "CBA", "units": 100.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())},
-        {"ticker": "TLS", "units": 1000.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())},
+        {"ticker": "CBA", "units": 296.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())},
+        {"ticker": "ANZ", "units": 1386.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())},
+        {"ticker": "MQG", "units": 243.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())},
     ]
 
 # ── TOOLBAR ──
