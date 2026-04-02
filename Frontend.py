@@ -242,31 +242,27 @@ if is_mobile:
 
     # 2. THE CARDS LOOP
     for i, h in enumerate(st.session_state.holdings):
-        live_units = st.session_state.get(f"m_u_{h['id']}", h['units'])
-        live_ticker = st.session_state.get(f"m_t_{h['id']}", h['ticker'])
-
-        data = MASTER_DATA.get(live_ticker.upper().strip())
-
-        base_p = h['custom_p'] if (is_edit_mode and h['custom_p'] > 0) else (data['price'] if data else 0)
-        base_y = h['custom_y'] if (is_edit_mode and h['custom_y'] > 0) else (data['yield'] if data else 0)
-
-        calc_val = base_p * live_units
-        calc_inc = calc_val * (base_y / 100)
-
+        # We already did the math at the top! Just grab the result for this specific holding.
         c = computed[i]
-           
-        t_name = h['ticker'] if h['ticker'] else "NEW"
+        
+        # Pull the values we pre-calculated
+        live_ticker = c['ticker']
+        calc_val = c['val']
+        # Determine if we show Gross or Cash income in the header based on the toggle
+        calc_inc = c['gross'] if is_gross_view else c['cash']
+        base_y = (c['gross'] / c['val'] * 100) if (is_gross_view and c['val'] > 0) else c['y']
+
+        # Format the strings for the expander label
         v_val = fmt_aud(calc_val)
         y_val = f"{base_y:.2f}%"
         i_val = fmt_aud(calc_inc)
         
-        def escape_math(text):
-            return (
-                text.replace("%", r"\%")
-                    .replace("$", r"\$")
-        )
-
+        # Create the label
         raw_label = f"{live_ticker or 'NEW'} | {v_val} | {y_val} | {i_val}"
+        
+        def escape_math(text):
+            return text.replace("%", r"\%").replace("$", r"\$")
+            
         card_label = escape_math(raw_label)
     
         is_expanded = st.session_state.get(f"exp_{h['id']}", False)
