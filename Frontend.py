@@ -99,12 +99,12 @@ def get_csv_data(computed_list, holdings_list, is_gross):
         export_data.append({
             "Ticker": ticker,
             "Company": company_name,
-            "Units": f"{h['units']:,}", 
-            "Price": fmt_aud2(c['p']),
-            "Value": fmt_aud(c['val']),
-            "Yield (%)": fmt_pct(display_yield),
-            "Annual Income": fmt_aud(display_income), # Now returns $0 instead of —
-            "Franking (%)": f"{c['f']:.0f}%"
+            "Units": h['units'], # Keep as number, not string with commas
+            "Price": round(c['p'], 2),
+            "Value": round(c['val'], 2),
+            "Yield (%)": round(display_yield, 2),
+            "Annual Income": round(display_income, 2), # Will now be 0.0 instead of "—"
+            "Franking (%)": round(c['f'], 0)
         })
     return pd.DataFrame(export_data).to_csv(index=False).encode('utf-8')
 
