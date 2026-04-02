@@ -163,28 +163,32 @@ computed = []
 t_val = t_cash = t_frank = t_gross = 0
 
 for h in st.session_state.holdings:
+    live_units = st.session_state.get(f"m_u_{h['id']}", h['units'])
+    live_ticker = st.session_state.get(f"m_t_{h['id']}", h['ticker'])
+    live_custom_p = st.session_state.get(f"m_cp_{h['id']}", h['custom_p'])
+    live_custom_y = st.session_state.get(f"m_cy_{h['id']}", h['custom_y'])
+    
     data = MASTER_DATA.get(h['ticker'].upper().strip())
+    
     # Source Logic
-    base_p = h['custom_p'] if (is_edit_mode and h['custom_p'] > 0) else (data['price'] if data else 0)
-    base_y = h['custom_y'] if (is_edit_mode and h['custom_y'] > 0) else (data['yield'] if data else 0)
+    base_p = live_custom_p if (is_edit_mode and live_custom_p > 0) else (data['price'] if data else 0)
+    base_y = live_custom_y if (is_edit_mode and live_custom_y > 0) else (data['yield'] if data else 0)
     base_f = data['franking'] if data else 0
 
-    r_val = base_p * h['units']
+    r_val = base_p * live_units
     r_cash = r_val * (base_y / 100)
     r_frank = r_cash * (base_f / 100) * (30/70)
     r_gross = r_cash + r_frank
 
     t_val += r_val; t_cash += r_cash; t_frank += r_frank; t_gross += r_gross
-    computed.append({"val": r_val, "cash": r_cash, "gross": r_gross, "p": base_p, "y": base_y, "f": base_f})
+    computed.append({"val": r_val, "cash": r_cash, "gross": r_gross, "p": base_p, "y": base_y, "f": base_f, "units": live_units, "ticker": live_ticker})
     
-    if is_gross_view and t_val > 0:
-        portfolio_yld = (t_gross / t_val) * 100
-    elif t_val > 0:
-        portfolio_yld = (t_cash / t_val) * 100
+    if t_val > 0:
+        portfolio_yld = (t_gross if is_gross_view else t_cash) / t_val * 100
     else:
         portfolio_yld = 0
-    
-post_tax = (t_cash + t_frank) * (1 - tax_rate)
+        
+    post_tax = (t_cash + t_frank) * (1 - tax_rate)
 
 
 # ── DOWNLOAD ──
