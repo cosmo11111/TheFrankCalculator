@@ -13,7 +13,7 @@ st.markdown("""
 
 /* Global & Layout */
 html, body, .block-container { font-family: 'Inter', sans-serif !important; }
-.block-container { padding: 0.5rem 2.5rem 2rem !important; max-width: 1200px; }
+.block-container { padding: 0rem 2.5rem 2rem !important; max-width: 1200px; }
 #MainMenu, footer, header { visibility: hidden; }
 
 /* Header & Toolbar */
