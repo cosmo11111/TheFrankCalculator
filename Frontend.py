@@ -162,7 +162,7 @@ def get_csv_data(computed_list, holdings_list, is_gross):
 
     # Info Icon
     def info_icon(text):
-    return f'''<span class="info-tooltip">ⓘ<span class="tooltiptext">{text}</span></span>'''
+        return f'''<span class="info-tooltip">ⓘ<span class="tooltiptext">{text}</span></span>'''
 
 # ── DATA FETCHING ──
 @st.cache_data(ttl=3600)
