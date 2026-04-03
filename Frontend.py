@@ -203,7 +203,7 @@ st.markdown('<div class="toolbar-wrapper"><div class="toolbar-inner">', unsafe_a
 
 # Adjusted column ratios to fit the new button
 # [Space, Gross Toggle, Manual Toggle, NEW: Assumptions, Tax Select, Download]
-col_spacer, col_gross, col_manual, col_assump, col_tax, col_btn = st.columns([2.5, 0.9, 1, 1.2, 1.4, 0.5])
+col_spacer, col_gross, col_manual, col_assump, col_tax, col_btn = st.columns([2.0, 0.9, 1.4, 0.7, 1.4, 0.5])
 
 with col_gross:
     is_gross_view = st.toggle("Grossed-up", value=False)
