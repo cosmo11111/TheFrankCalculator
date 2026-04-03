@@ -57,8 +57,17 @@ div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 
 
 /* Mobile Adjustments */
 @media (max-width: 800px) { input, select, textarea { font-size: 16px !important; } }
+@media (max-width: 800px) {
+    [data-testid="stHorizontalBlock"] {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        justify-content: space-between !important;
+    }
+}
 </style>
 """, unsafe_allow_html=True)
+
 
 # ── DATA SOURCES ──
 SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQXUiVcziu72OkPGE8Wy5xhelPIXJTMs0Z1oBtqQbZ-_RS5qNOAt9q5sr23I7ejAqXrQRuKZiwy6gFi/pub?gid=1786895027&single=true&output=csv"
