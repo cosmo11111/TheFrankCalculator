@@ -412,7 +412,7 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
     
-    to_del = None
+to_del = None
     for i, h in enumerate(st.session_state.holdings):
         c, data, rid = computed[i], MASTER_DATA.get(h['ticker'].upper().strip()), h['id']
         cols = st.columns([1.2, 1.8, 0.7, 0.9, 1.0, 0.9, 1.1, 0.9, 0.6])
