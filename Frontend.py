@@ -55,6 +55,49 @@ div[data-testid="stSelectbox"] svg[handle="arrow"] { display: none !important; }
 div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 7px !important; border: 1px solid #e5e5e5 !important; }
 .footer { font-size: 11px; color: #bbb; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #f0f0f0; }
 
+/* 1. Standard Tooltip Styling */
+.info-tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    margin-left: 6px;
+    color: #0066ff; /* A nice SaaS blue for the icon */
+    font-size: 0.85rem;
+    vertical-align: middle;
+}
+
+.info-tooltip .tooltiptext {
+    visibility: hidden;
+    width: 220px;
+    background-color: #15171a;
+    color: #fff;
+    text-align: left;
+    border-radius: 8px;
+    padding: 12px;
+    position: absolute;
+    z-index: 100;
+    bottom: 130%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.info-tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* 2. THE DESKTOP-ONLY KILL SWITCH */
+@media (max-width: 800px) {
+    .info-tooltip {
+        display: none !important; /* This hides it on mobile/tablets */
+    }
+}
+
 /* Mobile Adjustments */
 @media (max-width: 800px) { input, select, textarea { font-size: 16px !important; } }
 @media (max-width: 800px) {
@@ -116,6 +159,10 @@ def get_csv_data(computed_list, holdings_list, is_gross):
             "Franking (%)": round(c['f'], 0)
         })
     return pd.DataFrame(export_data).to_csv(index=False).encode('utf-8')
+
+    # Info Icon
+    def info_icon(text):
+    return f'''<span class="info-tooltip">ⓘ<span class="tooltiptext">{text}</span></span>'''
 
 # ── DATA FETCHING ──
 @st.cache_data(ttl=3600)
@@ -362,6 +409,8 @@ else:
             if new_u != h['units']: st.session_state.holdings[i]['units'] = new_u; st.rerun()
     
         with cols[3]: # Price
+            st.markdown(f"**Price Source** {info_icon('Priced sourced from Yahoo finance and updated daily at 10:30am AEST.')}", unsafe_allow_html=True)
+            st.title(fmt_aud(t_val))
             if is_edit_mode:
                 new_p = st.number_input("P", value=float(c['p']), key=f"p_{rid}", format="%g", label_visibility="collapsed")
                 if new_p != h['custom_p']: st.session_state.holdings[i]['custom_p'] = new_p; st.rerun()
