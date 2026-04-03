@@ -140,13 +140,33 @@ if 'holdings' not in st.session_state:
 # ── TOOLBAR ──
 st.markdown('<div class="toolbar-wrapper"><div class="toolbar-inner">', unsafe_allow_html=True)
 
-col_spacer, col_gross, col_manual, col_tax, col_btn = st.columns([3, 0.9, 1, 1.4, 0.5])
+# Adjusted column ratios to fit the new button
+# [Space, Gross Toggle, Manual Toggle, NEW: Assumptions, Tax Select, Download]
+col_spacer, col_gross, col_manual, col_assump, col_tax, col_btn = st.columns([2.5, 0.9, 1, 1.2, 1.4, 0.5])
 
 with col_gross:
     is_gross_view = st.toggle("Grossed-up", value=False)
 
 with col_manual:
     is_edit_mode = st.toggle("Manual Override", value=False)
+
+with col_assump:
+    # This sits to the left of the Tax Selector on Desktop
+    # And horizontally to the right of Download on Mobile (Streamlit stacks columns)
+    if st.button("ℹ️ Info", use_container_width=True, help="View Calculation Assumptions"):
+        @st.dialog("Calculation Assumptions")
+        def show_assumptions():
+            st.markdown("### 🇦🇺 Australian Tax Logic")
+            st.write("Our calculations align with ATO standards:")
+            st.markdown("""
+            - **Corporate Tax:** Fixed at **30%** for all franking credits.
+            - **Medicare Levy:** Included in all marginal tax rate options (e.g., 32.5% becomes 34.5%).
+            - **Price Data:** Sourced via API with a ~20-minute delay.
+            - **Yields:** Calculated on trailing 12-month (TTM) distributions.
+            """)
+            if st.button("Close", use_container_width=True):
+                st.rerun()
+        show_assumptions()
 
 with col_tax:
     selected_env = st.selectbox(
@@ -155,6 +175,17 @@ with col_tax:
         label_visibility="collapsed"
     )
     tax_rate = TAX_ENVIRONMENTS[selected_env]
+
+with col_btn:
+    # Prepare the CSV data
+    csv = get_csv_data(computed, st.session_state.holdings, is_gross_view)
+    st.download_button(
+        label="📥",
+        data=csv,
+        file_name="asx_dividend_report.csv",
+        mime="text/csv",
+        help="Download CSV"
+    )
 
 st.markdown('</div></div>', unsafe_allow_html=True)
 
