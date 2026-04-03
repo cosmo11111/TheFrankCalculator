@@ -176,17 +176,6 @@ with col_tax:
     )
     tax_rate = TAX_ENVIRONMENTS[selected_env]
 
-with col_btn:
-    # Prepare the CSV data
-    csv = get_csv_data(computed, st.session_state.holdings, is_gross_view)
-    st.download_button(
-        label="📥",
-        data=csv,
-        file_name="asx_dividend_report.csv",
-        mime="text/csv",
-        help="Download CSV"
-    )
-
 st.markdown('</div></div>', unsafe_allow_html=True)
 
 # ── CALCULATION LOGIC ──
@@ -226,13 +215,12 @@ for h in st.session_state.holdings:
 with col_btn:
     # Prepare the CSV data
     csv = get_csv_data(computed, st.session_state.holdings, is_gross_view)
-    
     st.download_button(
         label="📥",
         data=csv,
         file_name="asx_dividend_report.csv",
         mime="text/csv",
-        help="Download current view as CSV"
+        help="Download CSV"
     )
 
 # ----- MOBILE LAYOUT ------
