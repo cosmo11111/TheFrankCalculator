@@ -449,7 +449,7 @@ for i, h in enumerate(st.session_state.holdings):
         with cols[8]: 
             if st.button("✕", key=f"d_{rid}"): to_del = i
     
-    if to_del is not None: st.session_state.holdings.pop(to_del); st.rerun()
+if to_del is not None: st.session_state.holdings.pop(to_del); st.rerun()
     if st.button("+ Add Holding", use_container_width=True):
         st.session_state.holdings.append({"ticker": "", "units": 0.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())})
         st.rerun()
