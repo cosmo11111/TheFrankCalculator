@@ -55,47 +55,56 @@ div[data-testid="stSelectbox"] svg[handle="arrow"] { display: none !important; }
 div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 7px !important; border: 1px solid #e5e5e5 !important; }
 .footer { font-size: 11px; color: #bbb; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #f0f0f0; }
 
-/* 1. Standard Tooltip Styling */
+/* Tooltip Base Styling */
 .info-tooltip {
     position: relative;
     display: inline-block;
-    cursor: pointer;
-    margin-left: 6px;
-    color: #0066ff; /* A nice SaaS blue for the icon */
-    font-size: 0.85rem;
+    margin-left: 4px;
+    color: #0066ff; /* SaaS Blue - change to #999 for subtle gray */
+    font-size: 0.75rem;
+    cursor: help;
     vertical-align: middle;
 }
 
+/* The actual popup box */
 .info-tooltip .tooltiptext {
     visibility: hidden;
-    width: 220px;
+    width: 180px;
     background-color: #15171a;
-    color: #fff;
+    color: #ffffff;
     text-align: left;
-    border-radius: 8px;
-    padding: 12px;
+    border-radius: 6px;
+    padding: 10px;
     position: absolute;
-    z-index: 100;
-    bottom: 130%;
+    z-index: 999;
+    bottom: 150%; /* Pops up above the header */
     left: 50%;
     transform: translateX(-50%);
     opacity: 0;
     transition: opacity 0.2s;
-    font-size: 0.75rem;
-    line-height: 1.4;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    font-size: 0.7rem;
+    font-weight: 400;
+    line-height: 1.3;
+    white-space: normal; /* Allows text to wrap inside the box */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
 
+/* Show on hover */
 .info-tooltip:hover .tooltiptext {
     visibility: visible;
     opacity: 1;
 }
 
-/* 2. THE DESKTOP-ONLY KILL SWITCH */
-@media (max-width: 800px) {
-    .info-tooltip {
-        display: none !important; /* This hides it on mobile/tablets */
-    }
+/* The little arrow at the bottom of the box */
+.info-tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #15171a transparent transparent transparent;
 }
 
 /* Mobile Adjustments */
@@ -389,10 +398,19 @@ else:
     def info_icon(text):
         return f'''<span class="info-tooltip">ⓘ<span class="tooltiptext">{text}</span></span>'''
     
-    st.markdown(f"""<div class="tbl-header">
-        <span>Ticker</span><span>Company</span><span>Units</span><span class="r">Price</span><span class="r">Value</span>
-        <span class="r">{yield_head}</span><span class="r">{inc_head}</span><span class="r">Franking</span><span></span>
-    </div>""", unsafe_allow_html=True)
+st.markdown(f"""
+<div class="tbl-header">
+    <span>Ticker {info_icon('ASX Code (e.g. CBA)')}</span>
+    <span>Company</span>
+    <span>Units</span>
+    <span class="r">Price {info_icon('Market price (20min delay)')}</span>
+    <span>Value</span>
+    <span class="r">{yield_head} {info_icon('Annual dividend ÷ Price')}</span>
+    <span class="r">{inc_head} {info_icon('Total estimated annual return')}</span>
+    <span class="r">Franking {info_icon('% of dividend already taxed')}</span>
+    <span></span>
+</div>
+""", unsafe_allow_html=True)
     
     to_del = None
     for i, h in enumerate(st.session_state.holdings):
@@ -409,8 +427,6 @@ else:
             if new_u != h['units']: st.session_state.holdings[i]['units'] = new_u; st.rerun()
     
         with cols[3]: # Price
-            st.markdown(f"**Price Source** {info_icon('Priced sourced from Yahoo finance and updated daily at 10:30am AEST.')}", unsafe_allow_html=True)
-            st.title(fmt_aud(t_val))
             if is_edit_mode:
                 new_p = st.number_input("P", value=float(c['p']), key=f"p_{rid}", format="%g", label_visibility="collapsed")
                 if new_p != h['custom_p']: st.session_state.holdings[i]['custom_p'] = new_p; st.rerun()
