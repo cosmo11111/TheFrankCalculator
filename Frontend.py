@@ -214,7 +214,7 @@ with col_manual:
 with col_assump:
     # This sits to the left of the Tax Selector on Desktop
     # And horizontally to the right of Download on Mobile (Streamlit stacks columns)
-    if st.button("Info", use_container_width=True, help="View Calculation Assumptions"):
+    if st.button("Assumptions", use_container_width=True, help="View Calculation Assumptions"):
         @st.dialog("Calculation Assumptions")
         def show_assumptions():
             st.markdown("### 🇦🇺 Australian Tax Logic")
