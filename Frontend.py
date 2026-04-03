@@ -160,10 +160,6 @@ def get_csv_data(computed_list, holdings_list, is_gross):
         })
     return pd.DataFrame(export_data).to_csv(index=False).encode('utf-8')
 
-    # Info Icon
-    def info_icon(text):
-        return f'''<span class="info-tooltip">ⓘ<span class="tooltiptext">{text}</span></span>'''
-
 # ── DATA FETCHING ──
 @st.cache_data(ttl=3600)
 def load_master_data():
@@ -388,6 +384,10 @@ else:
     # ── TABLE ──
     yield_head = "Gross Yield" if is_gross_view else "Yield"
     inc_head = "Gross Inc." if is_gross_view else "Annual Inc."
+
+    # Info Icon
+    def info_icon(text):
+        return f'''<span class="info-tooltip">ⓘ<span class="tooltiptext">{text}</span></span>'''
     
     st.markdown(f"""<div class="tbl-header">
         <span>Ticker</span><span>Company</span><span>Units</span><span class="r">Price</span><span class="r">Value</span>
