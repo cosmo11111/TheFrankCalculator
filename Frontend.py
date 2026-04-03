@@ -214,7 +214,7 @@ with col_manual:
 with col_assump:
     # This sits to the left of the Tax Selector on Desktop
     # And horizontally to the right of Download on Mobile (Streamlit stacks columns)
-    if st.button("ℹ️ Info", use_container_width=True, help="View Calculation Assumptions"):
+    if st.button("Info", use_container_width=True, help="View Calculation Assumptions"):
         @st.dialog("Calculation Assumptions")
         def show_assumptions():
             st.markdown("### 🇦🇺 Australian Tax Logic")
@@ -400,11 +400,11 @@ else:
     
 st.markdown(f"""
 <div class="tbl-header">
-    <span>Ticker {info_icon('ASX Code (e.g. CBA)')}</span>
+    <span>Ticker</span>
     <span>Company</span>
     <span>Units</span>
     <span class="r">Price {info_icon('Market price (20min delay)')}</span>
-    <span>Value</span>
+    <span class="r">Value</span>
     <span class="r">{yield_head} {info_icon('Annual dividend ÷ Price')}</span>
     <span class="r">{inc_head} {info_icon('Total estimated annual return')}</span>
     <span class="r">Franking {info_icon('% of dividend already taxed')}</span>
