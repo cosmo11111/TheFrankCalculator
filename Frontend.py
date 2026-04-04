@@ -21,13 +21,54 @@ html, body, .block-container { font-family: 'Inter', sans-serif !important; }
 .page-header h1 { font-size: 20px; font-weight: 600; color: #111; margin: 0; }
 .toolbar { margin-bottom: 1rem; }
 .toolbar .element-container { padding-bottom: 0 !important; }
-.toolbar-inner .stMarkdown {
-    margin-bottom: -10px; /* Pulls the toggle up slightly to align with selectboxes */
+.info-tooltip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    margin-left: 6px;
+    color: #999 !important; /* Changed from Blue to SaaS Gray */
+    font-size: 0.9rem;
+    cursor: help;
+    vertical-align: middle;
 }
 
-/* Ensure the toggle doesn't have extra padding now that the label is custom */
-div[data-testid="stCheckbox"] {
-    margin-top: 5px;
+/* 2. The Popup Box Styling */
+.info-tooltip .tooltiptext {
+    visibility: hidden;
+    width: 220px;
+    background-color: #15171a;
+    color: #ffffff;
+    text-align: left;
+    border-radius: 8px;
+    padding: 12px;
+    position: absolute;
+    z-index: 9999; /* High z-index to stay on top */
+    bottom: 150%; 
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s;
+    font-size: 0.75rem;
+    font-weight: 400;
+    line-height: 1.4;
+    white-space: normal;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+.info-tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* 3. Stop "Manual Override" and "Grossed-up" from wrapping */
+[data-testid="stMarkdownContainer"] p, 
+[data-testid="stWidgetLabel"] p {
+    white-space: nowrap !important;
+}
+
+/* 4. Center the buttons vertically in the toolbar */
+.stButton button {
+    margin-top: 24px; /* Adjust this to align "Assumptions" with the toggles */
 }
 
 /* Summary Cards */
@@ -216,17 +257,18 @@ st.markdown('<div class="toolbar-wrapper"><div class="toolbar-inner">', unsafe_a
 
 # Adjusted column ratios to fit the new button
 # [Space, Gross Toggle, Manual Toggle, NEW: Assumptions, Tax Select, Download]
-col_spacer, col_gross, col_manual, col_assump, col_tax, col_btn = st.columns([1.8, 1.1, 1.4, 0.7, 1.5, 0.5])
+col_spacer, col_gross, col_manual, col_assump, col_tax, col_btn = st.columns([1.2, 1.1, 1.5, 1.2, 1.5, 0.5])
 
 with col_gross:
-    # 1. Custom Label with Info Icon
-    st.markdown(f"**Grossed-up** {info_icon('Include the value of franking credits in all yield and income calculations.')}", unsafe_allow_html=True)
+    st.markdown(f"**Grossed-up** {info_icon('Includes franking credits in yield.')}", unsafe_allow_html=True)
+    is_gross_view = st.toggle("Grossed-up", value=False, label_visibility="collapsed")
     
     # 2. Toggle with hidden label to keep it clean
     is_gross_view = st.toggle("Grossed-up", value=False, label_visibility="collapsed")
 
 with col_manual:
-    is_edit_mode = st.toggle("Manual Override", value=False)
+    st.markdown("**Manual Override**", unsafe_allow_html=True)
+    is_edit_mode = st.toggle("Manual Override", value=False, label_visibility="collapsed")
 
 with col_assump:
     # This sits to the left of the Tax Selector on Desktop
