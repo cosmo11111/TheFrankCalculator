@@ -15,15 +15,7 @@ st.markdown("""
 html, body, .block-container { font-family: 'Inter', sans-serif !important; }
 .block-container { padding: 0rem 2.5rem 2rem !important; max-width: 1200px; }
 #MainMenu, footer, header { visibility: hidden; }
-    .stMainBlockContainer {
-        padding-top: 0rem;
-        padding-bottom: 0rem;
-        padding-left: 2rem;
-        padding-right: 2rem;
-    }
-    .stVerticalBlock {
-        gap: 0rem;
-    }
+
 
 /* Header & Toolbar */
 .page-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 2rem; padding-bottom: 1.25rem; border-bottom: 1px solid #f0f0f0; }
