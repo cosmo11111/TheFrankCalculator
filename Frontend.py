@@ -261,13 +261,13 @@ col_spacer, col_gross, col_manual, col_assump, col_tax, col_btn = st.columns([1.
 
 with col_gross:
     st.markdown(f"**Grossed-up** {info_icon('Includes franking credits in yield.')}", unsafe_allow_html=True)
-    is_gross_view = st.toggle("Grossed-up", value=False, label_visibility="collapsed")
-    
-    # 2. Toggle with hidden label to keep it clean
-    is_gross_view = st.toggle("Grossed-up", value=False, label_visibility="collapsed")
+    # Added key="gross_toggle"
+    is_gross_view = st.toggle("Grossed-up", value=False, label_visibility="collapsed", key="gross_toggle")
 
 with col_manual:
-    is_edit_mode = st.toggle("Manual Override", value=False)
+    st.markdown("**Manual Override**", unsafe_allow_html=True)
+    # Added key="manual_toggle"
+    is_edit_mode = st.toggle("Manual Override", value=False, label_visibility="collapsed", key="manual_toggle")
     
 with col_assump:
     # This sits to the left of the Tax Selector on Desktop
