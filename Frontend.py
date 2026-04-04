@@ -213,7 +213,7 @@ col_spacer, col_gross, col_manual, col_assump, col_tax, col_btn = st.columns([0.
 
 with col_gross:
     gross_val = st.toggle(
-        f"Grossed-up ⓘ",
+        f"Grossed-up Yield",
         value=False,
         key="gross_toggle",
         help="Includes franking credits in yield."
