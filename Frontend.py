@@ -361,8 +361,9 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
     
-    to_del = None
-    for i, h in enumerate(st.session_state.holdings):
+to_del = None
+    
+for i, h in enumerate(st.session_state.holdings):
         c, data, rid = computed[i], MASTER_DATA.get(h['ticker'].upper().strip()), h['id']
         cols = st.columns([1.2, 1.8, 0.7, 0.9, 1.0, 0.9, 1.1, 0.9, 0.6])
     
@@ -395,8 +396,8 @@ st.markdown(f"""
         with cols[6]: st.markdown(f'<div style="font-weight:600;text-align:right;padding-top:9px;">{fmt_aud(c["gross"] if is_gross_view else c["cash"])}</div>', unsafe_allow_html=True)
         with cols[7]: st.markdown(f'<div style="text-align:right;padding-top:9px;">{franking_badge(c["f"])}</div>', unsafe_allow_html=True)
         with cols[8]: 
-            if st.button("✕", key=f"d_{rid}"): to_del = i
     
+    if st.button("✕", key=f"d_{rid}"): to_del = i
     if to_del is not None: st.session_state.holdings.pop(to_del); st.rerun()
     if st.button("+ Add Holding", use_container_width=True):
         st.session_state.holdings.append({"ticker": "", "units": 0.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())})
