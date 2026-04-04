@@ -15,6 +15,17 @@ st.markdown("""
 html, body, .block-container { font-family: 'Inter', sans-serif !important; }
 .block-container { padding: 0rem 2.5rem 2rem !important; max-width: 1200px; }
 #MainMenu, footer, header { visibility: hidden; }
+/* Remove top gap in embedded view */
+.block-container {
+    padding-top: 0rem !important;
+    margin-top: 0rem !important;
+}
+
+/* Target the specific element if needed */
+[class*="e150o2y"] {
+    padding: 0 !important;
+    margin: 0 !important;
+}
 
 /* Header & Toolbar */
 .page-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 2rem; padding-bottom: 1.25rem; border-bottom: 1px solid #f0f0f0; }
