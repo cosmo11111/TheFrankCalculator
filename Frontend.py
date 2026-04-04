@@ -21,79 +21,6 @@ html, body, .block-container { font-family: 'Inter', sans-serif !important; }
 .page-header h1 { font-size: 20px; font-weight: 600; color: #111; margin: 0; }
 .toolbar { margin-bottom: 1rem; }
 .toolbar .element-container { padding-bottom: 0 !important; }
-.info-tooltip {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    margin-left: 6px;
-    color: #999 !important; /* Changed from Blue to SaaS Gray */
-    font-size: 0.9rem;
-    cursor: help;
-    vertical-align: middle;
-}
-
-/* 2. The Popup Box Styling */
-.info-tooltip .tooltiptext {
-    visibility: hidden;
-    width: 220px;
-    background-color: #15171a;
-    color: #ffffff;
-    text-align: left;
-    border-radius: 8px;
-    padding: 12px;
-    position: absolute;
-    z-index: 9999; /* High z-index to stay on top */
-    bottom: 150%; 
-    left: 50%;
-    transform: translateX(-50%);
-    opacity: 0;
-    transition: opacity 0.2s;
-    font-size: 0.75rem;
-    font-weight: 400;
-    line-height: 1.4;
-    white-space: normal;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-}
-
-.info-tooltip:hover .tooltiptext {
-    visibility: visible;
-    opacity: 1;
-}
-
-/* 3. Stop "Manual Override" and "Grossed-up" from wrapping */
-[data-testid="stMarkdownContainer"] p, 
-[data-testid="stWidgetLabel"] p {
-    white-space: nowrap !important;
-}
-
-/* 4. Center the buttons vertically in the toolbar */
-.stButton button {
-    margin-top: 24px; /* Adjust this to align "Assumptions" with the toggles */
-}
-
-/* Force Horizontal Alignment for Toggles */
-[data-testid="column"] > div > div > div {
-    display: flex;
-    align-items: center;
-    gap: 8px; /* Space between text and toggle */
-}
-
-/* Ensure the label doesn't wrap */
-.stMarkdown p {
-    margin-bottom: 0 !important;
-    white-space: nowrap !important;
-}
-
-/* Align the Assumptions button with the toggles */
-[data-testid="stButton"] {
-    margin-top: 0px !important;
-}
-
-/* Adjust the Toggle widget's internal padding */
-[data-testid="stCheckbox"] {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-}
 
 /* Summary Cards */
 .summary-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 1.75rem; }
@@ -127,58 +54,6 @@ div[data-testid="stExpanderHeader"] .math-inline, div[data-testid="stExpanderHea
 div[data-testid="stSelectbox"] svg[handle="arrow"] { display: none !important; }
 div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 7px !important; border: 1px solid #e5e5e5 !important; }
 .footer { font-size: 11px; color: #bbb; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #f0f0f0; }
-
-/* Tooltip Base Styling */
-.info-tooltip {
-    position: relative;
-    display: inline-block;
-    margin-left: 4px;
-    color: #0066ff; /* SaaS Blue - change to #999 for subtle gray */
-    font-size: 0.75rem;
-    cursor: help;
-    vertical-align: middle;
-}
-
-/* The actual popup box */
-.info-tooltip .tooltiptext {
-    visibility: hidden;
-    width: 180px;
-    background-color: #15171a;
-    color: #ffffff;
-    text-align: left;
-    border-radius: 6px;
-    padding: 10px;
-    position: absolute;
-    z-index: 999;
-    bottom: 150%; /* Pops up above the header */
-    left: 50%;
-    transform: translateX(-50%);
-    opacity: 0;
-    transition: opacity 0.2s;
-    font-size: 0.7rem;
-    font-weight: 400;
-    line-height: 1.3;
-    white-space: normal; /* Allows text to wrap inside the box */
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-}
-
-/* Show on hover */
-.info-tooltip:hover .tooltiptext {
-    visibility: visible;
-    opacity: 1;
-}
-
-/* The little arrow at the bottom of the box */
-.info-tooltip .tooltiptext::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: #15171a transparent transparent transparent;
-}
 
 /* Mobile Adjustments */
 @media (max-width: 800px) { input, select, textarea { font-size: 16px !important; } }
@@ -242,11 +117,6 @@ def get_csv_data(computed_list, holdings_list, is_gross):
         })
     return pd.DataFrame(export_data).to_csv(index=False).encode('utf-8')
 
-
-# Info Icon
-def info_icon(text):
-    return f'''<span class="info-tooltip">ⓘ<span class="tooltiptext">{text}</span></span>'''
-
 # ── DATA FETCHING ──
 @st.cache_data(ttl=3600)
 def load_master_data():
@@ -280,34 +150,42 @@ if 'holdings' not in st.session_state:
 st.markdown('<div class="toolbar-wrapper"><div class="toolbar-inner">', unsafe_allow_html=True)
 
 # Adjusted column ratios to fit the new button
-# [Space, Gross, Manual, Assumptions, Tax, Download (Placeholder)]
-col_spacer, col_gross, col_manual, col_assump, col_tax, col_btn = st.columns([0.8, 1.4, 1.6, 1.3, 1.5, 0.5])
+# [Space, Gross Toggle, Manual Toggle, NEW: Assumptions, Tax Select, Download]
+col_spacer, col_gross, col_manual, col_assump, col_tax, col_btn = st.columns([2.5, 0.9, 1, 1.2, 1.4, 0.5])
 
 with col_gross:
-    # Adding an empty div to trigger the flex layout in CSS
-    st.markdown(f"**Grossed-up** {info_icon('Includes franking credits in yield.')}", unsafe_allow_html=True)
-    is_gross_view = st.toggle("Grossed-up", value=False, label_visibility="collapsed", key="gross_toggle")
+    is_gross_view = st.toggle("Grossed-up", value=False)
 
 with col_manual:
-    st.markdown("**Manual Override**", unsafe_allow_html=True)
-    is_edit_mode = st.toggle("Manual Override", value=False, label_visibility="collapsed", key="manual_toggle")
+    is_edit_mode = st.toggle("Manual Override", value=False)
 
 with col_assump:
-    if st.button("Assumptions", use_container_width=True):
+    # This sits to the left of the Tax Selector on Desktop
+    # And horizontally to the right of Download on Mobile (Streamlit stacks columns)
+    if st.button("ℹ️ Info", use_container_width=True, help="View Calculation Assumptions"):
         @st.dialog("Calculation Assumptions")
         def show_assumptions():
             st.markdown("### 🇦🇺 Australian Tax Logic")
+            st.write("Our calculations align with ATO standards:")
             st.markdown("""
-            - **Corporate Tax:** Fixed at **30%**.
-            - **Medicare Levy:** Included in marginal rates.
-            - **Data:** 20-minute price delay.
+            - **Corporate Tax:** Fixed at **30%** for all franking credits.
+            - **Medicare Levy:** Included in all marginal tax rate options (e.g., 32.5% becomes 34.5%).
+            - **Price Data:** Sourced via API with a ~20-minute delay.
+            - **Yields:** Calculated on trailing 12-month (TTM) distributions.
             """)
-            if st.button("Close"): st.rerun()
+            if st.button("Close", use_container_width=True):
+                st.rerun()
         show_assumptions()
 
 with col_tax:
-    selected_env = st.selectbox("Tax", list(TAX_ENVIRONMENTS.keys()), label_visibility="collapsed")
+    selected_env = st.selectbox(
+        "Tax Environment",
+        list(TAX_ENVIRONMENTS.keys()),
+        label_visibility="collapsed"
+    )
     tax_rate = TAX_ENVIRONMENTS[selected_env]
+
+st.markdown('</div></div>', unsafe_allow_html=True)
 
 # ── CALCULATION LOGIC ──
 computed = []
@@ -344,13 +222,14 @@ for h in st.session_state.holdings:
 
 # ── DOWNLOAD ──
 with col_btn:
+    # Prepare the CSV data
     csv = get_csv_data(computed, st.session_state.holdings, is_gross_view)
     st.download_button(
         label="📥",
         data=csv,
         file_name="asx_dividend_report.csv",
         mime="text/csv",
-        key="download_btn" # Unique key for safety
+        help="Download CSV"
     )
 
 # ----- MOBILE LAYOUT ------
@@ -463,23 +342,13 @@ else:
     yield_head = "Gross Yield" if is_gross_view else "Yield"
     inc_head = "Gross Inc." if is_gross_view else "Annual Inc."
     
-st.markdown(f"""
-<div class="tbl-header">
-    <span>Ticker</span>
-    <span>Company</span>
-    <span>Units</span>
-    <span class="r">Price {info_icon('Market price (20min delay)')}</span>
-    <span class="r">Value</span>
-    <span class="r">{yield_head} {info_icon('Annual dividend ÷ Price')}</span>
-    <span class="r">{inc_head} {info_icon('Total estimated annual return')}</span>
-    <span class="r">Franking {info_icon('% of dividend already taxed')}</span>
-    <span></span>
-</div>
-""", unsafe_allow_html=True)
+    st.markdown(f"""<div class="tbl-header">
+        <span>Ticker</span><span>Company</span><span>Units</span><span class="r">Price</span><span class="r">Value</span>
+        <span class="r">{yield_head}</span><span class="r">{inc_head}</span><span class="r">Franking</span><span></span>
+    </div>""", unsafe_allow_html=True)
     
-to_del = None
-
-for i, h in enumerate(st.session_state.holdings):
+    to_del = None
+    for i, h in enumerate(st.session_state.holdings):
         c, data, rid = computed[i], MASTER_DATA.get(h['ticker'].upper().strip()), h['id']
         cols = st.columns([1.2, 1.8, 0.7, 0.9, 1.0, 0.9, 1.1, 0.9, 0.6])
     
@@ -514,8 +383,7 @@ for i, h in enumerate(st.session_state.holdings):
         with cols[8]: 
             if st.button("✕", key=f"d_{rid}"): to_del = i
     
-if to_del is not None: st.session_state.holdings.pop(to_del); st.rerun()
-    
-if st.button("+ Add Holding", use_container_width=True):
+    if to_del is not None: st.session_state.holdings.pop(to_del); st.rerun()
+    if st.button("+ Add Holding", use_container_width=True):
         st.session_state.holdings.append({"ticker": "", "units": 0.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())})
         st.rerun()
