@@ -169,6 +169,11 @@ def get_csv_data(computed_list, holdings_list, is_gross):
         })
     return pd.DataFrame(export_data).to_csv(index=False).encode('utf-8')
 
+
+# Info Icon
+def info_icon(text):
+    return f'''<span class="info-tooltip">ⓘ<span class="tooltiptext">{text}</span></span>'''
+
 # ── DATA FETCHING ──
 @st.cache_data(ttl=3600)
 def load_master_data():
@@ -206,7 +211,11 @@ st.markdown('<div class="toolbar-wrapper"><div class="toolbar-inner">', unsafe_a
 col_spacer, col_gross, col_manual, col_assump, col_tax, col_btn = st.columns([2.0, 0.9, 1.4, 0.7, 1.4, 0.5])
 
 with col_gross:
-    is_gross_view = st.toggle("Grossed-up", value=False)
+    # 1. Custom Label with Info Icon
+    st.markdown(f"**Grossed-up** {info_icon('Include the value of franking credits in all yield and income calculations.')}", unsafe_allow_html=True)
+    
+    # 2. Toggle with hidden label to keep it clean
+    is_gross_view = st.toggle("Grossed-up", value=False, label_visibility="collapsed")
 
 with col_manual:
     is_edit_mode = st.toggle("Manual Override", value=False)
@@ -393,10 +402,6 @@ else:
     # ── TABLE ──
     yield_head = "Gross Yield" if is_gross_view else "Yield"
     inc_head = "Gross Inc." if is_gross_view else "Annual Inc."
-
-    # Info Icon
-    def info_icon(text):
-        return f'''<span class="info-tooltip">ⓘ<span class="tooltiptext">{text}</span></span>'''
     
 st.markdown(f"""
 <div class="tbl-header">
