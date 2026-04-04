@@ -117,6 +117,10 @@ def get_csv_data(computed_list, holdings_list, is_gross):
         })
     return pd.DataFrame(export_data).to_csv(index=False).encode('utf-8')
 
+# Info Icon
+def info_icon(text):
+    return f'''<span class="info-tooltip">ⓘ<span class="tooltiptext">{text}</span></span>'''
+
 # ── DATA FETCHING ──
 @st.cache_data(ttl=3600)
 def load_master_data():
@@ -149,12 +153,13 @@ if 'holdings' not in st.session_state:
 # ── TOOLBAR ──
 st.markdown('<div class="toolbar-wrapper"><div class="toolbar-inner">', unsafe_allow_html=True)
 
-# Adjusted column ratios to fit the new button
+
 # [Space, Gross Toggle, Manual Toggle, NEW: Assumptions, Tax Select, Download]
-col_spacer, col_gross, col_manual, col_assump, col_tax, col_btn = st.columns([2.5, 0.9, 1, 1.2, 1.4, 0.5])
+col_spacer, col_gross, col_manual, col_assump, col_tax, col_btn = st.columns([0.8, 1.4, 1.6, 1.3, 1.5, 0.5])
 
 with col_gross:
-    is_gross_view = st.toggle("Grossed-up", value=False)
+    st.markdown(f"**Grossed-up** {info_icon('Includes franking credits in yield.')}", unsafe_allow_html=True)
+    is_gross_view = st.toggle("Grossed-up", value=False, label_visibility="collapsed", key="gross_toggle")
 
 with col_manual:
     is_edit_mode = st.toggle("Manual Override", value=False)
@@ -162,7 +167,7 @@ with col_manual:
 with col_assump:
     # This sits to the left of the Tax Selector on Desktop
     # And horizontally to the right of Download on Mobile (Streamlit stacks columns)
-    if st.button("ℹ️ Info", use_container_width=True, help="View Calculation Assumptions"):
+    if st.button("Assumptions", use_container_width=True, help="View Calculation Assumptions"):
         @st.dialog("Calculation Assumptions")
         def show_assumptions():
             st.markdown("### 🇦🇺 Australian Tax Logic")
@@ -342,10 +347,19 @@ else:
     yield_head = "Gross Yield" if is_gross_view else "Yield"
     inc_head = "Gross Inc." if is_gross_view else "Annual Inc."
     
-    st.markdown(f"""<div class="tbl-header">
-        <span>Ticker</span><span>Company</span><span>Units</span><span class="r">Price</span><span class="r">Value</span>
-        <span class="r">{yield_head}</span><span class="r">{inc_head}</span><span class="r">Franking</span><span></span>
-    </div>""", unsafe_allow_html=True)
+st.markdown(f"""
+<div class="tbl-header">
+    <span>Ticker</span>
+    <span>Company</span>
+    <span>Units</span>
+    <span class="r">Price {info_icon('Market price (20min delay)')}</span>
+    <span class="r">Value</span>
+    <span class="r">{yield_head} {info_icon('Annual dividend ÷ Price')}</span>
+    <span class="r">{inc_head} {info_icon('Total estimated annual return')}</span>
+    <span class="r">Franking {info_icon('% of dividend already taxed')}</span>
+    <span></span>
+</div>
+""", unsafe_allow_html=True)
     
     to_del = None
     for i, h in enumerate(st.session_state.holdings):
