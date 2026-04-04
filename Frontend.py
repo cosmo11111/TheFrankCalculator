@@ -257,7 +257,8 @@ st.markdown('<div class="toolbar-wrapper"><div class="toolbar-inner">', unsafe_a
 
 # Adjusted column ratios to fit the new button
 # [Space, Gross Toggle, Manual Toggle, NEW: Assumptions, Tax Select, Download]
-col_spacer, col_gross, col_manual, col_assump, col_tax, col_btn = st.columns([1.2, 1.1, 1.5, 1.2, 1.5, 0.5])
+# [Space, Gross, Manual, Assumptions, Tax, Download]
+col_spacer, col_gross, col_manual, col_assump, col_tax, col_btn = st.columns([1.0, 1.2, 1.6, 1.3, 1.4, 0.5])
 
 with col_gross:
     st.markdown(f"**Grossed-up** {info_icon('Includes franking credits in yield.')}", unsafe_allow_html=True)
