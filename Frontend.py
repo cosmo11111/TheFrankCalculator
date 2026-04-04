@@ -212,18 +212,20 @@ st.markdown('<div class="toolbar-wrapper"><div class="toolbar-inner">', unsafe_a
 col_spacer, col_gross, col_manual, col_assump, col_tax, col_btn = st.columns([0.8, 1.4, 1.6, 1.3, 1.5, 0.5])
 
 with col_gross:
-    st.markdown(
-        f"""<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
-            <span style="font-size:14px;font-weight:600;">Grossed-up</span>
-            {info_icon('Includes franking credits in yield.')}
-        </div>""",
-        unsafe_allow_html=True
+    gross_val = st.toggle(
+        f"Grossed-up ⓘ",
+        value=False,
+        key="gross_toggle",
+        help="Includes franking credits in yield."
     )
-    is_gross_view = st.toggle("Grossed-up", value=False, label_visibility="collapsed", key="gross_toggle")
+    is_gross_view = gross_val
 
 with col_manual:
-    st.markdown("**Manual Override**", unsafe_allow_html=True)
-    is_edit_mode = st.toggle("Manual Override", value=False, label_visibility="collapsed", key="manual_toggle")
+    is_edit_mode = st.toggle(
+        "Manual Override",
+        value=False,
+        key="manual_toggle"
+    )
 
 with col_assump:
     if st.button("Assumptions", use_container_width=True):
