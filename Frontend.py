@@ -61,7 +61,7 @@ div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 
     position: relative;
     display: inline-block;
     margin-left: 4px;
-    color: #0066ff; /* SaaS Blue - change to #999 for subtle gray */
+    color: #999; 
     font-size: 0.75rem;
     cursor: help;
     vertical-align: middle;
@@ -212,8 +212,13 @@ st.markdown('<div class="toolbar-wrapper"><div class="toolbar-inner">', unsafe_a
 col_spacer, col_gross, col_manual, col_assump, col_tax, col_btn = st.columns([0.8, 1.4, 1.6, 1.3, 1.5, 0.5])
 
 with col_gross:
-    # Adding an empty div to trigger the flex layout in CSS
-    st.markdown(f"**Grossed-up** {info_icon('Includes franking credits in yield.')}", unsafe_allow_html=True)
+    st.markdown(
+        f"""<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+            <span style="font-size:14px;font-weight:600;">Grossed-up</span>
+            {info_icon('Includes franking credits in yield.')}
+        </div>""",
+        unsafe_allow_html=True
+    )
     is_gross_view = st.toggle("Grossed-up", value=False, label_visibility="collapsed", key="gross_toggle")
 
 with col_manual:
