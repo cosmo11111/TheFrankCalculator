@@ -398,63 +398,63 @@ else:
     yield_head = "Gross Yield" if is_gross_view else "Yield"
     inc_head = "Gross Inc." if is_gross_view else "Annual Inc."
     
-st.markdown(f"""
-<div class="tbl-header">
-    <span>Ticker</span>
-    <span>Company</span>
-    <span>Units</span>
-    <span class="r">Price {info_icon('Market price (20min delay)')}</span>
-    <span class="r">Value</span>
-    <span class="r">{yield_head} {info_icon('Annual dividend ÷ Price')}</span>
-    <span class="r">{inc_head} {info_icon('Total estimated annual return')}</span>
-    <span class="r">Franking {info_icon('% of dividend already taxed')}</span>
-    <span></span>
-</div>
-""", unsafe_allow_html=True)
-    
-to_del = None
-
-for i, h in enumerate(st.session_state.holdings):
-        c, data, rid = computed[i], MASTER_DATA.get(h['ticker'].upper().strip()), h['id']
-        cols = st.columns([1.2, 1.8, 0.7, 0.9, 1.0, 0.9, 1.1, 0.9, 0.6])
-    
-        with cols[0]: # Ticker
-            opts = [""] + sorted(MASTER_DATA.keys())
-            new_t = st.selectbox("T", opts, index=opts.index(h['ticker']) if h['ticker'] in opts else 0, key=f"t_{rid}", label_visibility="collapsed")
-            if new_t != h['ticker']: st.session_state.holdings[i]['ticker'] = new_t; st.rerun()
-    
-        with cols[2]: # Units
-            new_u = st.number_input("U", value=float(h['units']), key=f"u_{rid}", format="%g", label_visibility="collapsed")
-            if new_u != h['units']: st.session_state.holdings[i]['units'] = new_u; st.rerun()
-    
-        with cols[3]: # Price
-            if is_edit_mode:
-                new_p = st.number_input("P", value=float(c['p']), key=f"p_{rid}", format="%g", label_visibility="collapsed")
-                if new_p != h['custom_p']: st.session_state.holdings[i]['custom_p'] = new_p; st.rerun()
-            else: st.markdown(f'<div style="text-align:right;padding-top:9px;">{fmt_aud2(c["p"])}</div>', unsafe_allow_html=True)
-    
-        with cols[5]: # Yield
-            if is_edit_mode:
-                new_y = st.number_input("Y", value=float(c['y']), key=f"y_{rid}", format="%g", label_visibility="collapsed")
-                if new_y != h['custom_y']: st.session_state.holdings[i]['custom_y'] = new_y; st.rerun()
-            else:
-                y_val = (c['gross']/c['val']*100) if is_gross_view and c['val'] else c['y']
-                st.markdown(f'<div style="text-align:right;padding-top:9px;color:{"#166534" if is_gross_view else "#666"};">{fmt_pct(y_val)}</div>', unsafe_allow_html=True)
-    
-        # Static Columns
-        with cols[1]: st.markdown(f'<div style="color:#666;padding-top:9px;">{data["name"] if data else "—"}</div>', unsafe_allow_html=True)
-        with cols[4]: st.markdown(f'<div style="font-weight:600;text-align:right;padding-top:9px;">{fmt_aud(c["val"])}</div>', unsafe_allow_html=True)
-        with cols[6]: st.markdown(f'<div style="font-weight:600;text-align:right;padding-top:9px;">{fmt_aud(c["gross"] if is_gross_view else c["cash"])}</div>', unsafe_allow_html=True)
-        with cols[7]: st.markdown(f'<div style="text-align:right;padding-top:9px;">{franking_badge(c["f"])}</div>', unsafe_allow_html=True)
-        with cols[8]: 
-            if st.button("✕", key=f"d_{rid}"): to_del = i
-    
-if to_del is not None: st.session_state.holdings.pop(to_del); st.rerun()
-    
-if st.button("+ Add Holding", use_container_width=True):
-        st.session_state.holdings.append({"ticker": "", "units": 0.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())})
-        st.rerun()
+    st.markdown(f"""
+    <div class="tbl-header">
+        <span>Ticker</span>
+        <span>Company</span>
+        <span>Units</span>
+        <span class="r">Price {info_icon('Market price (20min delay)')}</span>
+        <span class="r">Value</span>
+        <span class="r">{yield_head} {info_icon('Annual dividend ÷ Price')}</span>
+        <span class="r">{inc_head} {info_icon('Total estimated annual return')}</span>
+        <span class="r">Franking {info_icon('% of dividend already taxed')}</span>
+        <span></span>
+    </div>
+    """, unsafe_allow_html=True)
         
-        if st.button("+ Add Holding", use_container_width=True):
+    to_del = None
+    
+    for i, h in enumerate(st.session_state.holdings):
+            c, data, rid = computed[i], MASTER_DATA.get(h['ticker'].upper().strip()), h['id']
+            cols = st.columns([1.2, 1.8, 0.7, 0.9, 1.0, 0.9, 1.1, 0.9, 0.6])
+        
+            with cols[0]: # Ticker
+                opts = [""] + sorted(MASTER_DATA.keys())
+                new_t = st.selectbox("T", opts, index=opts.index(h['ticker']) if h['ticker'] in opts else 0, key=f"t_{rid}", label_visibility="collapsed")
+                if new_t != h['ticker']: st.session_state.holdings[i]['ticker'] = new_t; st.rerun()
+        
+            with cols[2]: # Units
+                new_u = st.number_input("U", value=float(h['units']), key=f"u_{rid}", format="%g", label_visibility="collapsed")
+                if new_u != h['units']: st.session_state.holdings[i]['units'] = new_u; st.rerun()
+        
+            with cols[3]: # Price
+                if is_edit_mode:
+                    new_p = st.number_input("P", value=float(c['p']), key=f"p_{rid}", format="%g", label_visibility="collapsed")
+                    if new_p != h['custom_p']: st.session_state.holdings[i]['custom_p'] = new_p; st.rerun()
+                else: st.markdown(f'<div style="text-align:right;padding-top:9px;">{fmt_aud2(c["p"])}</div>', unsafe_allow_html=True)
+        
+            with cols[5]: # Yield
+                if is_edit_mode:
+                    new_y = st.number_input("Y", value=float(c['y']), key=f"y_{rid}", format="%g", label_visibility="collapsed")
+                    if new_y != h['custom_y']: st.session_state.holdings[i]['custom_y'] = new_y; st.rerun()
+                else:
+                    y_val = (c['gross']/c['val']*100) if is_gross_view and c['val'] else c['y']
+                    st.markdown(f'<div style="text-align:right;padding-top:9px;color:{"#166534" if is_gross_view else "#666"};">{fmt_pct(y_val)}</div>', unsafe_allow_html=True)
+        
+            # Static Columns
+            with cols[1]: st.markdown(f'<div style="color:#666;padding-top:9px;">{data["name"] if data else "—"}</div>', unsafe_allow_html=True)
+            with cols[4]: st.markdown(f'<div style="font-weight:600;text-align:right;padding-top:9px;">{fmt_aud(c["val"])}</div>', unsafe_allow_html=True)
+            with cols[6]: st.markdown(f'<div style="font-weight:600;text-align:right;padding-top:9px;">{fmt_aud(c["gross"] if is_gross_view else c["cash"])}</div>', unsafe_allow_html=True)
+            with cols[7]: st.markdown(f'<div style="text-align:right;padding-top:9px;">{franking_badge(c["f"])}</div>', unsafe_allow_html=True)
+            with cols[8]: 
+                if st.button("✕", key=f"d_{rid}"): to_del = i
+        
+    if to_del is not None: st.session_state.holdings.pop(to_del); st.rerun()
+        
+    if st.button("+ Add Holding", use_container_width=True):
             st.session_state.holdings.append({"ticker": "", "units": 0.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())})
             st.rerun()
+            
+            if st.button("+ Add Holding", use_container_width=True):
+                st.session_state.holdings.append({"ticker": "", "units": 0.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())})
+                st.rerun()
