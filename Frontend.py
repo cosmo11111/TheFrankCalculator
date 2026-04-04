@@ -22,6 +22,14 @@ html, body, .block-container { font-family: 'Inter', sans-serif !important; }
 .page-header h1 { font-size: 20px; font-weight: 600; color: #111; margin: 0; }
 .toolbar { margin-bottom: 1rem; }
 .toolbar .element-container { padding-bottom: 0 !important; }
+.stMainBlockContainer {
+    padding-top: 0.5rem !important;
+}
+
+.stMainBlockContainer > div:first-child {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
 
 /* Summary Cards */
 .summary-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 1.75rem; }
