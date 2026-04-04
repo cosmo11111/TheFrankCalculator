@@ -21,10 +21,6 @@ html, body, .block-container { font-family: 'Inter', sans-serif !important; }
 .page-header h1 { font-size: 20px; font-weight: 600; color: #111; margin: 0; }
 .toolbar { margin-bottom: 1rem; }
 .toolbar .element-container { padding-bottom: 0 !important; }
-/* Align the custom toggle labels with the rest of the toolbar */
-.toolbar-inner .stMarkdown {
-    margin-bottom: -10px; /* Pulls the toggle up slightly to align with selectboxes */
-}
 
 /* Ensure the toggle doesn't have extra padding now that the label is custom */
 div[data-testid="stCheckbox"] {
@@ -220,6 +216,8 @@ st.markdown('<div class="toolbar-wrapper"><div class="toolbar-inner">', unsafe_a
 col_spacer, col_gross, col_manual, col_assump, col_tax, col_btn = st.columns([1.8, 1.1, 1.4, 0.7, 1.5, 0.5])
 
 with col_gross:
+    .toolbar-inner .stMarkdown {
+    margin-bottom: -10px; /* Pulls the toggle up slightly to align with selectboxes */ }
     # 1. Custom Label with Info Icon
     st.markdown(f"**Grossed-up** {info_icon('Include the value of franking credits in all yield and income calculations.')}", unsafe_allow_html=True)
     
