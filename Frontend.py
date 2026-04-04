@@ -32,69 +32,6 @@ html, body, .block-container { font-family: 'Inter', sans-serif !important; }
     vertical-align: middle;
 }
 
-/* 2. The Popup Box Styling */
-.info-tooltip .tooltiptext {
-    visibility: hidden;
-    width: 220px;
-    background-color: #15171a;
-    color: #ffffff;
-    text-align: left;
-    border-radius: 8px;
-    padding: 12px;
-    position: absolute;
-    z-index: 9999; /* High z-index to stay on top */
-    bottom: 150%; 
-    left: 50%;
-    transform: translateX(-50%);
-    opacity: 0;
-    transition: opacity 0.2s;
-    font-size: 0.75rem;
-    font-weight: 400;
-    line-height: 1.4;
-    white-space: normal;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-}
-
-.info-tooltip:hover .tooltiptext {
-    visibility: visible;
-    opacity: 1;
-}
-
-/* 3. Stop "Manual Override" and "Grossed-up" from wrapping */
-[data-testid="stMarkdownContainer"] p, 
-[data-testid="stWidgetLabel"] p {
-    white-space: nowrap !important;
-}
-
-/* 4. Center the buttons vertically in the toolbar */
-.stButton button {
-    margin-top: 24px; /* Adjust this to align "Assumptions" with the toggles */
-}
-
-/* Force Horizontal Alignment for Toggles */
-[data-testid="column"] > div > div > div {
-    display: flex;
-    align-items: center;
-    gap: 8px; /* Space between text and toggle */
-}
-
-/* Ensure the label doesn't wrap */
-.stMarkdown p {
-    margin-bottom: 0 !important;
-    white-space: nowrap !important;
-}
-
-/* Align the Assumptions button with the toggles */
-[data-testid="stButton"] {
-    margin-top: 0px !important;
-}
-
-/* Adjust the Toggle widget's internal padding */
-[data-testid="stCheckbox"] {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-}
-
 /* Summary Cards */
 .summary-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 1.75rem; }
 .summary-card { background: #fafafa; border: 1px solid #f0f0f0; border-radius: 10px; padding: 16px 18px; }
