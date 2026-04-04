@@ -71,6 +71,30 @@ html, body, .block-container { font-family: 'Inter', sans-serif !important; }
     margin-top: 24px; /* Adjust this to align "Assumptions" with the toggles */
 }
 
+/* Force Horizontal Alignment for Toggles */
+[data-testid="column"] > div > div > div {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between text and toggle */
+}
+
+/* Ensure the label doesn't wrap */
+.stMarkdown p {
+    margin-bottom: 0 !important;
+    white-space: nowrap !important;
+}
+
+/* Align the Assumptions button with the toggles */
+[data-testid="stButton"] {
+    margin-top: 0px !important;
+}
+
+/* Adjust the Toggle widget's internal padding */
+[data-testid="stCheckbox"] {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
 /* Summary Cards */
 .summary-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 1.75rem; }
 .summary-card { background: #fafafa; border: 1px solid #f0f0f0; border-radius: 10px; padding: 16px 18px; }
@@ -256,47 +280,34 @@ if 'holdings' not in st.session_state:
 st.markdown('<div class="toolbar-wrapper"><div class="toolbar-inner">', unsafe_allow_html=True)
 
 # Adjusted column ratios to fit the new button
-# [Space, Gross Toggle, Manual Toggle, NEW: Assumptions, Tax Select, Download]
-# [Space, Gross, Manual, Assumptions, Tax, Download]
-col_spacer, col_gross, col_manual, col_assump, col_tax, col_btn = st.columns([1.0, 1.2, 1.6, 1.3, 1.4, 0.5])
+# [Space, Gross, Manual, Assumptions, Tax, Download (Placeholder)]
+col_spacer, col_gross, col_manual, col_assump, col_tax, col_btn = st.columns([0.8, 1.4, 1.6, 1.3, 1.5, 0.5])
 
 with col_gross:
+    # Adding an empty div to trigger the flex layout in CSS
     st.markdown(f"**Grossed-up** {info_icon('Includes franking credits in yield.')}", unsafe_allow_html=True)
-    # Added key="gross_toggle"
     is_gross_view = st.toggle("Grossed-up", value=False, label_visibility="collapsed", key="gross_toggle")
 
 with col_manual:
     st.markdown("**Manual Override**", unsafe_allow_html=True)
-    # Added key="manual_toggle"
     is_edit_mode = st.toggle("Manual Override", value=False, label_visibility="collapsed", key="manual_toggle")
-    
+
 with col_assump:
-    # This sits to the left of the Tax Selector on Desktop
-    # And horizontally to the right of Download on Mobile (Streamlit stacks columns)
-    if st.button("Assumptions", use_container_width=True, help="View Calculation Assumptions"):
+    if st.button("Assumptions", use_container_width=True):
         @st.dialog("Calculation Assumptions")
         def show_assumptions():
             st.markdown("### 🇦🇺 Australian Tax Logic")
-            st.write("Our calculations align with ATO standards:")
             st.markdown("""
-            - **Corporate Tax:** Fixed at **30%** for all franking credits.
-            - **Medicare Levy:** Included in all marginal tax rate options (e.g., 32.5% becomes 34.5%).
-            - **Price Data:** Sourced via API with a ~20-minute delay.
-            - **Yields:** Calculated on trailing 12-month (TTM) distributions.
+            - **Corporate Tax:** Fixed at **30%**.
+            - **Medicare Levy:** Included in marginal rates.
+            - **Data:** 20-minute price delay.
             """)
-            if st.button("Close", use_container_width=True):
-                st.rerun()
+            if st.button("Close"): st.rerun()
         show_assumptions()
 
 with col_tax:
-    selected_env = st.selectbox(
-        "Tax Environment",
-        list(TAX_ENVIRONMENTS.keys()),
-        label_visibility="collapsed"
-    )
+    selected_env = st.selectbox("Tax", list(TAX_ENVIRONMENTS.keys()), label_visibility="collapsed")
     tax_rate = TAX_ENVIRONMENTS[selected_env]
-
-st.markdown('</div></div>', unsafe_allow_html=True)
 
 # ── CALCULATION LOGIC ──
 computed = []
@@ -333,14 +344,13 @@ for h in st.session_state.holdings:
 
 # ── DOWNLOAD ──
 with col_btn:
-    # Prepare the CSV data
     csv = get_csv_data(computed, st.session_state.holdings, is_gross_view)
     st.download_button(
         label="📥",
         data=csv,
         file_name="asx_dividend_report.csv",
         mime="text/csv",
-        help="Download CSV"
+        key="download_btn" # Unique key for safety
     )
 
 # ----- MOBILE LAYOUT ------
