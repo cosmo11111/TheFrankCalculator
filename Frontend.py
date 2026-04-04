@@ -267,9 +267,8 @@ with col_gross:
     is_gross_view = st.toggle("Grossed-up", value=False, label_visibility="collapsed")
 
 with col_manual:
-    st.markdown("**Manual Override**", unsafe_allow_html=True)
-    is_edit_mode = st.toggle("Manual Override", value=False, label_visibility="collapsed")
-
+    is_edit_mode = st.toggle("Manual Override", value=False)
+    
 with col_assump:
     # This sits to the left of the Tax Selector on Desktop
     # And horizontally to the right of Download on Mobile (Streamlit stacks columns)
