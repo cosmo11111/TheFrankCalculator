@@ -16,6 +16,19 @@ html, body, .block-container { font-family: 'Inter', sans-serif !important; }
 .block-container { padding: 0rem 2.5rem 2rem !important; max-width: 1200px; }
 #MainMenu, footer, header { visibility: hidden; }
 
+/* Floating Guide Button */
+div.stButton > button[key="guide_trigger"] {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1000;
+    border-radius: 50px !important;
+    padding: 10px 20px !important;
+    background-color: #15171a !important;
+    color: white !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
 
 /* Header & Toolbar */
 .page-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 2rem; padding-bottom: 1.25rem; border-bottom: 1px solid #f0f0f0; }
@@ -212,6 +225,51 @@ if 'holdings' not in st.session_state:
         {"ticker": "MQG", "units": 243.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())},
     ]
 
+# Initialize Guide State
+if 'guide_step' not in st.session_state:
+    st.session_state.guide_step = None # None means guide is closed
+
+# --- THE GUIDE DIALOGS ---
+@st.dialog("The Frank Calculator Guide")
+def run_guide():
+    step = st.session_state.guide_step
+    
+    if step == "welcome":
+        st.subheader("👋 Welcome!")
+        st.write("Welcome to **The Frank Calculator**. If you're new around here, check out this useful guide.")
+        if st.button("Start Tour", use_container_width=True):
+            st.session_state.guide_step = "summary"
+            st.rerun()
+
+    elif step == "summary":
+        st.subheader("📊 Summary Cards")
+        st.write("These show your portfolio's **Value**, **Income**, and **Yield**. It also calculates franking returns and estimated post-tax income.")
+        col1, col2 = st.columns(2)
+        if col1.button("Back"): st.session_state.guide_step = "welcome"; st.rerun()
+        if col2.button("Next"): st.session_state.guide_step = "table"; st.rerun()
+
+    elif step == "table":
+        st.subheader("📑 The Table")
+        st.write("Add holdings using the button below. Type a ticker (e.g., CBA or VAS) and input your units—the calculator does the rest!")
+        col1, col2 = st.columns(2)
+        if col1.button("Back"): st.session_state.guide_step = "summary"; st.rerun()
+        if col2.button("Next"): st.session_state.guide_step = "toolbar"; st.rerun()
+
+    elif step == "toolbar":
+        st.subheader("🛠️ The Toolbar")
+        st.write("""
+        - **Grossed-Up:** Toggle to include franking credits in yields.
+        - **Manual Override:** Edit prices/yields with your own assumptions.
+        - **Tax Selection:** Choose your specific tax environment for accuracy.
+        """)
+        col1, col2 = st.columns(2)
+        if col1.button("Back"): st.session_state.guide_step = "table"; st.rerun()
+        if col2.button("Finish"): st.session_state.guide_step = None; st.rerun()
+
+# Trigger the dialog if a step is active
+if st.session_state.guide_step:
+    run_guide()
+    
 # ── TOOLBAR ──
 st.markdown('<div class="toolbar-wrapper"><div class="toolbar-inner">', unsafe_allow_html=True)
 
@@ -466,3 +524,10 @@ else:
             if st.button("+ Add Holding", use_container_width=True):
                 st.session_state.holdings.append({"ticker": "", "units": 0.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())})
                 st.rerun()
+
+
+
+# Floating Trigger Button
+if st.button("❓ How to use", key="guide_trigger"):
+    st.session_state.guide_step = "welcome"
+    st.rerun()
