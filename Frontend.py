@@ -30,20 +30,6 @@ div.stButton > button[key="guide_trigger"] {
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-/* The Spotlight Animation */
-@keyframes pulse-highlight {
-    0% { outline: 2px solid #166534; box-shadow: 0 0 0 0px rgba(22, 101, 52, 0.4); }
-    70% { outline: 4px solid #166534; box-shadow: 0 0 0 15px rgba(22, 101, 52, 0); }
-    100% { outline: 2px solid #166534; box-shadow: 0 0 0 0px rgba(22, 101, 52, 0); }
-}
-
-/* Apply this class to sections during the tour */
-.spotlight {
-    animation: pulse-highlight 2s infinite;
-    border-radius: 10px;
-    z-index: 9999;
-    position: relative;
-}
 
 /* Header & Toolbar */
 .page-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 2rem; padding-bottom: 1.25rem; border-bottom: 1px solid #f0f0f0; }
@@ -257,14 +243,8 @@ def run_guide():
             st.rerun()
 
     elif step == "summary":
-        st.write("### ⬆️ Look Above!")
-        st.write("The **Summary Cards** (Value, Income, Yield) are flashing at the top of the page.")
-        # We inject a snippet of JS to add the 'spotlight' class to the summary row
-        st.components.v1.html("""
-            <script>
-                window.parent.document.querySelector('.summary-row').classList.add('spotlight');
-            </script>
-        """, height=0)
+        st.subheader("📊 Summary Cards")
+        st.write("These show your portfolio's **Value**, **Income**, and **Yield**. It also calculates franking returns and estimated post-tax income.")
         col1, col2 = st.columns(2)
         if col1.button("Back"): st.session_state.guide_step = "welcome"; st.rerun()
         if col2.button("Next"): st.session_state.guide_step = "table"; st.rerun()
