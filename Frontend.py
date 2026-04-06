@@ -140,8 +140,30 @@ div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 
         justify-content: space-between !important;
     }
 }
+
+/* Style the specific Assumptions link to look like greyed-out text */
+button[kind="secondary"][key="lnk_assumptions"] {
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    color: #999 !important; /* Subtle Grey */
+    font-size: 11px !important;
+    text-decoration: none !important;
+    font-weight: 400 !important;
+    box-shadow: none !important;
+    display: inline-block !important;
+    float: right;
+}
+
+/* Hover state */
+button[kind="secondary"][key="lnk_assumptions"]:hover {
+    color: #666 !important;
+    background: none !important;
+    text-decoration: none !important;
+}
 </style>
 """, unsafe_allow_html=True)
+
 
 
 # ── DATA SOURCES ──
@@ -307,6 +329,12 @@ with col_assump:
             if st.button("Close"): st.rerun()
         show_assumptions()
 
+with col_assump:
+    # This button now sits in the main toolbar where 'Assumptions' used to be
+    if st.button("How to Use ❓", use_container_width=True):
+        st.session_state.guide_step = "welcome"
+        st.rerun()
+        
 with col_tax:
     selected_env = st.selectbox("Tax", list(TAX_ENVIRONMENTS.keys()), label_visibility="collapsed")
     tax_rate = TAX_ENVIRONMENTS[selected_env]
@@ -526,9 +554,7 @@ else:
                 st.session_state.holdings.append({"ticker": "", "units": 0.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())})
                 st.rerun()
 
-
-
-# Floating Trigger Button
-if st.button("❓ How to use", key="guide_trigger"):
-    st.session_state.guide_step = "welcome"
-    st.rerun()
+    c_left, c_right = st.columns([8, 2]) 
+    with c_right:
+        if st.button("Calculation Assumptions", key="lnk_assumptions"):
+            show_assumptions()
