@@ -552,5 +552,5 @@ else:
                     - **Medicare Levy:** Included in marginal rates.
                     - **Data:** 20-minute price delay.
                     """)
-            if st.button("Close"): st.rerun()
-            show_assumptions()
+                    if st.button("Close"): st.rerun()
+                    show_assumptions()
