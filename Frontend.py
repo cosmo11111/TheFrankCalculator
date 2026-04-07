@@ -531,7 +531,7 @@ else:
     if to_del is not None: st.session_state.holdings.pop(to_del); st.rerun()
         
     # 1. The Add Button (STAYS AS A REGULAR BUTTON)
-    sif st.button("+ Add Holding", use_container_width=True, key="add_new_final"):
+    if st.button("+ Add Holding", use_container_width=True, key="add_new_final"):
         st.session_state.holdings.append({"ticker": "", "units": 0.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())})
         st.rerun()
     
