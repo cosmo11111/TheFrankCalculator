@@ -535,9 +535,9 @@ else:
         st.session_state.holdings.append({"ticker": "", "units": 0.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())})
         st.rerun()
     
-   if t.session_state.get("open_assumptions"):
-    show_assumptions()
-    st.session_state.open_assumptions = False
+    if t.session_state.get("open_assumptions"):
+        show_assumptions()
+        st.session_state.open_assumptions = False
 
     # 2. The Subtle Link Row
     st.markdown(
