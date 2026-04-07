@@ -212,10 +212,6 @@ window.addEventListener('message', (event) => {
 });
 """)
 
-if st.session_state.get("open_assumptions"):
-    show_assumptions()
-    st.session_state.open_assumptions = False
-
 # Info Icon
 def info_icon(text):
     return f'''<span class="info-tooltip">ⓘ<span class="tooltiptext">{text}</span></span>'''
@@ -535,17 +531,24 @@ else:
     if to_del is not None: st.session_state.holdings.pop(to_del); st.rerun()
         
     # 1. The Add Button (STAYS AS A REGULAR BUTTON)
-    if st.button("+ Add Holding", use_container_width=True, key="add_new_final"):
+    sif st.button("+ Add Holding", use_container_width=True, key="add_new_final"):
         st.session_state.holdings.append({"ticker": "", "units": 0.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())})
         st.rerun()
     
+   if t.session_state.get("open_assumptions"):
+    show_assumptions()
+    st.session_state.open_assumptions = False
+
     # 2. The Subtle Link Row
-    if st.markdown(
-        '<p style="font-size:11px; color:#aaa; cursor:pointer; text-decoration:none;" '
-        'onclick="window.parent.postMessage({type: \'open_assumptions\'}, \'*\')">'
-        'Calculation assumptions</p>',
+    st.markdown(
+        """
+        <p style="font-size:11px; color:#aaa; cursor:pointer; text-decoration:none;"
+           onclick="window.parent.postMessage({type: 'open_assumptions'}, '*')">
+           Calculation assumptions
+        </p>
+        """,
         unsafe_allow_html=True
-    ):
-        pass
+    )
+
 
 
