@@ -141,20 +141,22 @@ div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 
     }
 }
 
-/* Style the specific Assumptions link to look like greyed-out text */
-button[kind="secondary"][key="lnk_assumptions"] {
-    background: none !important;
-    border: none !important;
-    padding: 0 !important;
-    color: #999 !important; /* Subtle Grey */
+div[data-testid="stColumn"] div[data-testid="stVerticalBlock"] div:last-child button {
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    color: #999 !important;
     font-size: 11px !important;
-    text-decoration: none !important;
-    font-weight: 400 !important;
-    box-shadow: none !important;
-    display: inline-block !important;
+    padding: 0 !important;
+    height: auto !important;
+    line-height: normal !important;
     float: right;
 }
 
+div[data-testid="stColumn"] div[data-testid="stVerticalBlock"] div:last-child button:hover {
+    color: #111 !important;
+    text-decoration: underline !important;
+    background: transparent !important;
+}
 /* Hover state */
 button[kind="secondary"][key="lnk_assumptions"]:hover {
     color: #666 !important;
