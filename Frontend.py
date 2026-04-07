@@ -141,27 +141,33 @@ div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 
     }
 }
 
-div[data-testid="stColumn"] div[data-testid="stVerticalBlock"] div:last-child button {
+/* Target ONLY the Assumptions link by its unique key */
+button[key="lnk_assumptions"] {
     background: transparent !important;
-    border: 1px solid transparent !important;
+    border: none !important;
+    padding: 0 !important;
     color: #999 !important;
     font-size: 11px !important;
-    padding: 0 !important;
+    text-decoration: none !important;
+    box-shadow: none !important;
     height: auto !important;
+    min-height: 0px !important;
     line-height: normal !important;
     float: right;
+    width: auto !important;
 }
 
-div[data-testid="stColumn"] div[data-testid="stVerticalBlock"] div:last-child button:hover {
+/* Hover state for the link */
+button[key="lnk_assumptions"]:hover {
     color: #111 !important;
     text-decoration: underline !important;
     background: transparent !important;
 }
-/* Hover state */
-button[kind="secondary"][key="lnk_assumptions"]:hover {
-    color: #666 !important;
-    background: none !important;
-    text-decoration: none !important;
+
+/* Ensure the text inside the button inherits the styling */
+button[key="lnk_assumptions"] p {
+    font-size: 11px !important;
+    margin: 0 !important;
 }
 </style>
 """, unsafe_allow_html=True)
