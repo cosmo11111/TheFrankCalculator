@@ -541,10 +541,6 @@ else:
         st.rerun()
     
     # 2. The Subtle Link Row
-    st.markdown(
-        '<span style="font-size:11px;color:#aaa;cursor:pointer;" '
-        'onclick="void(0)">Calculation assumptions</span>',
-        unsafe_allow_html=True
-    )
-    if st.button("Calculation Assumptions", key="lnk_assumptions", help="View how calculations are made"):
-        show_assumptions()
+    if not st.session_state.get("guide_step"):
+        if st.button("Calculation assumptions", key="lnk_assumptions"):
+            show_assumptions()
