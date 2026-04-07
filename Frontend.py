@@ -553,4 +553,4 @@ else:
                     - **Data:** 20-minute price delay.
                     """)
             if st.button("Close"): st.rerun()
-                show_assumptions()
+            show_assumptions()
