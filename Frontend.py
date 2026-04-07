@@ -126,32 +126,15 @@ div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 
     }
 }
 
-/* Replace the existing lnk_assumptions styles with these */
-button[key="lnk_assumptions"] {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    height: auto !important;
-    min-height: 0px !important;
-    width: auto !important;
+.assumption-link {
+    font-size: 11px;
+    color: #aaa;
+    cursor: pointer;
+    text-decoration: none;
 }
-button[key="lnk_assumptions"] p {
-    color: #aaa !important;
-    font-size: 11px !important;
-    font-weight: 400 !important;
-    margin: 0 !important;
-    text-decoration: none !important;
-}
-button[key="lnk_assumptions"]:hover p {
-    color: #666 !important;
-    text-decoration: underline !important;
-}
-button[key="lnk_assumptions"]:focus,
-button[key="lnk_assumptions"]:active {
-    outline: none !important;
-    box-shadow: none !important;
-    background: transparent !important;
+.assumption-link:hover {
+    color: #666;
+    text-decoration: underline;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -541,6 +524,10 @@ else:
         st.rerun()
     
     # 2. The Subtle Link Row
-    if not st.session_state.get("guide_step"):
-        if st.button("Calculation assumptions", key="lnk_assumptions"):
-            show_assumptions()
+    st.markdown(
+    '<p class="assumption-link">Calculation assumptions</p>',
+    unsafe_allow_html=True
+    )
+    if st.button("hidden_assumptions_button", key="assump_hidden", help="", label_visibility="collapsed"):
+        show_assumptions()
+
