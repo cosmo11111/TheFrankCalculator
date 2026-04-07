@@ -126,15 +126,32 @@ div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 
     }
 }
 
-.assumption-link {
-    font-size: 11px;
-    color: #aaa;
-    cursor: pointer;
-    text-decoration: none;
+/* Replace the existing lnk_assumptions styles with these */
+button[key="lnk_assumptions"] {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    height: auto !important;
+    min-height: 0px !important;
+    width: auto !important;
 }
-.assumption-link:hover {
-    color: #666;
-    text-decoration: underline;
+button[key="lnk_assumptions"] p {
+    color: #aaa !important;
+    font-size: 11px !important;
+    font-weight: 400 !important;
+    margin: 0 !important;
+    text-decoration: none !important;
+}
+button[key="lnk_assumptions"]:hover p {
+    color: #666 !important;
+    text-decoration: underline !important;
+}
+button[key="lnk_assumptions"]:focus,
+button[key="lnk_assumptions"]:active {
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -199,18 +216,6 @@ def show_assumptions():
     """)
     if st.button("Close"): 
         st.rerun()
-
-# Tax Assumptions Button
-st_javascript("""
-window.addEventListener('message', (event) => {
-    if (event.data.type === 'open_assumptions') {
-        window.parent.postMessage(
-            {type: 'streamlit:setComponentValue', key: 'open_assumptions', value: true},
-            '*'
-        );
-    }
-});
-""")
 
 # Info Icon
 def info_icon(text):
@@ -535,20 +540,9 @@ else:
         st.session_state.holdings.append({"ticker": "", "units": 0.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())})
         st.rerun()
     
-    if st.session_state.get("open_assumptions"):
-        show_assumptions()
-        st.session_state.open_assumptions = False
-
     # 2. The Subtle Link Row
-    st.markdown(
-        """
-        <p style="font-size:11px; color:#aaa; cursor:pointer; text-decoration:none;"
-           onclick="window.parent.postMessage({type: 'open_assumptions'}, '*')">
-           Calculation assumptions
-        </p>
-        """,
-        unsafe_allow_html=True
-    )
-
+    if not st.session_state.get("guide_step"):
+        if st.button("Calculation assumptions", key="lnk_assumptions"):
+            show_assumptions()
 
 
