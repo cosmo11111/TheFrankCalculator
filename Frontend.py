@@ -551,9 +551,9 @@ else:
                 st.session_state.holdings.append({"ticker": "", "units": 0.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())})
                 st.rerun()
 
-   c_left, c_right = st.columns([8, 2]) 
+c_left, c_right = st.columns([8, 2]) 
 
-    with c_right:
-        # Now the button just triggers the function we defined above
-        if st.button("Calculation Assumptions", key="lnk_assumptions"):
-            show_assumptions()
+with c_right:
+    # Now the button just triggers the function we defined above
+    if st.button("Calculation Assumptions", key="lnk_assumptions"):
+        show_assumptions()
