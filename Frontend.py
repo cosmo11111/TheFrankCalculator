@@ -16,21 +16,6 @@ html, body, .block-container { font-family: 'Inter', sans-serif !important; }
 .block-container { padding: 0rem 2.5rem 2rem !important; max-width: 1200px; }
 #MainMenu, footer, header { visibility: hidden; }
 
-/* Floating Guide Button */
-div.stButton > button[key="guide_trigger"] {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    z-index: 1000;
-    border-radius: 50px !important;
-    padding: 10px 20px !important;
-    background-color: #15171a !important;
-    color: white !important;
-    border: none !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-
 /* Header & Toolbar */
 .page-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 2rem; padding-bottom: 1.25rem; border-bottom: 1px solid #f0f0f0; }
 .page-header h1 { font-size: 20px; font-weight: 600; color: #111; margin: 0; }
@@ -554,10 +539,6 @@ else:
     if st.button("+ Add Holding", use_container_width=True):
             st.session_state.holdings.append({"ticker": "", "units": 0.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())})
             st.rerun()
-            
-            if st.button("+ Add Holding", use_container_width=True):
-                st.session_state.holdings.append({"ticker": "", "units": 0.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())})
-                st.rerun()
 
 c_left, c_right = st.columns([8, 2]) 
 
