@@ -126,8 +126,8 @@ div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 
     }
 }
 
-/* 1. Target the button's wrapper and the button itself specifically */
-div[data-testid="stVerticalBlock"] div:has(button[key="lnk_assumptions"]) button {
+/* Target the Assumptions button to make it look like a text link */
+button[key="lnk_assumptions"] {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
@@ -135,31 +135,32 @@ div[data-testid="stVerticalBlock"] div:has(button[key="lnk_assumptions"]) button
     height: auto !important;
     min-height: 0px !important;
     width: auto !important;
-    float: right !important;
-    display: inline-block !important;
+    text-align: left !important;
+    display: block !important;
+    margin-top: 10px !important;
+    margin-left: 12px !important; /* Aligns with Ticker column */
 }
 
-/* 2. Style the text inside */
-div[data-testid="stVerticalBlock"] div:has(button[key="lnk_assumptions"]) p {
+/* Style the text inside the button */
+button[key="lnk_assumptions"] p {
     color: #999 !important;
     font-size: 11px !important;
     text-decoration: none !important;
     margin: 0 !important;
 }
 
-/* 3. Hover state */
-div[data-testid="stVerticalBlock"] div:has(button[key="lnk_assumptions"]) button:hover p {
-    color: #111 !important;
+/* Hover effect */
+button[key="lnk_assumptions"]:hover p {
+    color: #666 !important;
     text-decoration: underline !important;
 }
 
-/* 4. Kill the active/focus 'halo' effect */
-div[data-testid="stVerticalBlock"] div:has(button[key="lnk_assumptions"]) button:focus,
-div[data-testid="stVerticalBlock"] div:has(button[key="lnk_assumptions"]) button:active {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
+/* Kill the blue 'focus' border Streamlit adds when clicked */
+button[key="lnk_assumptions"]:focus, 
+button[key="lnk_assumptions"]:active {
     outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -549,9 +550,6 @@ else:
         st.rerun()
     
     # 2. The Subtle Link Row
-    f_left, f_right = st.columns([8, 2])
-    
-    with f_right:
-        # The key="lnk_assumptions" is what the CSS is looking for
+    with st.container():
         if st.button("Calculation Assumptions", key="lnk_assumptions"):
             show_assumptions()
