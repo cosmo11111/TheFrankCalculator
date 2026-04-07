@@ -126,33 +126,40 @@ div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 
     }
 }
 
-/* Target ONLY the Assumptions link by its unique key */
-button[key="lnk_assumptions"] {
+/* 1. Target the button via its internal label to strip the background and border */
+button:has(div p:contains("Calculation Assumptions")) {
     background: transparent !important;
     border: none !important;
+    box-shadow: none !important;
     padding: 0 !important;
+    height: auto !important;
+    min-height: 0px !important;
+    width: auto !important;
+    float: right !important;
+}
+
+/* 2. Target the text inside that specific button */
+button:has(div p:contains("Calculation Assumptions")) p {
     color: #999 !important;
     font-size: 11px !important;
     text-decoration: none !important;
-    box-shadow: none !important;
-    height: auto !important;
-    min-height: 0px !important;
-    line-height: normal !important;
-    float: right;
-    width: auto !important;
+    margin: 0 !important;
 }
 
-/* Hover state for the link */
-button[key="lnk_assumptions"]:hover {
+/* 3. Hover state for the text */
+button:has(div p:contains("Calculation Assumptions")):hover p {
     color: #111 !important;
     text-decoration: underline !important;
-    background: transparent !important;
 }
 
-/* Ensure the text inside the button inherits the styling */
-button[key="lnk_assumptions"] p {
-    font-size: 11px !important;
-    margin: 0 !important;
+/* 4. Remove the Streamlit 'Focus' ring and hover background */
+button:has(div p:contains("Calculation Assumptions")):focus,
+button:has(div p:contains("Calculation Assumptions")):active,
+button:has(div p:contains("Calculation Assumptions")):hover {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -536,13 +543,14 @@ else:
         
     if to_del is not None: st.session_state.holdings.pop(to_del); st.rerun()
         
-    if st.button("+ Add Holding", use_container_width=True):
-            st.session_state.holdings.append({"ticker": "", "units": 0.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())})
-            st.rerun()
-
-c_left, c_right = st.columns([8, 2]) 
-
-with c_right:
-    # Now the button just triggers the function we defined above
-    if st.button("Calculation Assumptions", key="lnk_assumptions"):
-        show_assumptions()
+    # 1. The Add Button (STAYS AS A REGULAR BUTTON)
+    if st.button("+ Add Holding", use_container_width=True, key="add_new_final"):
+        st.session_state.holdings.append({"ticker": "", "units": 0.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())})
+        st.rerun()
+    
+    # 2. The Subtle Link Row
+    st.write("") 
+    c_l, c_r = st.columns([8, 2])
+    with c_r:
+        if st.button("Calculation Assumptions", key="lnk_assumptions"):
+            show_assumptions()
