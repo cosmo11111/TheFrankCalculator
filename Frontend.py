@@ -307,13 +307,14 @@ with col_gross:
         f"Grossed-up Yield",
         value=False,
         key="gross_toggle",
-        help="Includes franking credits in yield."
+        help="The Grossed-Up Yield toggle changes the yields for each stock to include both the cash income and the value of the franking credits. 
+              It provides a pre-tax indication of the income and provides a useful comparison for stocks that pay dividends at varying franking rates."
     )
     is_gross_view = gross_val
 
 with col_manual:
     is_edit_mode = st.toggle(
-        "Manual Override",
+        "Price & Yield Override",
         value=False,
         key="manual_toggle"
     )
