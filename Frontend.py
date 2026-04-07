@@ -126,7 +126,7 @@ div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 
     }
 }
 
-/* Target the Assumptions button to make it look like a text link */
+/* Replace the existing lnk_assumptions styles with these */
 button[key="lnk_assumptions"] {
     background: transparent !important;
     border: none !important;
@@ -135,28 +135,19 @@ button[key="lnk_assumptions"] {
     height: auto !important;
     min-height: 0px !important;
     width: auto !important;
-    text-align: left !important;
-    display: block !important;
-    margin-top: 10px !important;
-    margin-left: 12px !important; /* Aligns with Ticker column */
 }
-
-/* Style the text inside the button */
 button[key="lnk_assumptions"] p {
-    color: #999 !important;
+    color: #aaa !important;
     font-size: 11px !important;
-    text-decoration: none !important;
+    font-weight: 400 !important;
     margin: 0 !important;
+    text-decoration: none !important;
 }
-
-/* Hover effect */
 button[key="lnk_assumptions"]:hover p {
     color: #666 !important;
     text-decoration: underline !important;
 }
-
-/* Kill the blue 'focus' border Streamlit adds when clicked */
-button[key="lnk_assumptions"]:focus, 
+button[key="lnk_assumptions"]:focus,
 button[key="lnk_assumptions"]:active {
     outline: none !important;
     box-shadow: none !important;
@@ -550,6 +541,10 @@ else:
         st.rerun()
     
     # 2. The Subtle Link Row
-    with st.container():
-        if st.button("Calculation Assumptions", key="lnk_assumptions"):
-            show_assumptions()
+    st.markdown(
+        '<span style="font-size:11px;color:#aaa;cursor:pointer;" '
+        'onclick="void(0)">Calculation assumptions</span>',
+        unsafe_allow_html=True
+    )
+    if st.button("Calculation Assumptions", key="lnk_assumptions", help="View how calculations are made"):
+        show_assumptions()
