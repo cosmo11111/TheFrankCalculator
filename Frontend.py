@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import uuid
 from streamlit_javascript import st_javascript
-import streamlit.components.v1 as components
 
 # --- CONFIG ---
 st.set_page_config(layout="wide", page_title="ASX Dividend Tool", page_icon="📊")
@@ -320,110 +319,11 @@ with col_manual:
     )
 
 with col_assump:
+    # This button now sits in the main toolbar where 'Assumptions' used to be
     if st.button("How to Use ❓", use_container_width=True):
-        st.session_state.show_guide = True
-
-if st.session_state.get("show_guide", False):
-    components.html("""
-    <style>
-      * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; }
-      body { margin: 0; background: transparent; }
-      .overlay {
-        position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-        z-index: 9998; display: flex; align-items: center; justify-content: center;
-      }
-      .card {
-        background: #fff; border-radius: 12px; padding: 24px 28px;
-        width: 340px; box-shadow: 0 16px 40px rgba(0,0,0,0.18);
-        position: relative; z-index: 9999;
-      }
-      .step-label { font-size: 11px; color: #aaa; margin-bottom: 6px; }
-      h3 { font-size: 15px; font-weight: 500; color: #111; margin: 0 0 8px; }
-      p { font-size: 13px; color: #666; line-height: 1.55; margin: 0 0 16px; }
-      .dots { display: flex; gap: 5px; margin-bottom: 16px; }
-      .dot { width: 6px; height: 6px; border-radius: 50%; background: #e0e0e0; }
-      .dot.active { background: #111; }
-      .btns { display: flex; gap: 8px; }
-      .btns button { flex: 1; padding: 8px; border-radius: 7px; font-size: 13px; cursor: pointer;
-        border: 1px solid #e5e5e5; background: #f5f5f5; color: #111; }
-      .btns button.primary { background: #111; color: #fff; border-color: #111; }
-      
-      /* Highlight spotlights — these are fixed-position cutouts that match 
-         approximate positions of each section in the Streamlit page.
-         You will need to tune top/height values to match your actual layout. */
-      .spotlight {
-        position: fixed; border-radius: 8px;
-        border: 2px solid rgba(255,255,255,0.8);
-        box-shadow: 0 0 0 9999px rgba(0,0,0,0.5);
-        pointer-events: none; z-index: 9997;
-        transition: all 0.3s ease;
-      }
-    </style>
-
-    <div class="overlay" id="overlay">
-      <div class="spotlight" id="spotlight"></div>
-      <div class="card">
-        <div class="step-label" id="stepLabel"></div>
-        <div class="dots" id="dots"></div>
-        <h3 id="title"></h3>
-        <p id="body"></p>
-        <div class="btns">
-          <button id="btnBack" onclick="prev()">Back</button>
-          <button class="primary" onclick="next()">Next</button>
-        </div>
-      </div>
-    </div>
-
-    <script>
-    const steps = [
-      {
-        title: "The toolbar",
-        body: "Toggle grossed-up yield to include franking credits. Use manual override to enter your own price and yield assumptions.",
-        // Approximate top/height for the toolbar row in Streamlit
-        spot: { top: 56, height: 48, left: 80, right: 80 }
-      },
-      {
-        title: "Summary cards",
-        body: "Live portfolio totals — value, income, yield, franking credits, and your estimated post-tax income.",
-        spot: { top: 120, height: 90, left: 80, right: 80 }
-      },
-      {
-        title: "Holdings table",
-        body: "Add a ticker and units — prices and dividends are pulled automatically. Click ✕ to remove any row.",
-        spot: { top: 230, height: 180, left: 80, right: 80 }
-      },
-    ];
-
-    let i = 0;
-
-    function render() {
-      const s = steps[i];
-      document.getElementById('title').textContent = s.title;
-      document.getElementById('body').textContent = s.body;
-      document.getElementById('stepLabel').textContent = `Step ${i+1} of ${steps.length}`;
-      document.getElementById('btnBack').style.display = i === 0 ? 'none' : '';
-
-      const sp = document.getElementById('spotlight');
-      sp.style.top = s.spot.top + 'px';
-      sp.style.left = s.spot.left + 'px';
-      sp.style.right = s.spot.right + 'px';
-      sp.style.height = s.spot.height + 'px';
-      sp.style.width = (window.innerWidth - s.spot.left - s.spot.right) + 'px';
-
-      const dots = document.getElementById('dots');
-      dots.innerHTML = steps.map((_,j) =>
-        `<div class="dot ${j===i?'active':''}"></div>`).join('');
-    }
-
-    function next() {
-      if (i < steps.length - 1) { i++; render(); }
-      else { document.getElementById('overlay').remove(); window.parent.postMessage({type:'guide_done'},'*'); }
-    }
-    function prev() { if (i > 0) { i--; render(); } }
-    render();
-    </script>
-    """, height=0, scrolling=False)
-    
+        st.session_state.guide_step = "welcome"
+        st.rerun()
+        
 with col_tax:
     selected_env = st.selectbox("Tax", list(TAX_ENVIRONMENTS.keys()), label_visibility="collapsed")
     tax_rate = TAX_ENVIRONMENTS[selected_env]
