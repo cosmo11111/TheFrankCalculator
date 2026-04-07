@@ -317,19 +317,6 @@ with col_manual:
     )
 
 with col_assump:
-    if st.button("Assumptions", use_container_width=True):
-        @st.dialog("Calculation Assumptions")
-        def show_assumptions():
-            st.markdown("### 🇦🇺 Australian Tax Logic")
-            st.markdown("""
-            - **Corporate Tax:** Fixed at **30%**.
-            - **Medicare Levy:** Included in marginal rates.
-            - **Data:** 20-minute price delay.
-            """)
-            if st.button("Close"): st.rerun()
-        show_assumptions()
-
-with col_assump:
     # This button now sits in the main toolbar where 'Assumptions' used to be
     if st.button("How to Use ❓", use_container_width=True):
         st.session_state.guide_step = "welcome"
@@ -556,5 +543,14 @@ else:
 
     c_left, c_right = st.columns([8, 2]) 
     with c_right:
-        if st.button("Calculation Assumptions", key="lnk_assumptions"):
-            show_assumptions()
+            if st.button("Assumptions", use_container_width=True):
+                @st.dialog("Calculation Assumptions")
+                def show_assumptions():
+                    st.markdown("### 🇦🇺 Australian Tax Logic")
+                    st.markdown("""
+                    - **Corporate Tax:** Fixed at **30%**.
+                    - **Medicare Levy:** Included in marginal rates.
+                    - **Data:** 20-minute price delay.
+                    """)
+            if st.button("Close"): st.rerun()
+                show_assumptions()
