@@ -200,6 +200,22 @@ def show_assumptions():
     if st.button("Close"): 
         st.rerun()
 
+# Tax Assumptions Button
+st_javascript("""
+window.addEventListener('message', (event) => {
+    if (event.data.type === 'open_assumptions') {
+        window.parent.postMessage(
+            {type: 'streamlit:setComponentValue', key: 'open_assumptions', value: true},
+            '*'
+        );
+    }
+});
+""")
+
+if st.session_state.get("open_assumptions"):
+    show_assumptions()
+    st.session_state.open_assumptions = False
+
 # Info Icon
 def info_icon(text):
     return f'''<span class="info-tooltip">ⓘ<span class="tooltiptext">{text}</span></span>'''
@@ -524,10 +540,12 @@ else:
         st.rerun()
     
     # 2. The Subtle Link Row
-    st.markdown(
-    '<p class="assumption-link">Calculation assumptions</p>',
-    unsafe_allow_html=True
-    )
-    if st.button("hidden_assumptions_button", key="assump_hidden", help="", label_visibility="collapsed"):
-        show_assumptions()
+    if st.markdown(
+        '<p style="font-size:11px; color:#aaa; cursor:pointer; text-decoration:none;" '
+        'onclick="window.parent.postMessage({type: \'open_assumptions\'}, \'*\')">'
+        'Calculation assumptions</p>',
+        unsafe_allow_html=True
+    ):
+        pass
+
 
