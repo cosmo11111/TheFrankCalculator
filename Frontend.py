@@ -214,6 +214,16 @@ def get_csv_data(computed_list, holdings_list, is_gross):
         })
     return pd.DataFrame(export_data).to_csv(index=False).encode('utf-8')
 
+@st.dialog("Calculation Assumptions")
+def show_assumptions():
+    st.markdown("### 🇦🇺 Australian Tax Logic")
+    st.markdown("""
+    - **Corporate Tax:** Fixed at **30%**.
+    - **Medicare Levy:** Included in marginal rates.
+    - **Data:** 20-minute price delay.
+    """)
+    if st.button("Close"): 
+        st.rerun()
 
 # Info Icon
 def info_icon(text):
@@ -541,16 +551,9 @@ else:
                 st.session_state.holdings.append({"ticker": "", "units": 0.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())})
                 st.rerun()
 
-    c_left, c_right = st.columns([8, 2]) 
+   c_left, c_right = st.columns([8, 2]) 
+
     with c_right:
-            if st.button("Assumptions", use_container_width=True):
-                @st.dialog("Calculation Assumptions")
-                def show_assumptions():
-                    st.markdown("### 🇦🇺 Australian Tax Logic")
-                    st.markdown("""
-                    - **Corporate Tax:** Fixed at **30%**.
-                    - **Medicare Levy:** Included in marginal rates.
-                    - **Data:** 20-minute price delay.
-                    """)
-                    if st.button("Close"): st.rerun()
+        # Now the button just triggers the function we defined above
+        if st.button("Calculation Assumptions", key="lnk_assumptions"):
             show_assumptions()
