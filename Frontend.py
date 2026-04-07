@@ -206,13 +206,12 @@ def get_csv_data(computed_list, holdings_list, is_gross):
         })
     return pd.DataFrame(export_data).to_csv(index=False).encode('utf-8')
 
-@st.dialog("Calculation Assumptions")
+@st.dialog("Tax Assumptions")
 def show_assumptions():
-    st.markdown("### 🇦🇺 Australian Tax Logic")
+    st.markdown("### Australian Tax Logic")
     st.markdown("""
     - **Corporate Tax:** Fixed at **30%**.
-    - **Medicare Levy:** Included in marginal rates.
-    - **Data:** 20-minute price delay.
+    - **Medicare Levy:** Included in marginal rates which are based of the ATO website.
     """)
     if st.button("Close"): 
         st.rerun()
@@ -320,7 +319,7 @@ with col_manual:
 
 with col_assump:
     # This button now sits in the main toolbar where 'Assumptions' used to be
-    if st.button("How to Use ❓", use_container_width=True):
+    if st.button("How to Use", use_container_width=True):
         st.session_state.guide_step = "welcome"
         st.rerun()
         
@@ -487,11 +486,11 @@ else:
         <span>Ticker</span>
         <span>Company</span>
         <span>Units</span>
-        <span class="r">Price {info_icon('Market price (20min delay)')}</span>
+        <span class="r">Price {info_icon('Price generated each day at 10:30am AEST from Yahoo Finance. ')}</span>
         <span class="r">Value</span>
-        <span class="r">{yield_head} {info_icon('Annual dividend ÷ Price')}</span>
-        <span class="r">{inc_head} {info_icon('Total estimated annual return')}</span>
-        <span class="r">Franking {info_icon('% of dividend already taxed')}</span>
+        <span class="r">{yield_head} {info_icon('Dividend yield generated from Yahoo Finance and is the Forward dividend yield. Usually the latest dividend is annualized and is represented as the dividend / share price')}</span>
+        <span class="r">{inc_head} {info_icon('Annual Income is the total value of the holding multiplied by the yield.')}</span>
+        <span class="r">Franking {info_icon('The extent to which an entity has allocated franking credits to a frankable distribution is referred to as the franking percentage.')}</span>
         <span></span>
     </div>
     """, unsafe_allow_html=True)
