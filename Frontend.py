@@ -126,8 +126,8 @@ div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 
     }
 }
 
-/* 1. Target the button via its internal label to strip the background and border */
-button:has(div p:contains("Calculation Assumptions")) {
+/* 1. Target the button's wrapper and the button itself specifically */
+div[data-testid="stVerticalBlock"] div:has(button[key="lnk_assumptions"]) button {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
@@ -136,26 +136,26 @@ button:has(div p:contains("Calculation Assumptions")) {
     min-height: 0px !important;
     width: auto !important;
     float: right !important;
+    display: inline-block !important;
 }
 
-/* 2. Target the text inside that specific button */
-button:has(div p:contains("Calculation Assumptions")) p {
+/* 2. Style the text inside */
+div[data-testid="stVerticalBlock"] div:has(button[key="lnk_assumptions"]) p {
     color: #999 !important;
     font-size: 11px !important;
     text-decoration: none !important;
     margin: 0 !important;
 }
 
-/* 3. Hover state for the text */
-button:has(div p:contains("Calculation Assumptions")):hover p {
+/* 3. Hover state */
+div[data-testid="stVerticalBlock"] div:has(button[key="lnk_assumptions"]) button:hover p {
     color: #111 !important;
     text-decoration: underline !important;
 }
 
-/* 4. Remove the Streamlit 'Focus' ring and hover background */
-button:has(div p:contains("Calculation Assumptions")):focus,
-button:has(div p:contains("Calculation Assumptions")):active,
-button:has(div p:contains("Calculation Assumptions")):hover {
+/* 4. Kill the active/focus 'halo' effect */
+div[data-testid="stVerticalBlock"] div:has(button[key="lnk_assumptions"]) button:focus,
+div[data-testid="stVerticalBlock"] div:has(button[key="lnk_assumptions"]) button:active {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
@@ -549,8 +549,9 @@ else:
         st.rerun()
     
     # 2. The Subtle Link Row
-    st.write("") 
-    c_l, c_r = st.columns([8, 2])
-    with c_r:
+    f_left, f_right = st.columns([8, 2])
+    
+    with f_right:
+        # The key="lnk_assumptions" is what the CSS is looking for
         if st.button("Calculation Assumptions", key="lnk_assumptions"):
             show_assumptions()
