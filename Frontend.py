@@ -499,13 +499,6 @@ if is_mobile:
             # --- DELETE BUTTON ---
             st.button("🗑️ Remove", key=f"m_del_{h['id']}", on_click=lambda idx=i: st.session_state.holdings.pop(idx), use_container_width=True)
 
-            # 2. The Subtle Link Row
-            if not st.session_state.get("guide_step"):
-                # Use different keys for mobile vs desktop logic here as well
-                footer_key = "lnk_assumptions_footer_mob" if is_mobile else "lnk_assumptions_footer_desk"
-                if st.button("Calculation assumptions", key=footer_key):
-                    show_assumptions()
-
 else:
     # ── SUMMARY ──
     st.markdown(f"""<div class="summary-row">
@@ -578,10 +571,15 @@ else:
         st.session_state.holdings.append({"ticker": "", "units": 0.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())})
         st.rerun()
     
-    # 2. The Subtle Link Row
-    if not st.session_state.get("guide_step"):
-        if st.button("Calculation assumptions", key="lnk_assumptions"):
-            show_assumptions()
+st.markdown("---") # Adds a subtle divider line
+
+# Ensure the guide isn't covering the screen
+if not st.session_state.get("guide_step"):
+    # This single button works for everyone and only needs ONE key
+    if st.button("Calculation assumptions", key="global_footer_assumptions"):
+        show_assumptions()
+        
+    st.markdown('<div class="footer">© 2026 The Frank Calculator | ASX Dividend Data</div>', unsafe_allow_html=True)
 
 
 
