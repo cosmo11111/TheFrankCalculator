@@ -38,6 +38,58 @@ button[key^="lnk_assumptions"] {
     color: #aaa !important;
     font-size: 11px !important;
 }
+
+/* Tooltip Base Styling */
+.info-tooltip {
+    position: relative;
+    display: inline-block;
+    margin-left: 4px;
+    color: #999; 
+    font-size: 0.75rem;
+    cursor: help;
+    vertical-align: middle;
+}
+
+/* The actual popup box */
+.info-tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: #1a1c1e;
+    color: #ffffff;
+    text-align: left;
+    border-radius: 8px;
+    padding: 12px;
+    position: absolute;
+    z-index: 1000;
+    bottom: 150%; 
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    white-space: normal;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    border: 1px solid #333;
+}
+
+/* Show on hover */
+.info-tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Little arrow at the bottom */
+.info-tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #1a1c1e transparent transparent transparent;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -80,6 +132,10 @@ def load_master_data():
     except: return {}
 
 MASTER_DATA = load_master_data()
+
+# Info Icon Helper
+def info_icon(text):
+    return f'''<span class="info-tooltip">ⓘ<span class="tooltiptext">{text}</span></span>'''
 
 # ── SESSION STATE ──
 if 'holdings' not in st.session_state:
