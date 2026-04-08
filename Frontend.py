@@ -375,7 +375,7 @@ if is_mobile:
     # On mobile, we can put it right under the summary cards or in the sidebar
     with st.sidebar:
         st.divider()
-        st.download_button("📥 Download CSV", data=csv_data, file_name="extract.csv", use_container_width=True)
+        st.download_button("📥 Download CSV", data=csv, file_name="asx_dividend_report.csv", use_container_width=True)
 else:
     with col_btn:
         csv = get_csv_data(computed, st.session_state.holdings, is_gross_view)
