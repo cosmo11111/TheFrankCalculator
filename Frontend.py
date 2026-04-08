@@ -126,32 +126,17 @@ div[data-testid="stButton"] button { font-size: 13px !important; border-radius: 
     }
 }
 
-/* Replace the existing lnk_assumptions styles with these */
-button[key="lnk_assumptions"] {
+button[key="global_footer_assumptions"] {
     background: transparent !important;
     border: none !important;
-    box-shadow: none !important;
     padding: 0 !important;
-    height: auto !important;
-    min-height: 0px !important;
-    width: auto !important;
-}
-button[key="lnk_assumptions"] p {
     color: #aaa !important;
     font-size: 11px !important;
-    font-weight: 400 !important;
-    margin: 0 !important;
-    text-decoration: none !important;
 }
-button[key="lnk_assumptions"]:hover p {
+
+button[key="global_footer_assumptions"]:hover p {
     color: #666 !important;
     text-decoration: underline !important;
-}
-button[key="lnk_assumptions"]:focus,
-button[key="lnk_assumptions"]:active {
-    outline: none !important;
-    box-shadow: none !important;
-    background: transparent !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -571,7 +556,6 @@ else:
         st.session_state.holdings.append({"ticker": "", "units": 0.0, "custom_p": 0.0, "custom_y": 0.0, "id": str(uuid.uuid4())})
         st.rerun()
     
-st.markdown("---") # Adds a subtle divider line
 
 # Ensure the guide isn't covering the screen
 if not st.session_state.get("guide_step"):
