@@ -4,7 +4,7 @@ import uuid
 from streamlit_javascript import st_javascript
 
 # --- CONFIG ---
-st.set_page_config(layout="wide", page_title="ASX Dividend Tool", page_icon="📊")
+st.set_page_config(layout="wide", page_title="ASX Dividend Tool", page_icon="📊", initial_sidebar_state="collapsed")
 
 # --- CUSTOM CSS ---
 st.markdown("""
@@ -25,9 +25,20 @@ html, body, .block-container { font-family: 'Inter', sans-serif !important; }
     padding-top: 0.5rem !important;
 }
 
-.stMainBlockContainer > div:first-child {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
+/* Hide Streamlit furniture by default */
+#MainMenu, footer { visibility: hidden; }
+header { visibility: hidden; } 
+
+/* REVEAL the header (hamburger) ONLY on Mobile */
+@media (max-width: 800px) {
+    header { 
+        visibility: visible !important; 
+        background: transparent !important; 
+    }
+    /* This shifts your title down slightly so it doesn't overlap the hamburger */
+    .stApp {
+        margin-top: 10px;
+    }
 }
 
 /* Summary Cards */
