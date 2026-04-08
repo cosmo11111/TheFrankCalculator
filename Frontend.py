@@ -171,12 +171,12 @@ else:
     st.markdown(f"""<div class="summary-row">
         <div class="summary-card"><div class="label">Portfolio Value</div><div class="value">{fmt_aud(t_val)}</div></div>
         <div class="summary-card"><div class="label">Annual Income</div><div class="value green">{fmt_aud(t_gross if is_gross_view else t_cash)}</div></div>
-        <div class="summary-card"><div class="label">Portfolio Yield</div><div class="value green">{fmt_pct((t_gross/t_val*100) if is_gross_view and t_val else (t_cash/t_val*100) if t_val else 0)}</div></div>
+        <div class="summary-card"><div class="label">Portfolio Yield</div><div class="value green">{fmt_pct(portfolio_yld)}</div></div>
         <div class="summary-card"><div class="label">Franking</div><div class="value">{fmt_aud(t_frank)}</div></div>
         <div class="summary-card"><div class="label">Post-Tax</div><div class="value">{fmt_aud(post_tax)}</div></div>
     </div>""", unsafe_allow_html=True)
     
-    # ── TABLE ──
+    # ── TABLE HEADERS WITH DESKTOP-ONLY TOOLTIPS ──
     yield_head = "Gross Yield" if is_gross_view else "Yield"
     inc_head = "Gross Inc." if is_gross_view else "Annual Inc."
     
@@ -185,11 +185,11 @@ else:
         <span>Ticker</span>
         <span>Company</span>
         <span>Units</span>
-        <span class="r">Price {info_icon('Price generated each day at 10:30am AEST from Yahoo Finance. ')}</span>
+        <span class="r">Price {info_icon('Price generated each day at 10:30am AEST from Yahoo Finance.')}</span>
         <span class="r">Value</span>
-        <span class="r">{yield_head} {info_icon('Dividend yield generated from Yahoo Finance and is the Forward dividend yield. Usually the latest dividend is annualized and is represented as the dividend / share price')}</span>
-        <span class="r">{inc_head} {info_icon('Annual Income is the total value of the holding multiplied by the yield.')}</span>
-        <span class="r">Franking {info_icon('The extent to which an entity has allocated franking credits to a frankable distribution is referred to as the franking percentage.')}</span>
+        <span class="r">{yield_head} {info_icon('Forward dividend yield annualized based on the latest distribution.')}</span>
+        <span class="r">{inc_head} {info_icon('Total value of the holding multiplied by the yield.')}</span>
+        <span class="r">Franking {info_icon('The percentage of the distribution that has corporate tax already paid.')}</span>
         <span></span>
     </div>
     """, unsafe_allow_html=True)
