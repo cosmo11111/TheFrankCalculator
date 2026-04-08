@@ -50,7 +50,7 @@ header { visibility: hidden; }
         content: 'Settings';
         position: absolute;
         left: 50px; /* Adjust based on icon width */
-        top: 18px;
+        top: 16px;
         font-size: 18px;
         font-weight: 500;
         color: #666;
