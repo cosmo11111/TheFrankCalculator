@@ -295,37 +295,47 @@ if st.session_state.guide_step:
     run_guide()
     
 # ── TOOLBAR ──
-st.markdown('<div class="toolbar-wrapper"><div class="toolbar-inner">', unsafe_allow_html=True)
+if is_mobile:
+    with st.sidebar:
+        st.subheader("Settings")
+        is_gross_view = st.toggle("Grossed-up Yield", key="m_gross")
+        is_edit_mode = st.toggle("Manual Override", key="m_manual")
+        selected_env = st.selectbox("Tax Environment", list(TAX_ENVIRONMENTS.keys()))
+        tax_rate = TAX_ENVIRONMENTS[selected_env]
+else:
+    st.markdown('<div class="toolbar-wrapper"><div class="toolbar-inner">', unsafe_allow_html=True)
+    
+    # Adjusted column ratios to fit the new button
+    # [Space, Gross, Manual, Assumptions, Tax, Download (Placeholder)]
+    col_spacer, col_gross, col_manual, col_assump, col_tax, col_btn = st.columns([0.8, 1.4, 1.6, 1.3, 1.5, 0.5])
+    
+    with col_gross:
+        gross_val = st.toggle(
+            f"Grossed-up Yield",
+            value=False,
+            key="gross_toggle",
+            help="The Grossed-Up Yield toggle changes the yields for each stock to include both the cash income and the value of the franking credits. It provides a pre-tax indication of the income and provides a useful comparison for stocks that pay dividends at varying franking rates."
+        )
+        is_gross_view = gross_val
+    
+    with col_manual:
+        is_edit_mode = st.toggle(
+            "Price & Yield Override",
+            value=False,
+            key="manual_toggle"
+        )
+    
+    with col_assump:
+        # This button now sits in the main toolbar where 'Assumptions' used to be
+        if st.button("How to Use", use_container_width=True):
+            st.session_state.guide_step = "welcome"
+            st.rerun()
+            
+    with col_tax:
+        selected_env = st.selectbox("Tax", list(TAX_ENVIRONMENTS.keys()), label_visibility="collapsed")
+        tax_rate = TAX_ENVIRONMENTS[selected_env]
 
-# Adjusted column ratios to fit the new button
-# [Space, Gross, Manual, Assumptions, Tax, Download (Placeholder)]
-col_spacer, col_gross, col_manual, col_assump, col_tax, col_btn = st.columns([0.8, 1.4, 1.6, 1.3, 1.5, 0.5])
-
-with col_gross:
-    gross_val = st.toggle(
-        f"Grossed-up Yield",
-        value=False,
-        key="gross_toggle",
-        help="The Grossed-Up Yield toggle changes the yields for each stock to include both the cash income and the value of the franking credits. It provides a pre-tax indication of the income and provides a useful comparison for stocks that pay dividends at varying franking rates."
-    )
-    is_gross_view = gross_val
-
-with col_manual:
-    is_edit_mode = st.toggle(
-        "Price & Yield Override",
-        value=False,
-        key="manual_toggle"
-    )
-
-with col_assump:
-    # This button now sits in the main toolbar where 'Assumptions' used to be
-    if st.button("How to Use", use_container_width=True):
-        st.session_state.guide_step = "welcome"
-        st.rerun()
-        
-with col_tax:
-    selected_env = st.selectbox("Tax", list(TAX_ENVIRONMENTS.keys()), label_visibility="collapsed")
-    tax_rate = TAX_ENVIRONMENTS[selected_env]
+    pass
 
 # ── CALCULATION LOGIC ──
 computed = []
@@ -361,15 +371,21 @@ for h in st.session_state.holdings:
 
 
 # ── DOWNLOAD ──
-with col_btn:
-    csv = get_csv_data(computed, st.session_state.holdings, is_gross_view)
-    st.download_button(
-        label="📥",
-        data=csv,
-        file_name="asx_dividend_report.csv",
-        mime="text/csv",
-        key="download_btn" # Unique key for safety
-    )
+if is_mobile:
+    # On mobile, we can put it right under the summary cards or in the sidebar
+    with st.sidebar:
+        st.divider()
+        st.download_button("📥 Download CSV", data=csv_data, file_name="extract.csv", use_container_width=True)
+else:
+    with col_btn:
+        csv = get_csv_data(computed, st.session_state.holdings, is_gross_view)
+        st.download_button(
+            label="📥",
+            data=csv,
+            file_name="asx_dividend_report.csv",
+            mime="text/csv",
+            key="download_btn" # Unique key for safety
+        )
 
 # ----- MOBILE LAYOUT ------
 if is_mobile:
