@@ -41,6 +41,23 @@ header { visibility: hidden; }
     }
 }
 
+@media (max-width: 800px) {
+    /* Reveal the header */
+    header { visibility: visible !important; }
+
+    /* Inject a "Settings" label next to the hamburger icon */
+    header::after {
+        content: 'Settings';
+        position: absolute;
+        left: 50px; /* Adjust based on icon width */
+        top: 14px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #666;
+        letter-spacing: 0.5px;
+    }
+}
+
 /* Summary Cards */
 .summary-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 1.75rem; }
 .summary-card { background: #fafafa; border: 1px solid #f0f0f0; border-radius: 10px; padding: 16px 18px; }
