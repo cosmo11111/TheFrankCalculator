@@ -51,7 +51,7 @@ header { visibility: hidden; }
         position: absolute;
         left: 50px; /* Adjust based on icon width */
         top: 18px;
-        font-size: 14px;
+        font-size: 18px;
         font-weight: 500;
         color: #666;
         letter-spacing: 0.5px;
