@@ -297,11 +297,20 @@ if st.session_state.guide_step:
 # ── TOOLBAR ──
 if is_mobile:
     with st.sidebar:
-        st.subheader("Settings")
-        is_gross_view = st.toggle("Grossed-up Yield", key="m_gross")
-        is_edit_mode = st.toggle("Manual Override", key="m_manual")
-        selected_env = st.selectbox("Tax Environment", list(TAX_ENVIRONMENTS.keys()))
+        st.markdown("### Settings")
+        is_gross_view = st.toggle("Grossed-up Yield", value=False, key="m_gross_toggle")
+        is_edit_mode = st.toggle("Price & Yield Override", value=False, key="m_manual_toggle")
+        
+        selected_env = st.selectbox("Tax", list(TAX_ENVIRONMENTS.keys()), key="m_tax_sel")
         tax_rate = TAX_ENVIRONMENTS[selected_env]
+        
+        if st.button("How to Use", use_container_width=True, key="m_guide_btn"):
+            st.session_state.guide_step = "welcome"
+            st.rerun()
+            
+        # The first "Assumptions" button (Mobile)
+        if st.button("Calculation assumptions", key="lnk_assumptions_mob", use_container_width=True):
+            show_assumptions()
 else:
     st.markdown('<div class="toolbar-wrapper"><div class="toolbar-inner">', unsafe_allow_html=True)
     
@@ -371,21 +380,28 @@ for h in st.session_state.holdings:
 
 
 # ── DOWNLOAD ──
+csv_data = get_csv_data(computed, st.session_state.holdings, is_gross_view)
+
 if is_mobile:
-    # On mobile, we can put it right under the summary cards or in the sidebar
     with st.sidebar:
         st.divider()
-        csv = get_csv_data(computed, st.session_state.holdings, is_gross_view)
-        st.download_button("📥", data=csv, file_name="asx_dividend_report.csv", use_container_width=True)
-else:
-    with col_btn:
-        csv = get_csv_data(computed, st.session_state.holdings, is_gross_view)
         st.download_button(
-            label="📥",
-            data=csv,
+            label="📥 Download Report",
+            data=csv_data,
             file_name="asx_dividend_report.csv",
             mime="text/csv",
-            key="download_btn" # Unique key for safety
+            key="m_download_btn",
+            use_container_width=True
+        )
+else:
+    # Place it in that last small column from your desktop toolbar
+    with col_btn:
+        st.download_button(
+            label="📥",
+            data=csv_data,
+            file_name="asx_dividend_report.csv",
+            mime="text/csv",
+            key="d_download_btn"
         )
 
 # ----- MOBILE LAYOUT ------
@@ -485,7 +501,9 @@ if is_mobile:
 
             # 2. The Subtle Link Row
             if not st.session_state.get("guide_step"):
-                if st.button("Calculation assumptions", key="lnk_assumptions"):
+                # Use different keys for mobile vs desktop logic here as well
+                footer_key = "lnk_assumptions_footer_mob" if is_mobile else "lnk_assumptions_footer_desk"
+                if st.button("Calculation assumptions", key=footer_key):
                     show_assumptions()
 
 else:
