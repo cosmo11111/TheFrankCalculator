@@ -466,6 +466,10 @@ if is_mobile:
             # --- DELETE BUTTON ---
             st.button("🗑️ Remove", key=f"m_del_{h['id']}", on_click=lambda idx=i: st.session_state.holdings.pop(idx), use_container_width=True)
 
+            # 2. The Subtle Link Row
+            if not st.session_state.get("guide_step"):
+                if st.button("Calculation assumptions", key="lnk_assumptions"):
+                    show_assumptions()
 
 else:
     # ── SUMMARY ──
