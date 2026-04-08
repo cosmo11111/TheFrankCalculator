@@ -167,10 +167,6 @@ if is_mobile:
 
 # ── DESKTOP UI ──
 else:
-    # ... (Keep your existing desktop table logic here)
-    st.write("Desktop View Active") # Placeholder for your existing table code
-
-else:
     # ── SUMMARY ──
     st.markdown(f"""<div class="summary-row">
         <div class="summary-card"><div class="label">Portfolio Value</div><div class="value">{fmt_aud(t_val)}</div></div>
